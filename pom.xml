@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.5.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>de.alpharogroup</groupId>
+	<artifactId>user-auth</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>user-auth</name>
+	<description>Project for user authentication with Spring Boot</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<auth-api.version>5.3</auth-api.version>
+		<!-- ENT-API version -->
+		<ent-api.version>1</ent-api.version>
+		<!-- ENT-CORE version -->
+		<ent-core.version>1.1</ent-core.version>
+		<!-- PG-ENUM-USERTYPE version -->
+		<pg-enum-usertype.version>1</pg-enum-usertype.version>
+		<!-- JOBJ-CONTRACT-VERIFIER version -->
+		<jobj-contract-verifier.version>3.2</jobj-contract-verifier.version>
+		<!-- MEANBEAN version -->
+		<meanbean.version>2.0.3</meanbean.version>
+		<!-- SPRINGFOX version -->
+		<springfox.version>2.9.2</springfox.version>
+		<mapstruct.version>1.2.0.Final</mapstruct.version>
+		<hibernate-jpamodelgen.version>5.3.7.Final</hibernate-jpamodelgen.version>
+	</properties>
+
+
+	<dependencyManagement>
+
+		<dependencies>
+			<dependency>
+				<groupId>de.alpharogroup</groupId>
+				<artifactId>auth-api</artifactId>
+				<version>${auth-api.version}</version>
+			</dependency>
+			<!-- JOBJ-CONTRACT-VERIFIER DEPENDENCY -->
+			<dependency>
+				<groupId>de.alpharogroup</groupId>
+				<artifactId>jobj-contract-verifier</artifactId>
+				<version>${jobj-contract-verifier.version}</version>
+			</dependency>
+			<!-- ENT-API DEPENDENCY -->
+			<dependency>
+				<groupId>de.alpharogroup</groupId>
+				<artifactId>ent-api</artifactId>
+				<version>${ent-api.version}</version>
+			</dependency>
+			<!-- ENT-CORE DEPENDENCY -->
+			<dependency>
+				<groupId>de.alpharogroup</groupId>
+				<artifactId>ent-core</artifactId>
+				<version>${ent-core.version}</version>
+			</dependency>
+			<!-- PG-ENUM-USERTYPE DEPENDENCY -->
+			<dependency>
+				<groupId>de.alpharogroup</groupId>
+				<artifactId>pg-enum-usertype</artifactId>
+				<version>${pg-enum-usertype.version}</version>
+			</dependency>
+			<!-- MAPSTRUCT DEPENDENCY -->
+			<dependency>
+				<groupId>org.mapstruct</groupId>
+				<artifactId>mapstruct-jdk8</artifactId>
+				<version>${mapstruct.version}</version>
+			</dependency>
+			<!-- SPRINGFOX-SWAGGER2 DEPENDENCY -->
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger2</artifactId>
+				<version>${springfox.version}</version>
+			</dependency>
+			<!-- SPRINGFOX-SWAGGER-UI DEPENDENCY -->
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger-ui</artifactId>
+				<version>${springfox.version}</version>
+			</dependency>
+			<!-- Annotation processor that raising compilation errors whenever constraint 
+				annotations are incorrectly used. -->
+			<dependency>
+				<groupId>org.hibernate.validator</groupId>
+				<artifactId>hibernate-validator-annotation-processor</artifactId>
+				<version>${hibernate-validator-annotation-processor.version}</version>
+			</dependency>
+
+		</dependencies>
+
+	</dependencyManagement>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>de.alpharogroup</groupId>
+			<artifactId>auth-api</artifactId>
+		</dependency>
+		<!-- ENT-API DEPENDENCY -->
+		<dependency>
+			<groupId>de.alpharogroup</groupId>
+			<artifactId>ent-api</artifactId>
+		</dependency>
+		<!-- ENT-CORE DEPENDENCY -->
+		<dependency>
+			<groupId>de.alpharogroup</groupId>
+			<artifactId>ent-core</artifactId>
+		</dependency>
+		<!-- PG-ENUM-USERTYPE DEPENDENCY -->
+		<dependency>
+			<groupId>de.alpharogroup</groupId>
+			<artifactId>pg-enum-usertype</artifactId>
+		</dependency>
+		<!-- SPRING-BOOT RELATED DEPENDENCIES -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<!-- MAPSTRUCT DEPENDENCY -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-jdk8</artifactId>
+		</dependency><!-- SPRINGFOX-SWAGGER2 DEPENDENCY -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+		</dependency>
+		<!-- SPRINGFOX-SWAGGER-UI DEPENDENCY -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
