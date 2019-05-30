@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>de.alpharogroup</groupId>
 	<artifactId>user-auth</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1-SNAPSHOT</version>
 	<name>user-auth</name>
 	<description>Project for user authentication with Spring Boot</description>
 
@@ -19,7 +19,12 @@
 		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<!-- AUTH-API version -->
 		<auth-api.version>5.3</auth-api.version>
+		<!-- AUTH version -->
+		<auth.version>5.3.1</auth.version>
+		<!-- CRYPT-CORE version -->
+		<crypt-core.version>5.8</crypt-core.version>
 		<!-- ENT-API version -->
 		<ent-api.version>1</ent-api.version>
 		<!-- ENT-CORE version -->
@@ -36,14 +41,26 @@
 		<hibernate-jpamodelgen.version>5.3.7.Final</hibernate-jpamodelgen.version>
 	</properties>
 
-
 	<dependencyManagement>
 
 		<dependencies>
+			<!-- AUTH-API DEPENDENCY -->
 			<dependency>
 				<groupId>de.alpharogroup</groupId>
 				<artifactId>auth-api</artifactId>
 				<version>${auth-api.version}</version>
+			</dependency>
+			<!-- AUTH DEPENDENCY -->
+			<dependency>
+				<groupId>de.alpharogroup</groupId>
+				<artifactId>auth</artifactId>
+				<version>${auth.version}</version>
+			</dependency>
+			<!-- CRYPT-CORE DEPENDENCY -->
+			<dependency>
+				<groupId>de.alpharogroup</groupId>
+				<artifactId>crypt-core</artifactId>
+				<version>${crypt-core.version}</version>
 			</dependency>
 			<!-- JOBJ-CONTRACT-VERIFIER DEPENDENCY -->
 			<dependency>
@@ -99,11 +116,20 @@
 
 	</dependencyManagement>
 
-
 	<dependencies>
 		<dependency>
 			<groupId>de.alpharogroup</groupId>
 			<artifactId>auth-api</artifactId>
+		</dependency>
+		<!-- AUTH DEPENDENCY -->
+		<dependency>
+			<groupId>de.alpharogroup</groupId>
+			<artifactId>auth</artifactId>
+		</dependency>
+		<!-- CRYPT-CORE DEPENDENCY -->
+		<dependency>
+			<groupId>de.alpharogroup</groupId>
+			<artifactId>crypt-core</artifactId>
 		</dependency>
 		<!-- ENT-API DEPENDENCY -->
 		<dependency>
@@ -120,16 +146,13 @@
 			<groupId>de.alpharogroup</groupId>
 			<artifactId>pg-enum-usertype</artifactId>
 		</dependency>
-		<!-- SPRING-BOOT RELATED DEPENDENCIES -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
 		<!-- MAPSTRUCT DEPENDENCY -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct-jdk8</artifactId>
-		</dependency><!-- SPRINGFOX-SWAGGER2 DEPENDENCY -->
+			<artifactId>mapstruct</artifactId>
+			<version>${mapstruct.version}</version>
+		</dependency>
+		<!-- SPRINGFOX-SWAGGER2 DEPENDENCY -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -139,7 +162,19 @@
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 		</dependency>
-
+		<!-- SPRING-BOOT RELATED DEPENDENCIES -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
@@ -162,31 +197,37 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 
 	<build>

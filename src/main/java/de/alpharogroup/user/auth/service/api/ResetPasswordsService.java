@@ -1,13 +1,13 @@
-package de.alpharogroup.user.auth.jpa.repositories;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+package de.alpharogroup.user.auth.service.api;
 
 import de.alpharogroup.user.auth.jpa.entities.ResetPasswords;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 
-@Repository
-public interface ResetPasswordsRepository extends JpaRepository<ResetPasswords, Long> {
+/**
+ * The interface {@link ResetPasswordsService}.
+ */
+public interface ResetPasswordsService
+{
 
 	/**
 	 * Finds the {@link ResetPasswords} object from the given {@link Users} object.

@@ -1,14 +1,38 @@
-package de.alpharogroup.user.auth.jpa.repositories;
+package de.alpharogroup.user.auth.service.api;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import de.alpharogroup.user.auth.jpa.entities.Permissions;
 
-@Repository
-public interface PermissionsRepository extends JpaRepository<Permissions, Integer> {
+/**
+ * The interface {@link PermissionsService}
+ */
+public interface PermissionsService
+{
+
+	/**
+	 * Factory method to create and save a new {@link Permissions} object.
+	 *
+	 * @param name
+	 *            the name
+	 * @param description
+	 *            the description
+	 * @return the new {@link Permissions} object.
+	 */
+	Permissions save(String name, String description);
+
+	/**
+	 * Factory method to create and save a new {@link Permissions} object.
+	 *
+	 * @param name
+	 *            the name
+	 * @param description
+	 *            the description
+	 * @param shortcut
+	 *            the shortcut
+	 * @return the new {@link Permissions} object.
+	 */
+	Permissions createAndSavePermissions(String name, String description, String shortcut);
 
 	/**
 	 * Find all {@link Permissions} objects by the given parameters.

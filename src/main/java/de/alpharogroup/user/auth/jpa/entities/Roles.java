@@ -36,9 +36,14 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import de.alpharogroup.db.entity.BaseEntity;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 /**
  * The entity class {@link Roles} is keeping the information for the user roles.
@@ -47,35 +52,51 @@ import lombok.Setter;
 @Table(name = "roles")
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Roles extends BaseEntity<Integer> implements Cloneable
 {
-
 	/** The serial Version UID. */
-	private static final long serialVersionUID = -5523602462337489391L;
+	private static final long serialVersionUID = 1L;
 	/** A description of the role. */
 	@Column(name = "description", length = 64)
-	private String description;
+	String description;
 	/** The permissions of the role. */
+	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "role_permissions", joinColumns = {
 			@JoinColumn(name = "role_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "permission_id", referencedColumnName = "id") })
-	private Set<Permissions> permissions = new HashSet<Permissions>();
+	Set<Permissions> permissions = new HashSet<>();
 	/** The name of the role. */
-	@Column(name = "rolename", length = 64, unique = true)
-	private String rolename;
+	@Column(name = "name", length = 64, unique = true)
+	String name;
 
 	/**
-	 * Adds the permission.
+	 * Adds the given permission to this {@link Roles} object
 	 *
 	 * @param permission
-	 *            the permission
+	 *            the permission to add
 	 * @return true, if successful
 	 */
 	public boolean addPermission(Permissions permission)
 	{
 		return permissions.add(permission);
+	}
+
+	/**
+	 * Removes the given permission from this {@link Roles} object
+	 *
+	 * @param permission
+	 *            the permission to remove
+	 * @return true, if successful
+	 */
+	public boolean removePermission(Permissions permission)
+	{
+		return permissions.remove(permission);
 	}
 
 }

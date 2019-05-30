@@ -36,9 +36,14 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import de.alpharogroup.db.entity.BaseEntity;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 /**
  * The entity class {@link Users} is keeping the information for the users from the application.
@@ -47,37 +52,41 @@ import lombok.Setter;
 @Table(name = "users")
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
-public class Users extends BaseEntity<Integer> implements Cloneable
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Users extends BaseEntity<Long> implements Cloneable
 {
-
 	/** The serial Version UID. */
 	private static final long serialVersionUID = 1L;
 	/** The attribute active, if true the user account is active. */
 	@Column(name = "active")
-	private Boolean active;
+	boolean active;
 	/** A Flag that indicates if the user account is locked or not. */
 	@Column(name = "locked")
-	private Boolean locked;
+	boolean locked;
 	/** The hash from the password hashed with sha512. */
 	@Column(name = "pw", length = 1024)
-	private String pw;
+	String pw;
 	/** The roles of the user. */
+	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_roles", joinColumns = {
 			@JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "role_id", referencedColumnName = "id") })
-	private Set<Roles> roles = new HashSet<Roles>();
+	Set<Roles> roles = new HashSet<>();
 	/** The salt that is used to compute the hash. */
 	@Column(name = "salt", length = 8)
-	private String salt;
+	String salt;
 	/** The user name. */
 	@Column(name = "username", length = 256, unique = true)
-	private String username;
+	String username;
 
 	/**
-	 * Adds a role to the user.
-	 * 
+	 * Adds the given role to this {@link Users} object
+	 *
 	 * @param role
 	 *            the role
 	 * @return true, if successful
@@ -87,9 +96,16 @@ public class Users extends BaseEntity<Integer> implements Cloneable
 		return roles.add(role);
 	}
 
-	public boolean isActive()
+	/**
+	 * Removes the given role from this {@link Users} object
+	 *
+	 * @param role
+	 *            the role
+	 * @return true, if successful
+	 */
+	public boolean removeRole(Roles role)
 	{
-		return getActive();
+		return roles.remove(role);
 	}
 
 }

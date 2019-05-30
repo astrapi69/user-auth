@@ -1,4 +1,4 @@
-package de.alpharogroup.user.auth.config;
+package de.alpharogroup.user.auth.configuration;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.MessageSource;
@@ -23,7 +23,7 @@ import lombok.experimental.FieldDefaults;
 @EnableTransactionManagement
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class Config implements WebMvcConfigurer
+public class ApplicationConfiguration implements WebMvcConfigurer
 {
 
 	@SuppressWarnings("unused")

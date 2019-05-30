@@ -24,19 +24,21 @@
  */
 package de.alpharogroup.user.auth.jpa.entities;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import de.alpharogroup.db.entity.BaseEntity;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 /**
  * The entity class {@link UserTokens} is keeping the information for the token of users.
@@ -49,18 +51,17 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserTokens extends BaseEntity<Integer> implements Cloneable
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class UserTokens extends BaseEntity<Long> implements Cloneable
 {
-
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
 	/** The user name. */
 	@Column(name = "username", length = 256, unique = true)
-	private String username;
+	String username;
 	/** The token for the user. */
 	@Column(name = "token", length = 128, unique = true)
-	private String token;
+	String token;
 	/** The expiration date. */
-	private Date expiry;
-
+	LocalDateTime expiry;
 }

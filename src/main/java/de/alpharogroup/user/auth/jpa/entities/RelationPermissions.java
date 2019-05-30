@@ -38,9 +38,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import de.alpharogroup.db.entity.BaseEntity;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 /**
  * This class describes the permissions that a user can give to another user. For instance: if a
@@ -52,27 +57,28 @@ import lombok.Setter;
 @Table(name = "relation_permissions")
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
-public class RelationPermissions extends BaseEntity<Integer> implements Cloneable
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class RelationPermissions extends BaseEntity<Long> implements Cloneable
 {
-
-	/**
-	 * The serial Version UID
-	 */
+	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
 	/** The subscriber of the permissions. */
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "subscriber_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_USER_RELATION_PERMISSIONS_SUBSCRIBER_ID"))
-	private Users subscriber;
+	Users subscriber;
 	/** The provider of the permissions. */
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "provider_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_USER_RELATION_PERMISSIONS_PROVIDER_ID"))
-	private Users provider;
+	Users provider;
 	/** The permissions of the role. */
+	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_relation_permissions", joinColumns = {
 			@JoinColumn(name = "user_relation_permission_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "permission_id", referencedColumnName = "id") })
-	private Set<Permissions> permissions = new HashSet<Permissions>();
-
+	Set<Permissions> permissions = new HashSet<>();
 }
