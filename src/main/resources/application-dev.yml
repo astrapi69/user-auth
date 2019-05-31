@@ -1,0 +1,6 @@
+# profile dev properties
+
+spring:  
+  datasource:
+    username: postgres
+    password: postgres
