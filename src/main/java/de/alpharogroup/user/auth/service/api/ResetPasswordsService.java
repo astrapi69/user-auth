@@ -1,7 +1,10 @@
 package de.alpharogroup.user.auth.service.api;
 
+import java.util.Optional;
+
 import de.alpharogroup.user.auth.jpa.entities.ResetPasswords;
 import de.alpharogroup.user.auth.jpa.entities.Users;
+import lombok.NonNull;
 
 /**
  * The interface {@link ResetPasswordsService}.
@@ -14,9 +17,9 @@ public interface ResetPasswordsService
 	 *
 	 * @param user
 	 *            the user
-	 * @return the entry of the found {@link ResetPasswords} or null if not found
+	 * @return an optional with the entry if found
 	 */
-	ResetPasswords findResetPassword(Users user);
+	Optional<ResetPasswords> findByUser(final @NonNull Users user);
 
 
 	/**
@@ -26,8 +29,9 @@ public interface ResetPasswordsService
 	 *            the user
 	 * @param generatedPassword
 	 *            the generated password(hashed) is the confirmationCode from the url query string
-	 * @return the entry of the found {@link ResetPasswords} or null if not found
+	 * @return an optional with the entry if found
 	 */
-	ResetPasswords findResetPassword(Users user, String generatedPassword);
+	Optional<ResetPasswords> findByUserAndGeneratedPassword(final @NonNull Users user,
+		final @NonNull String generatedPassword);
 
 }

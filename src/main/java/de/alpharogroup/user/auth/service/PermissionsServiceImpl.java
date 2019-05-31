@@ -1,6 +1,6 @@
 package de.alpharogroup.user.auth.service;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -20,45 +20,39 @@ public class PermissionsServiceImpl implements PermissionsService
 	PermissionsRepository permissionsRepository;
 
 	@Override
+	public Optional<Permissions> findByName(String name)
+	{
+		return permissionsRepository.findByName(name);
+	}
+
+	@Override
+	public Optional<Permissions> findByShortcut(String shortcut)
+	{
+		return permissionsRepository.findByShortcut(shortcut);
+	}
+
+	@Override
 	public Permissions save(String name, String description)
 	{
-		Permissions permissions = permissionsRepository.findByName(name);
-		if (permissions != null)
+		Optional<Permissions> optional = permissionsRepository.findByName(name);
+		if (optional.isPresent())
 		{
-			return permissions;
+			return optional.get();
 		}
 		return permissionsRepository
 			.save(Permissions.builder().name(name).description(description).build());
 	}
 
 	@Override
-	public Permissions createAndSavePermissions(String name, String description, String shortcut)
+	public Permissions save(String name, String description, String shortcut)
 	{
-		Permissions permissions = permissionsRepository.findByName(name);
-		if (permissions != null)
+		Optional<Permissions> optional = permissionsRepository.findByName(name);
+		if (optional.isPresent())
 		{
-			return permissions;
+			return optional.get();
 		}
 		return permissionsRepository.save(
 			Permissions.builder().name(name).description(description).shortcut(shortcut).build());
-	}
-
-	@Override
-	public List<Permissions> find(String description, String permissionName, String shortcut)
-	{
-		return permissionsRepository.find(description, permissionName, shortcut);
-	}
-
-	@Override
-	public Permissions findByName(String name)
-	{
-		return permissionsRepository.findByName(name);
-	}
-
-	@Override
-	public Permissions findByShortcut(String shortcut)
-	{
-		return permissionsRepository.findByShortcut(shortcut);
 	}
 
 }

@@ -1,6 +1,7 @@
 package de.alpharogroup.user.auth.service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -30,15 +31,15 @@ public class UserDetailsServiceImpl implements UserDetailsService
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username)
 	{
-		Users user = usersRepository.findByUsername(username);
-		if (user == null)
+		Optional<Users> optional = usersRepository.findByUsername(username);
+		if (!optional.isPresent())
 		{
 			throw new UsernameNotFoundException(username);
 		}
-
+		Users user = optional.get();
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-		user.getRoles().stream().forEach(
-			role -> grantedAuthorities.add(new SimpleGrantedAuthority(role.getName())));
+		user.getRoles().stream()
+			.forEach(role -> grantedAuthorities.add(new SimpleGrantedAuthority(role.getName())));
 		return new User(user.getUsername(), user.getPw(), grantedAuthorities);
 	}
 

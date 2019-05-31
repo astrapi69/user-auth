@@ -1,10 +1,11 @@
 package de.alpharogroup.user.auth.service.api;
 
-import java.util.List;
+import java.util.Optional;
 
 import de.alpharogroup.user.auth.jpa.entities.Permissions;
 import de.alpharogroup.user.auth.jpa.entities.RelationPermissions;
 import de.alpharogroup.user.auth.jpa.entities.Users;
+import lombok.NonNull;
 
 /**
  * The interface {@link RelationPermissionsService}
@@ -22,7 +23,8 @@ public interface RelationPermissionsService
 	 * @param permission
 	 *            the permission
 	 */
-	void addPermission(Users provider, Users subscriber, Permissions permission);
+	void addPermission(final @NonNull Users provider, final @NonNull Users subscriber,
+		final @NonNull Permissions permission);
 
 	/**
 	 * Find a list of RelationPermissions that the given provider granted to the subscriber.
@@ -33,11 +35,11 @@ public interface RelationPermissionsService
 	 *            the subscriber
 	 * @return the list
 	 */
-	List<RelationPermissions> find(final Users provider, final Users subscriber);
+	Optional<RelationPermissions> find(final @NonNull Users provider,
+		final @NonNull Users subscriber);
 
 	/**
-	 * Find a list of RelationPermissions from the given provider and to the subscriber and the
-	 * given permission if the provider granted this permission to the subscriber.
+	 * Checks if the given subscriber have the given permission to the given provider
 	 *
 	 * @param provider
 	 *            the provider
@@ -45,36 +47,10 @@ public interface RelationPermissionsService
 	 *            the subscriber
 	 * @param permission
 	 *            the permission
-	 * @return the list
+	 * @return true if the given subscriber have the given permission otherwise false
 	 */
-	List<RelationPermissions> find(final Users provider, final Users subscriber,
-		Permissions permission);
-
-	/**
-	 * Find all given permissions that the given provider granted to the subscriber.
-	 *
-	 * @param provider
-	 *            the provider
-	 * @param subscriber
-	 *            the subscriber
-	 * @return the list
-	 */
-	RelationPermissions findRelationPermissions(final Users provider, final Users subscriber);
-
-	/**
-	 * Finds the RelationPermissions object from the given permissions the given provider and the
-	 * subscriber.
-	 *
-	 * @param provider
-	 *            the provider
-	 * @param subscriber
-	 *            the subscriber
-	 * @param permission
-	 *            the permission
-	 * @return the relation permissions
-	 */
-	RelationPermissions findRelationPermissions(final Users provider, final Users subscriber,
-		Permissions permission);
+	boolean havePermission(final @NonNull Users provider, final @NonNull Users subscriber,
+		final @NonNull Permissions permission);
 
 	/**
 	 * Removes all permissions that are given for both users.
@@ -84,7 +60,7 @@ public interface RelationPermissionsService
 	 * @param subscriber
 	 *            the subscriber
 	 */
-	void removeAllPermissions(Users provider, Users subscriber);
+	void removeAllPermissions(final @NonNull Users provider, final @NonNull Users subscriber);
 
 	/**
 	 * Removes the given permission for the given subscriber provided from the provider.
@@ -96,6 +72,7 @@ public interface RelationPermissionsService
 	 * @param permission
 	 *            the permission
 	 */
-	void removePermission(Users provider, Users subscriber, Permissions permission);
+	void removePermission(final @NonNull Users provider, final @NonNull Users subscriber,
+		final @NonNull Permissions permission);
 
 }

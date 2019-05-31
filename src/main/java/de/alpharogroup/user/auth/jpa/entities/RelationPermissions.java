@@ -66,14 +66,6 @@ public class RelationPermissions extends BaseEntity<Long> implements Cloneable
 {
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
-	/** The subscriber of the permissions. */
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "subscriber_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_USER_RELATION_PERMISSIONS_SUBSCRIBER_ID"))
-	Users subscriber;
-	/** The provider of the permissions. */
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "provider_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_USER_RELATION_PERMISSIONS_PROVIDER_ID"))
-	Users provider;
 	/** The permissions of the role. */
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -81,4 +73,12 @@ public class RelationPermissions extends BaseEntity<Long> implements Cloneable
 			@JoinColumn(name = "user_relation_permission_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "permission_id", referencedColumnName = "id") })
 	Set<Permissions> permissions = new HashSet<>();
+	/** The provider of the permissions. */
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "provider_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_USER_RELATION_PERMISSIONS_PROVIDER_ID"))
+	Users provider;
+	/** The subscriber of the permissions. */
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "subscriber_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_USER_RELATION_PERMISSIONS_SUBSCRIBER_ID"))
+	Users subscriber;
 }

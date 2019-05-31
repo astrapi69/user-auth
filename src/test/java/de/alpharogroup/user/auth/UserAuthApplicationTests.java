@@ -7,10 +7,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserAuthApplicationTests {
+public class UserAuthApplicationTests
+{
 
 	@Test
-	public void contextLoads() {
+	public void contextLoads()
+	{
 	}
 
 }

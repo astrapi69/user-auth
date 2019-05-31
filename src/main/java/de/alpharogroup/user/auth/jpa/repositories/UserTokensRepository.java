@@ -1,41 +1,18 @@
 package de.alpharogroup.user.auth.jpa.repositories;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.alpharogroup.user.auth.jpa.entities.UserTokens;
 
 @Repository
-public interface UserTokensRepository extends JpaRepository<UserTokens, Long> {
-
-	/**
-	 * Find all token from the given user name.
-	 *
-	 * @param username
-	 *            the username
-	 * @return the found {@link UserTokens} or null if no result.
-	 */
-	UserTokens find(final String username);
-
-	/**
-	 * Find all token from the given user name.
-	 *
-	 * @param username
-	 *            the username
-	 * @return the list
-	 */
-	List<UserTokens> findAll(final String username);
-
-	/**
-	 * Gets the authetication token from the given user name.
-	 *
-	 * @param username
-	 *            the username
-	 * @return the authetication token or null if no result.
-	 */
-	String getAutheticationToken(final String username);
+public interface UserTokensRepository extends JpaRepository<UserTokens, Long>
+{
 
 	/**
 	 * Checks if the given token is valid.
@@ -44,15 +21,35 @@ public interface UserTokensRepository extends JpaRepository<UserTokens, Long> {
 	 *            the token to validate
 	 * @return true, if the given token is valid otherwise false
 	 */
-	boolean isValid(String token);
+	boolean existsByToken(String token);
 
 	/**
-	 * Factory method that creates a new authentication token from the given user name.
+	 * Find the {@link UserTokens} by token
+	 *
+	 * @param token
+	 *            the token
+	 * @return an optional with the entry if found
+	 */
+	Optional<UserTokens> findByToken(final String token);
+
+	/**
+	 * Find the {@link UserTokens} by user name
+	 *
+	 * @param username
+	 *            the user name
+	 * @return an optional with the entry if found
+	 */
+	Optional<UserTokens> findByUsername(final String username);
+
+	/**
+	 * Gets the authetication token from the given user name.
 	 *
 	 * @param username
 	 *            the username
-	 * @return the new authentication token
+	 * @return the authetication token or null if no result.
 	 */
-	String newAuthenticationToken(String username);
+	@Transactional
+	@Query("select ut.token from UserTokens ut where ut.username = :username")
+	String getAutheticationToken(@Param("username") final String username);
 
 }

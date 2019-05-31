@@ -1,6 +1,6 @@
 package de.alpharogroup.user.auth.service;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -18,55 +18,71 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RelationPermissionsServiceImpl implements RelationPermissionsService
 {
+
 	RelationPermissionsRepository relationPermissionsRepository;
 
 	@Override
 	public void addPermission(Users provider, Users subscriber, Permissions permission)
 	{
-		// TODO Auto-generated method stub
-
+		Optional<RelationPermissions> optional = relationPermissionsRepository.findByProviderAndSubscriber(provider,
+			subscriber);
+		RelationPermissions relationPermissions;
+		if (!optional.isPresent())
+		{
+			relationPermissions = RelationPermissions.builder().provider(provider)
+				.subscriber(subscriber).build();
+		}
+		else
+		{
+			relationPermissions = optional.get();
+		}
+		relationPermissions.getPermissions().add(permission);
+		relationPermissionsRepository.save(relationPermissions);
 	}
 
 	@Override
-	public List<RelationPermissions> find(Users provider, Users subscriber)
+	public Optional<RelationPermissions> find(Users provider, Users subscriber)
 	{
-		return relationPermissionsRepository.find(provider, subscriber);
+		return relationPermissionsRepository.findByProviderAndSubscriber(provider, subscriber);
 	}
 
-	@Override
-	public List<RelationPermissions> find(Users provider, Users subscriber, Permissions permission)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
-	public RelationPermissions findRelationPermissions(Users provider, Users subscriber)
+	public boolean havePermission(Users provider, Users subscriber, Permissions permission)
 	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public RelationPermissions findRelationPermissions(Users provider, Users subscriber,
-		Permissions permission)
-	{
-		// TODO Auto-generated method stub
-		return null;
+		Optional<RelationPermissions> optional = relationPermissionsRepository.findByProviderAndSubscriber(provider,
+			subscriber);
+		if (optional.isPresent())
+		{
+			return optional.get().getPermissions().contains(permission);
+		}
+		return false;
 	}
 
 	@Override
 	public void removeAllPermissions(Users provider, Users subscriber)
 	{
-		// TODO Auto-generated method stub
-
+		Optional<RelationPermissions> optional = relationPermissionsRepository.findByProviderAndSubscriber(provider,
+			subscriber);
+		RelationPermissions relationPermissions;
+		if (optional.isPresent())
+		{
+			relationPermissions = optional.get();
+			relationPermissions.getPermissions().clear();
+		}
 	}
 
 	@Override
 	public void removePermission(Users provider, Users subscriber, Permissions permission)
 	{
-		// TODO Auto-generated method stub
-
+		Optional<RelationPermissions> optional = relationPermissionsRepository.findByProviderAndSubscriber(provider,
+			subscriber);
+		RelationPermissions relationPermissions;
+		if (optional.isPresent())
+		{
+			relationPermissions = optional.get();
+			relationPermissions.getPermissions().remove(permission);
+		}
 	}
 
 }

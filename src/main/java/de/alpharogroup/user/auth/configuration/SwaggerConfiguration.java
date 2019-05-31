@@ -30,7 +30,8 @@ public class SwaggerConfiguration
 
 	private ApiInfo metaData()
 	{
-		return new ApiInfo("User Auth REST API", "REST API for user authorisation and authentication", "v1", "",
+		return new ApiInfo("User Auth REST API",
+			"REST API for user authorisation and authentication", "v1", "",
 			new Contact("user-auth org.", "www.foo-gamble.com", ""), "", "",
 			Collections.emptyList());
 	}

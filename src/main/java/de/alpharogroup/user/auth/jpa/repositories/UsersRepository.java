@@ -1,28 +1,24 @@
 package de.alpharogroup.user.auth.jpa.repositories;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import de.alpharogroup.user.auth.jpa.entities.Roles;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 
 @Repository
-public interface UsersRepository extends JpaRepository<Users, Long> {
-
-	Users findByUsername(String username);
+public interface UsersRepository extends JpaRepository<Users, Long>
+{
 
 	/**
-	 * Find roles from the given {@link Users}.
+	 * Checks if an {@link Users} object exists with the given user name
 	 *
-	 * @param user
-	 *            the user
-	 * @return the list of found {@link Roles} from the given {@link Users}.
+	 * @param username
+	 *            the user name
+	 * @return true if a {@link Users} object exists with the given user name
 	 */
-	@Query("select u.roles from Users u where u=:user")
-	List<Roles> findRolesFromUser(final Users user);
+	boolean existsByUsername(final String username);
 
 	/**
 	 * Find {@link Users} object from the given user name.
@@ -31,16 +27,6 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 	 *            the user name
 	 * @return the found {@link Users} object
 	 */
-	Users findUserWithUsername(final String username);
+	Optional<Users> findByUsername(final String username);
 
-	/**
-	 * Checks if the given {@link Users} object is in the given {@link Roles} object.
-	 *
-	 * @param user
-	 *            the user
-	 * @param role
-	 *            the role
-	 * @return true, if successful
-	 */
-	boolean isInRole(final Users user, final Roles role);
 }

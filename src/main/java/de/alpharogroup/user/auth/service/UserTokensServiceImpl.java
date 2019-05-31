@@ -1,9 +1,11 @@
 package de.alpharogroup.user.auth.service;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import de.alpharogroup.random.RandomExtensions;
 import de.alpharogroup.user.auth.jpa.entities.UserTokens;
 import de.alpharogroup.user.auth.jpa.repositories.UserTokensRepository;
 import de.alpharogroup.user.auth.service.api.UserTokensService;
@@ -20,37 +22,62 @@ public class UserTokensServiceImpl implements UserTokensService
 	UserTokensRepository userTokensRepository;
 
 	@Override
-	public UserTokens find(String username)
+	public Optional<UserTokens> findByUsername(String username)
 	{
-		return userTokensRepository.find(username);
-	}
-
-	@Override
-	public List<UserTokens> findAll(String username)
-	{
-		// TODO Auto-generated method stub
-		return null;
+		return userTokensRepository.findByUsername(username);
 	}
 
 	@Override
 	public String getAutheticationToken(String username)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return userTokensRepository.getAutheticationToken(username);
 	}
 
 	@Override
 	public boolean isValid(String token)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return userTokensRepository.existsByToken(token);
 	}
 
 	@Override
 	public String newAuthenticationToken(String username)
 	{
-		// TODO Auto-generated method stub
-		return null;
+
+		Optional<UserTokens> optional = findByUsername(username);
+		UserTokens userTokens;
+		if (!optional.isPresent())
+		{
+			userTokens = userTokensRepository.save(newUserTokens(username));
+		}
+		else
+		{
+			userTokens = optional.get();
+		}
+		// check if expired
+		final LocalDateTime now = LocalDateTime.now();
+		if (userTokens.getExpiry().isBefore(now))
+		{
+			// expires in one year
+			final LocalDateTime expiry = LocalDateTime.now().plusMonths(12);
+			// create a token
+			final String token = RandomExtensions.randomToken();
+			userTokens.setExpiry(expiry);
+			userTokens.setToken(token);
+			userTokens = userTokensRepository.save(userTokens);
+		}
+		return userTokens.getToken();
 	}
 
+	/**
+	 * New user tokens.
+	 *
+	 * @param username
+	 *            the username
+	 * @return the user tokens
+	 */
+	private UserTokens newUserTokens(String username)
+	{
+		return UserTokens.builder().expiry(LocalDateTime.now().plusMonths(12)).username(username)
+			.token(RandomExtensions.randomToken()).build();
+	}
 }

@@ -9,12 +9,12 @@ import java.util.List;
 public enum GenderType
 {
 
-	/** The constant for the gender male. */
-	MALE,
 	/** The constant for the gender female. */
 	FEMALE,
 	/** The constant for the gender that represents a company. */
 	INCORPORATION,
+	/** The constant for the gender male. */
+	MALE,
 	/** The constant if the gender is undefined. */
 	UNDEFINED;
 

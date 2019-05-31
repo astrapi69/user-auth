@@ -1,6 +1,6 @@
 package de.alpharogroup.user.auth.service;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -21,45 +21,28 @@ public class RolesServiceImpl implements RolesService
 	RolesRepository rolesRepository;
 
 	@Override
-	public Roles createAndSaveRole(String rolename, String description)
+	public boolean existsByName(String name)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return rolesRepository.existsByName(name);
 	}
 
 	@Override
-	public Roles createAndSaveRole(String rolename, String description,
-		Set<Permissions> permissions)
+	public Optional<Roles> findByName(String name)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return rolesRepository.findByName(name);
 	}
 
 	@Override
-	public boolean exists(String rolename)
+	public Roles save(String name, String description)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return rolesRepository.save(Roles.builder().name(name).description(description).build());
 	}
 
 	@Override
-	public List<Permissions> findAllPermissions(Roles role)
+	public Roles save(String name, String description, Set<Permissions> permissions)
 	{
-		return rolesRepository.findAllPermissions(role);
-	}
-
-	@Override
-	public Roles findRole(String rolename)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Roles> findRoles(String rolename)
-	{
-		// TODO Auto-generated method stub
-		return null;
+		return rolesRepository.save(
+			Roles.builder().name(name).description(description).permissions(permissions).build());
 	}
 
 }

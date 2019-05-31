@@ -64,6 +64,9 @@ public class Roles extends BaseEntity<Integer> implements Cloneable
 	/** A description of the role. */
 	@Column(name = "description", length = 64)
 	String description;
+	/** The name of the role. */
+	@Column(name = "name", length = 64, unique = true)
+	String name;
 	/** The permissions of the role. */
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -71,9 +74,6 @@ public class Roles extends BaseEntity<Integer> implements Cloneable
 			@JoinColumn(name = "role_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "permission_id", referencedColumnName = "id") })
 	Set<Permissions> permissions = new HashSet<>();
-	/** The name of the role. */
-	@Column(name = "name", length = 64, unique = true)
-	String name;
 
 	/**
 	 * Adds the given permission to this {@link Roles} object

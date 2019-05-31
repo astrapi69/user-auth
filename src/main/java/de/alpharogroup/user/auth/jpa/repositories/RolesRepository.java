@@ -1,41 +1,31 @@
 package de.alpharogroup.user.auth.jpa.repositories;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import de.alpharogroup.user.auth.jpa.entities.Permissions;
 import de.alpharogroup.user.auth.jpa.entities.Roles;
 
 @Repository
-public interface RolesRepository extends JpaRepository<Roles, Integer> {
+public interface RolesRepository extends JpaRepository<Roles, Integer>
+{
 
 	/**
-	 * Find all {@link Permissions} objects from the given {@link Roles} object.
+	 * Checks if an {@link Roles} object exists with the given role name.
 	 *
-	 * @param role
-	 *            the given {@link Roles} object
-	 * @return 's a list with all {@link Permissions} objects from the given {@link Roles} object.
-	 */
-	List<Permissions> findAllPermissions(Roles role);
-
-	/**
-	 * Find the {@link Roles} object with the given role name. If it does'nt exists it returns null.
-	 *
-	 * @param rolename
+	 * @param name
 	 *            the role name
-	 * @return the found {@link Roles} object or if it does'nt exists it returns null.
+	 * @return true if a {@link Roles} object exists with the given role name
 	 */
-	Roles findRole(final String rolename);
+	boolean existsByName(final String name);
 
 	/**
-	 * Find the {@link Roles} objects with the given role name.
+	 * Find the {@link Roles} object with the given role name.
 	 *
-	 * @param rolename
-	 *            the rolename
-	 * @return the found {@link Roles} objects
+	 * @param name
+	 *            the role name
+	 * @return an optional with the entry if found
 	 */
-	List<Roles> findRoles(final String rolename);
-
+	Optional<Roles> findByName(final String name);
 }

@@ -56,12 +56,12 @@ public class UserTokens extends BaseEntity<Long> implements Cloneable
 {
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
-	/** The user name. */
-	@Column(name = "username", length = 256, unique = true)
-	String username;
+	/** The expiration date. */
+	LocalDateTime expiry;
 	/** The token for the user. */
 	@Column(name = "token", length = 128, unique = true)
 	String token;
-	/** The expiration date. */
-	LocalDateTime expiry;
+	/** The user name. */
+	@Column(name = "username", length = 256, unique = true)
+	String username;
 }

@@ -6,14 +6,18 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Optional;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
 import de.alpharogroup.auth.beans.AuthenticationResult;
 import de.alpharogroup.auth.enums.AuthenticationErrors;
+import de.alpharogroup.collections.set.SetFactory;
 import de.alpharogroup.crypto.pw.PasswordEncryptor;
 import de.alpharogroup.user.auth.jpa.entities.Users;
+import lombok.NonNull;
 
 public interface AuthenticationsService extends Serializable
 {
@@ -28,25 +32,30 @@ public interface AuthenticationsService extends Serializable
 	 * @return the resulted {@link AuthenticationResult} object
 	 */
 	default public AuthenticationResult<Users, AuthenticationErrors> authenticate(
-		final String emailOrUsername, final String password)
+		final @NonNull String emailOrUsername, final @NonNull String password)
 	{
-		final AuthenticationResult<Users, AuthenticationErrors> authenticationResult = new AuthenticationResult<>();
-		final UsersService userManagementBusinessService = getUsersService();
-		// Check if username exists.
-		final boolean usernameExists = userManagementBusinessService
-			.existsUserWithUsername(emailOrUsername);
-		if (usernameExists)
+
+		Optional<Users> byUsername = getUsersService().findByUsername(emailOrUsername);
+		if (byUsername.isPresent())
 		{
-			final Users user = userManagementBusinessService.findByUsername(emailOrUsername);
-			return authorize(user, password, authenticationResult);
+			final Users user = byUsername.get();
+			return authorize(user, password);
 		}
+		final AuthenticationResult<Users, AuthenticationErrors> authenticationResult = new AuthenticationResult<>();
+
+		AuthenticationResult.<Users, AuthenticationErrors> builder()
+			.validationErrors(
+				SetFactory.newHashSet(AuthenticationErrors.EMAIL_OR_USERNAME_DOES_NOT_EXIST))
+			.build();
 		// set validation errors
 		authenticationResult.getValidationErrors()
 			.add(AuthenticationErrors.EMAIL_OR_USERNAME_DOES_NOT_EXIST);
 
-		return authenticationResult;
+		return AuthenticationResult.<Users, AuthenticationErrors> builder()
+			.validationErrors(
+				SetFactory.newHashSet(AuthenticationErrors.EMAIL_OR_USERNAME_DOES_NOT_EXIST))
+			.build();
 	}
-
 
 	/**
 	 * Authorize given Users object.
@@ -59,10 +68,12 @@ public interface AuthenticationsService extends Serializable
 	 *            the authentication result
 	 * @return the authentication result
 	 */
-	default public AuthenticationResult<Users, AuthenticationErrors> authorize(final Users user,
-		final String password,
-		final AuthenticationResult<Users, AuthenticationErrors> authenticationResult)
+	default public AuthenticationResult<Users, AuthenticationErrors> authorize(
+		final @NonNull Users user, final @NonNull String password)
 	{
+		final AuthenticationResult<Users, AuthenticationErrors> authenticationResult = AuthenticationResult
+			.<Users, AuthenticationErrors> builder().validationErrors(SetFactory.newHashSet())
+			.build();
 		if (user != null && user.isActive())
 		{
 			String hashedPassword = "";

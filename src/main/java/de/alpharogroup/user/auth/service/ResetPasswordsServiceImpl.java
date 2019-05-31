@@ -1,5 +1,7 @@
 package de.alpharogroup.user.auth.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import de.alpharogroup.user.auth.jpa.entities.ResetPasswords;
@@ -19,15 +21,16 @@ public class ResetPasswordsServiceImpl implements ResetPasswordsService
 	ResetPasswordsRepository resetPasswordsRepository;
 
 	@Override
-	public ResetPasswords findResetPassword(Users user)
+	public Optional<ResetPasswords> findByUser(Users user)
 	{
-		return resetPasswordsRepository.findResetPassword(user);
+		return resetPasswordsRepository.findByUser(user);
 	}
 
 	@Override
-	public ResetPasswords findResetPassword(Users user, String generatedPassword)
+	public Optional<ResetPasswords> findByUserAndGeneratedPassword(Users user,
+		String generatedPassword)
 	{
-		return resetPasswordsRepository.findResetPassword(user, generatedPassword);
+		return resetPasswordsRepository.findByUserAndGeneratedPassword(user, generatedPassword);
 	}
 
 }

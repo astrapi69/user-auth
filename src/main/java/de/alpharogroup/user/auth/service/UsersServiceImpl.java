@@ -1,6 +1,6 @@
 package de.alpharogroup.user.auth.service;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -10,6 +10,7 @@ import de.alpharogroup.user.auth.jpa.repositories.UsersRepository;
 import de.alpharogroup.user.auth.service.api.UsersService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 
 @Service
@@ -24,30 +25,16 @@ public class UsersServiceImpl implements UsersService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean existsUserWithUsername(final String username)
+	public boolean existsByUsername(final @NonNull String username)
 	{
-		final Users users = findByUsername(username);
-		if (users != null)
-		{
-			return true;
-		}
-		return false;
+		return usersRepository.existsByUsername(username);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Roles> findRolesFromUser(final Users user)
-	{
-		return usersRepository.findRolesFromUser(user);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Users findByUsername(final String username)
+	public Optional<Users> findByUsername(final @NonNull String username)
 	{
 		return usersRepository.findByUsername(username);
 	}
@@ -56,14 +43,9 @@ public class UsersServiceImpl implements UsersService
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isInRole(final Users user, final Roles role)
+	public boolean isInRole(final @NonNull Users user, final @NonNull Roles role)
 	{
-		final List<Roles> roles = findRolesFromUser(user);
-		if (null != roles && !roles.isEmpty() && roles.contains(role))
-		{
-			return true;
-		}
-		return false;
+		return user.getRoles().contains(role);
 	}
 
 }
