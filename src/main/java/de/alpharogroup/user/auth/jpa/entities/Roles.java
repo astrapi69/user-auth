@@ -27,13 +27,7 @@ package de.alpharogroup.user.auth.jpa.entities;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import de.alpharogroup.db.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -49,7 +43,10 @@ import lombok.experimental.FieldDefaults;
  * The entity class {@link Roles} is keeping the information for the user roles.
  */
 @Entity
-@Table(name = "roles")
+@Table(name = Roles.TABLE_NAME, uniqueConstraints = {
+		@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + Roles.TABLE_NAME
+			+ BaseEntity.UNDERSCORE
+			+ Roles.COLUMN_NAME_NAME, columnNames = { Roles.COLUMN_NAME_NAME }) })
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -59,20 +56,22 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Roles extends BaseEntity<Integer> implements Cloneable
 {
+	static final String TABLE_NAME = "roles";
+	static final String COLUMN_NAME_NAME = "name";
 	/** The serial Version UID. */
 	private static final long serialVersionUID = 1L;
 	/** A description of the role. */
 	@Column(name = "description", length = 64)
 	String description;
 	/** The name of the role. */
-	@Column(name = "name", length = 64, unique = true)
+	@Column(name = COLUMN_NAME_NAME, length = 64)
 	String name;
 	/** The permissions of the role. */
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "role_permissions", joinColumns = {
-			@JoinColumn(name = "role_id", referencedColumnName = "id") }, inverseJoinColumns = {
-					@JoinColumn(name = "permission_id", referencedColumnName = "id") })
+			@JoinColumn(name = "role_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_role_permissions_role_id")) }, inverseJoinColumns = {
+					@JoinColumn(name = "permission_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_role_permissions_permission_id")) })
 	Set<Permissions> permissions = new HashSet<>();
 
 	/**

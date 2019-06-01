@@ -25,7 +25,8 @@ public interface RelationPermissionsRepository extends JpaRepository<RelationPer
 	 *            the subscriber
 	 * @return an optional with the entry if found
 	 */
-	Optional<RelationPermissions> findByProviderAndSubscriber(final Users provider, final Users subscriber);
+	Optional<RelationPermissions> findByProviderAndSubscriber(final Users provider,
+		final Users subscriber);
 
 	/**
 	 * Finds the RelationPermissions object from the given permissions the given provider and the
@@ -41,8 +42,8 @@ public interface RelationPermissionsRepository extends JpaRepository<RelationPer
 	 */
 	@Transactional
 	@Query("select rp from RelationPermissions rp where rp.provider = :provider and rp.subscriber = :subscriber and :permission in (rp.permissions)")
-	Optional<RelationPermissions> findByProviderAndSubscriberAndPermission(@Param("provider") final Users provider,
-																		   @Param("subscriber") final Users subscriber,
-																		   @Param("permission") Permissions permission);
+	Optional<RelationPermissions> findByProviderAndSubscriberAndPermission(
+		@Param("provider") final Users provider, @Param("subscriber") final Users subscriber,
+		@Param("permission") Permissions permission);
 
 }

@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import de.alpharogroup.db.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -44,7 +45,13 @@ import lombok.experimental.FieldDefaults;
  * The entity class {@link UserTokens} is keeping the information for the token of users.
  */
 @Entity
-@Table(name = "user_tokens")
+@Table(name = UserTokens.TABLE_NAME, uniqueConstraints = {
+		@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + UserTokens.TABLE_NAME
+			+ BaseEntity.UNDERSCORE
+			+ UserTokens.COLUMN_NAME_TOKEN, columnNames = { UserTokens.COLUMN_NAME_TOKEN }),
+		@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + UserTokens.TABLE_NAME
+			+ BaseEntity.UNDERSCORE
+			+ UserTokens.COLUMN_NAME_USERNAME, columnNames = { UserTokens.COLUMN_NAME_USERNAME }) })
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -54,14 +61,18 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserTokens extends BaseEntity<Long> implements Cloneable
 {
+
+	static final String TABLE_NAME = "user_tokens";
+	static final String COLUMN_NAME_TOKEN = "token";
+	static final String COLUMN_NAME_USERNAME = "username";
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
 	/** The expiration date. */
 	LocalDateTime expiry;
 	/** The token for the user. */
-	@Column(name = "token", length = 128, unique = true)
+	@Column(name = "token", length = 128)
 	String token;
 	/** The user name. */
-	@Column(name = "username", length = 256, unique = true)
+	@Column(name = COLUMN_NAME_USERNAME, length = 256)
 	String username;
 }

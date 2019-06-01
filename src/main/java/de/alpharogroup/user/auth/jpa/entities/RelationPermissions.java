@@ -54,7 +54,7 @@ import lombok.experimental.FieldDefaults;
  * specified permission have to be added in the set of permission.
  */
 @Entity
-@Table(name = "relation_permissions")
+@Table(name = RelationPermissions.TABLE_NAME)
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -64,21 +64,23 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RelationPermissions extends BaseEntity<Long> implements Cloneable
 {
+
+	static final String TABLE_NAME = "relation_permissions";
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
 	/** The permissions of the role. */
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_relation_permissions", joinColumns = {
-			@JoinColumn(name = "user_relation_permission_id", referencedColumnName = "id") }, inverseJoinColumns = {
-					@JoinColumn(name = "permission_id", referencedColumnName = "id") })
+			@JoinColumn(name = "user_relation_permission_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_relation_permissions_user_relation_permission_id")) }, inverseJoinColumns = {
+					@JoinColumn(name = "permission_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_relation_permissions_permission_id")) })
 	Set<Permissions> permissions = new HashSet<>();
 	/** The provider of the permissions. */
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "provider_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_USER_RELATION_PERMISSIONS_PROVIDER_ID"))
+	@JoinColumn(name = "provider_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_relation_permissions_provider_id"))
 	Users provider;
 	/** The subscriber of the permissions. */
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "subscriber_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_USER_RELATION_PERMISSIONS_SUBSCRIBER_ID"))
+	@JoinColumn(name = "subscriber_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_relation_permissions_subscriber_id"))
 	Users subscriber;
 }

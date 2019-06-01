@@ -49,7 +49,7 @@ import lombok.experimental.FieldDefaults;
  * a user. Data will be inserted when a user forgets his password and enter his data in the form.
  */
 @Entity
-@Table(name = "reset_passwords")
+@Table(name = ResetPasswords.TABLE_NAME)
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -59,6 +59,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResetPasswords extends BaseEntity<Long> implements Cloneable
 {
+	static final String TABLE_NAME = "reset_passwords";
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
 	/** The date which this data expire */
@@ -72,6 +73,6 @@ public class ResetPasswords extends BaseEntity<Long> implements Cloneable
 	LocalDateTime starttime;
 	/** The user attribute that references to the Entity class {@link Users} */
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_RESET_PASSWORDS_USER_ID"))
+	@JoinColumn(name = "user_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_reset_passwords_user_id"))
 	Users user;
 }

@@ -27,13 +27,7 @@ package de.alpharogroup.user.auth.jpa.entities;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import de.alpharogroup.db.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -49,7 +43,10 @@ import lombok.experimental.FieldDefaults;
  * The entity class {@link Users} is keeping the information for the users from the application.
  */
 @Entity
-@Table(name = "users")
+@Table(name = Users.TABLE_NAME, uniqueConstraints = {
+		@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + Users.TABLE_NAME
+			+ BaseEntity.UNDERSCORE
+			+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.COLUMN_NAME_USERNAME }) })
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -59,6 +56,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Users extends BaseEntity<Long> implements Cloneable
 {
+
+	static final String TABLE_NAME = "users";
+	static final String COLUMN_NAME_USERNAME = "username";
+
 	/** The serial Version UID. */
 	private static final long serialVersionUID = 1L;
 	/** The attribute active, if true the user account is active. */
@@ -74,14 +75,14 @@ public class Users extends BaseEntity<Long> implements Cloneable
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_roles", joinColumns = {
-			@JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = {
-					@JoinColumn(name = "role_id", referencedColumnName = "id") })
+			@JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_roles_user_id")) }, inverseJoinColumns = {
+					@JoinColumn(name = "role_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_roles_role_id")) })
 	Set<Roles> roles = new HashSet<>();
 	/** The salt that is used to compute the hash. */
 	@Column(name = "salt", length = 8)
 	String salt;
 	/** The user name. */
-	@Column(name = "username", length = 256, unique = true)
+	@Column(name = COLUMN_NAME_USERNAME, length = 256)
 	String username;
 
 	/**

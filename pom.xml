@@ -26,9 +26,9 @@
 		<!-- CRYPT-CORE version -->
 		<crypt-core.version>5.8</crypt-core.version>
 		<!-- ENT-API version -->
-		<ent-api.version>1</ent-api.version>
+		<ent-api.version>1.1</ent-api.version>
 		<!-- ENT-CORE version -->
-		<ent-core.version>1.1</ent-core.version>
+		<ent-core.version>1.2.1</ent-core.version>
 		<!-- PG-ENUM-USERTYPE version -->
 		<pg-enum-usertype.version>1</pg-enum-usertype.version>
 		<!-- JOBJ-CONTRACT-VERIFIER version -->

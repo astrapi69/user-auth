@@ -24,8 +24,8 @@ public class RelationPermissionsServiceImpl implements RelationPermissionsServic
 	@Override
 	public void addPermission(Users provider, Users subscriber, Permissions permission)
 	{
-		Optional<RelationPermissions> optional = relationPermissionsRepository.findByProviderAndSubscriber(provider,
-			subscriber);
+		Optional<RelationPermissions> optional = relationPermissionsRepository
+			.findByProviderAndSubscriber(provider, subscriber);
 		RelationPermissions relationPermissions;
 		if (!optional.isPresent())
 		{
@@ -50,8 +50,8 @@ public class RelationPermissionsServiceImpl implements RelationPermissionsServic
 	@Override
 	public boolean havePermission(Users provider, Users subscriber, Permissions permission)
 	{
-		Optional<RelationPermissions> optional = relationPermissionsRepository.findByProviderAndSubscriber(provider,
-			subscriber);
+		Optional<RelationPermissions> optional = relationPermissionsRepository
+			.findByProviderAndSubscriber(provider, subscriber);
 		if (optional.isPresent())
 		{
 			return optional.get().getPermissions().contains(permission);
@@ -62,8 +62,8 @@ public class RelationPermissionsServiceImpl implements RelationPermissionsServic
 	@Override
 	public void removeAllPermissions(Users provider, Users subscriber)
 	{
-		Optional<RelationPermissions> optional = relationPermissionsRepository.findByProviderAndSubscriber(provider,
-			subscriber);
+		Optional<RelationPermissions> optional = relationPermissionsRepository
+			.findByProviderAndSubscriber(provider, subscriber);
 		RelationPermissions relationPermissions;
 		if (optional.isPresent())
 		{
@@ -75,8 +75,8 @@ public class RelationPermissionsServiceImpl implements RelationPermissionsServic
 	@Override
 	public void removePermission(Users provider, Users subscriber, Permissions permission)
 	{
-		Optional<RelationPermissions> optional = relationPermissionsRepository.findByProviderAndSubscriber(provider,
-			subscriber);
+		Optional<RelationPermissions> optional = relationPermissionsRepository
+			.findByProviderAndSubscriber(provider, subscriber);
 		RelationPermissions relationPermissions;
 		if (optional.isPresent())
 		{

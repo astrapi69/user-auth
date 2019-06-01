@@ -8,9 +8,9 @@ create table permissions
     shortcut    varchar(10),
     constraint permissions_pkey
         primary key (id),
-    constraint uk_pnvtwliis6p05pn6i3ndjrqt2
+    constraint uk_permissions_name
         unique (name),
-    constraint uk_g2rmf7gqfiy4nnpgn5dvm93o2
+    constraint uk_permissions_shortcut
         unique (shortcut)
 );
 
@@ -21,7 +21,7 @@ create table roles
     name        varchar(64),
     constraint roles_pkey
         primary key (id),
-    constraint uk_ofx66keruapi6vyqpv6f2or37
+    constraint uk_roles_name
         unique (name)
 );
 
@@ -31,9 +31,9 @@ create table role_permissions
     permission_id integer not null,
     constraint role_permissions_pkey
         primary key (role_id, permission_id),
-    constraint fkegdk29eiy7mdtefy5c7eirr6e
+    constraint fk_role_permissions_permission_id
         foreign key (permission_id) references permissions,
-    constraint fkn5fotdgk8d1xvo8nav9uv3muc
+    constraint fk_role_permissions_role_id
         foreign key (role_id) references roles
 );
 
@@ -45,9 +45,9 @@ create table user_tokens
     username varchar(256),
     constraint user_tokens_pkey
         primary key (id),
-    constraint uk_fvl6k04x11pern525noiw5k6v
+    constraint uk_user_tokens_token
         unique (token),
-    constraint uk_97k2k0b1p7rph9rbpr6um0ltw
+    constraint uk_user_tokens_username
         unique (username)
 );
 
@@ -61,7 +61,7 @@ create table users
     username varchar(256),
     constraint users_pkey
         primary key (id),
-    constraint uk_r43af9ap4edm43mmtq01oddj6
+    constraint uk_users_username
         unique (username)
 );
 
@@ -97,9 +97,9 @@ create table user_relation_permissions
     permission_id               integer not null,
     constraint user_relation_permissions_pkey
         primary key (user_relation_permission_id, permission_id),
-    constraint fkqd0xlwl87en0dd3og131b7mxg
+    constraint fk_user_relation_permissions_permission_id
         foreign key (permission_id) references permissions,
-    constraint fknwsjvj80u1boqvqocf2f6m7v9
+    constraint fk_user_relation_permissions_user_relation_permission_id
         foreign key (user_relation_permission_id) references relation_permissions
 );
 
@@ -109,9 +109,9 @@ create table user_roles
     role_id integer not null,
     constraint user_roles_pkey
         primary key (user_id, role_id),
-    constraint fkh8ciramu9cc9q3qcqiv4ue8a6
+    constraint fk_user_roles_role_id
         foreign key (role_id) references roles,
-    constraint fkhfh9dx7w3ubf1co1vdev94g3f
+    constraint fk_user_roles_user_id
         foreign key (user_id) references users
 );
 

@@ -27,6 +27,7 @@ package de.alpharogroup.user.auth.jpa.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import de.alpharogroup.db.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -43,7 +44,13 @@ import lombok.experimental.FieldDefaults;
  * roles.
  */
 @Entity
-@Table(name = "permissions")
+@Table(name = Permissions.TABLE_NAME, uniqueConstraints = {
+		@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + Permissions.TABLE_NAME
+			+ BaseEntity.UNDERSCORE
+			+ Permissions.COLUMN_NAME_NAME, columnNames = { Permissions.COLUMN_NAME_NAME }),
+		@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + Permissions.TABLE_NAME
+			+ BaseEntity.UNDERSCORE + Permissions.COLUMN_NAME_SHORTCUT, columnNames = {
+					Permissions.COLUMN_NAME_SHORTCUT }) })
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -53,15 +60,20 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Permissions extends BaseEntity<Integer> implements Cloneable
 {
+
+	static final String TABLE_NAME = "permissions";
+	static final String COLUMN_NAME_NAME = "name";
+	static final String COLUMN_NAME_SHORTCUT = "shortcut";
+
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
 	/** A description for the permission. */
 	@Column(name = "description", length = 64)
 	String description;
 	/** The name from the permission. */
-	@Column(name = "name", length = 64, unique = true)
+	@Column(name = COLUMN_NAME_NAME, length = 64)
 	String name;
 	/** A shortcut for the permission. */
-	@Column(name = "shortcut", length = 10, unique = true)
+	@Column(name = COLUMN_NAME_SHORTCUT, length = 10)
 	String shortcut;
 }
