@@ -16,34 +16,10 @@ public class ApplicationProperties
 {
 
 	String dir;
-
 	String name;
-	@NestedConfigurationProperty
-	final Db db = new Db();
+	String dbName;
+	String dbHost;
+	int dbPort;
+	String dbUrlPrefix;
 
-	@Getter
-	@Setter
-	static class Db
-	{
-		String name;
-		String host;
-		@NestedConfigurationProperty
-		final Postgres postgres = new Postgres();
-
-		@Getter
-		@Setter
-		static class Postgres
-		{
-			@NestedConfigurationProperty
-			final Url url = new Url();
-
-			@Getter
-			@Setter
-			static class Url
-			{
-				String prefix;
-				int port;
-			}
-		}
-	}
 }
