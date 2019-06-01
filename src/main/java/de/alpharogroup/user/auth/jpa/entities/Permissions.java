@@ -24,10 +24,7 @@
  */
 package de.alpharogroup.user.auth.jpa.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 import de.alpharogroup.db.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -44,7 +41,10 @@ import lombok.experimental.FieldDefaults;
  * roles.
  */
 @Entity
-@Table(name = Permissions.TABLE_NAME, uniqueConstraints = {
+@Table(name = Permissions.TABLE_NAME, indexes = { @Index(name = BaseEntity.INDEX_PREFIX + Permissions.TABLE_NAME
+		+ BaseEntity.UNDERSCORE
+		+ Permissions.COLUMN_NAME_NAME + BaseEntity.UNDERSCORE + Permissions.COLUMN_NAME_SHORTCUT, columnList = Permissions.COLUMN_NAME_NAME + "," + Permissions.COLUMN_NAME_SHORTCUT, unique = true) },
+		uniqueConstraints = {
 		@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + Permissions.TABLE_NAME
 			+ BaseEntity.UNDERSCORE
 			+ Permissions.COLUMN_NAME_NAME, columnNames = { Permissions.COLUMN_NAME_NAME }),

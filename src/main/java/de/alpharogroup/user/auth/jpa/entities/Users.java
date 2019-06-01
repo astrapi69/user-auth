@@ -43,7 +43,10 @@ import lombok.experimental.FieldDefaults;
  * The entity class {@link Users} is keeping the information for the users from the application.
  */
 @Entity
-@Table(name = Users.TABLE_NAME, uniqueConstraints = {
+@Table(name = Users.TABLE_NAME, indexes = { @Index(name = BaseEntity.INDEX_PREFIX + Users.TABLE_NAME
+		+ BaseEntity.UNDERSCORE
+		+ Users.COLUMN_NAME_USERNAME, columnList = Users.COLUMN_NAME_USERNAME, unique = true) }
+		, uniqueConstraints = {
 		@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + Users.TABLE_NAME
 			+ BaseEntity.UNDERSCORE
 			+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.COLUMN_NAME_USERNAME }) })

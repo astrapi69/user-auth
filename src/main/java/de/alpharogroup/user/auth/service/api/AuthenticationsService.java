@@ -38,19 +38,9 @@ public interface AuthenticationsService extends Serializable
 		Optional<Users> byUsername = getUsersService().findByUsername(emailOrUsername);
 		if (byUsername.isPresent())
 		{
-			final Users user = byUsername.get();
-			return authorize(user, password);
+			return authorize(byUsername.get(), password);
 		}
-		final AuthenticationResult<Users, AuthenticationErrors> authenticationResult = new AuthenticationResult<>();
-
-		AuthenticationResult.<Users, AuthenticationErrors> builder()
-			.validationErrors(
-				SetFactory.newHashSet(AuthenticationErrors.EMAIL_OR_USERNAME_DOES_NOT_EXIST))
-			.build();
 		// set validation errors
-		authenticationResult.getValidationErrors()
-			.add(AuthenticationErrors.EMAIL_OR_USERNAME_DOES_NOT_EXIST);
-
 		return AuthenticationResult.<Users, AuthenticationErrors> builder()
 			.validationErrors(
 				SetFactory.newHashSet(AuthenticationErrors.EMAIL_OR_USERNAME_DOES_NOT_EXIST))
@@ -64,8 +54,6 @@ public interface AuthenticationsService extends Serializable
 	 *            the user
 	 * @param password
 	 *            the password
-	 * @param authenticationResult
-	 *            the authentication result
 	 * @return the authentication result
 	 */
 	default public AuthenticationResult<Users, AuthenticationErrors> authorize(
