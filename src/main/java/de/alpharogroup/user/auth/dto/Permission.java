@@ -1,5 +1,6 @@
 package de.alpharogroup.user.auth.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
@@ -15,12 +17,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Permission
 {
 	/** A description for the permission. */
-	private String description;
+	String description;
 	/** The name from the permission. */
-	private String permissionName;
+	String permissionName;
 	/** A shortcut for the permission. */
-	private String shortcut;
+	String shortcut;
 }

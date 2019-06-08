@@ -1,7 +1,8 @@
 package de.alpharogroup.user.auth.dto;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+
+import org.springframework.http.HttpStatus;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,13 +22,14 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RelationPermission
+public class ThrowableReport
 {
-	/** The permissions of the role. */
-	@Builder.Default
-	Set<Permission> permissions = new HashSet<>();
-	/** The provider of the permissions. */
-	User provider;
-	/** The subscriber of the permissions. */
-	User subscriber;
+
+	private String message;
+
+	private LocalDateTime occurred;
+
+	private String requestDescription;
+
+	private HttpStatus status;
 }

@@ -26,8 +26,11 @@ import lombok.experimental.FieldDefaults;
 public class ApplicationConfiguration implements WebMvcConfigurer
 {
 
+	public static final String REST_VERSION = "/v1";
+
 	@SuppressWarnings("unused")
 	Environment env;
+
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry)
@@ -39,7 +42,6 @@ public class ApplicationConfiguration implements WebMvcConfigurer
 	@Bean
 	public MessageSource messageSource()
 	{
-
 		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 		messageSource.setBasenames("messages/errors");
 		messageSource.setDefaultEncoding("UTF-8");

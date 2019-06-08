@@ -2,6 +2,7 @@ package de.alpharogroup.user.auth.dto;
 
 import java.time.LocalDateTime;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
@@ -17,14 +19,15 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResetPassword
 {
 	/** The date which this data expire. */
-	private LocalDateTime expiryDate;
+	LocalDateTime expiryDate;
 	/** mapping */
-	private String generatedPassword;
+	String generatedPassword;
 	/** The time that the user send the form. */
-	private LocalDateTime starttime;
+	LocalDateTime starttime;
 	/** The user attribute that references to the domain class {@link User}. */
-	private User user;
+	User user;
 }

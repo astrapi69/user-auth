@@ -65,9 +65,9 @@ import lombok.experimental.FieldDefaults;
 public class RelationPermissions extends BaseEntity<Long> implements Cloneable
 {
 
-	static final String TABLE_NAME = "relation_permissions";
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
+	static final String TABLE_NAME = "relation_permissions";
 	/** The permissions of the role. */
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)

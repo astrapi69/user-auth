@@ -1,12 +1,7 @@
 package de.alpharogroup.user.auth.service;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import de.alpharogroup.user.auth.jpa.entities.Users;
 import de.alpharogroup.user.auth.jpa.repositories.UsersRepository;
+import de.alpharogroup.user.auth.principal.UsersPrincipal;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -31,16 +27,12 @@ public class UserDetailsServiceImpl implements UserDetailsService
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username)
 	{
-		Optional<Users> optional = usersRepository.findByUsername(username);
-		if (!optional.isPresent())
+		Optional<Users> optionalUser = usersRepository.findByUsername(username);
+		if (!optionalUser.isPresent())
 		{
 			throw new UsernameNotFoundException(username);
 		}
-		Users user = optional.get();
-		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-		user.getRoles().stream()
-			.forEach(role -> grantedAuthorities.add(new SimpleGrantedAuthority(role.getName())));
-		return new User(user.getUsername(), user.getPw(), grantedAuthorities);
+		return new UsersPrincipal(optionalUser.get());
 	}
 
 }

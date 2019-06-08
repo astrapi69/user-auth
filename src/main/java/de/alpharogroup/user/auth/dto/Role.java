@@ -3,6 +3,7 @@ package de.alpharogroup.user.auth.dto;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -10,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
@@ -18,13 +20,14 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Role
 {
 	/** A description of the role. */
-	private String description;
+	String description;
 	/** The permissions of the role. */
 	@Builder.Default
-	private Set<Permission> permissions = new HashSet<>();
+	Set<Permission> permissions = new HashSet<>();
 	/** The name of the role. */
-	private String rolename;
+	String rolename;
 }

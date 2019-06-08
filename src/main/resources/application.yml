@@ -1,6 +1,16 @@
 # default properties
 server:
-  port: 5050
+  port: 8443
+  ssl:
+    enabled: true
+    key-alias: selfsigned_authuserkeystore
+    key-store-password: f00B4r@gmol.org
+    key-store: classpath:ssl-rest-authusers.pfx
+    key-store-provider: SUN
+    key-store-type: PKCS12
+    key-password: f00B4r@gmol.org
+  http2:
+    enabled: true
 
 app:
   name: user-auth
@@ -12,9 +22,13 @@ app:
 
 spring:  
   datasource:
+    username: postgres
+    password: postgres
     driver-class-name: org.postgresql.Driver
     type: com.zaxxer.hikari.HikariDataSource
     url: ${app.db-url-prefix}${app.db-host}:${app.db-port}/${app.db-name}
+    initialization-mode: never
+
   jpa:
     properties:
       hibernate:
@@ -27,6 +41,8 @@ spring:
       use_sql_comments: true
       generate_statistics: false
 
-
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
 
   

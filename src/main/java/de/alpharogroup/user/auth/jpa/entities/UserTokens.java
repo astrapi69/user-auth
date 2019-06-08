@@ -62,11 +62,11 @@ import lombok.experimental.FieldDefaults;
 public class UserTokens extends BaseEntity<Long> implements Cloneable
 {
 
-	static final String TABLE_NAME = "user_tokens";
 	static final String COLUMN_NAME_TOKEN = "token";
 	static final String COLUMN_NAME_USERNAME = "username";
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
+	static final String TABLE_NAME = "user_tokens";
 	/** The expiration date. */
 	LocalDateTime expiry;
 	/** The token for the user. */

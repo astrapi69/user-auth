@@ -46,7 +46,8 @@ import lombok.experimental.FieldDefaults;
 
 /**
  * The entity class {@link ResetPasswords} is keeping the information for reseting the password from
- * a user. Data will be inserted when a user forgets his password and enter his data in the form.
+ * a user. Data will be inserted occurred a user forgets his password and enter his data in the
+ * form.
  */
 @Entity
 @Table(name = ResetPasswords.TABLE_NAME)
@@ -59,9 +60,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResetPasswords extends BaseEntity<Long> implements Cloneable
 {
-	static final String TABLE_NAME = "reset_passwords";
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
+	static final String TABLE_NAME = "reset_passwords";
 	/** The date which this data expire */
 	@Column(name = "expiry_date")
 	LocalDateTime expiryDate;

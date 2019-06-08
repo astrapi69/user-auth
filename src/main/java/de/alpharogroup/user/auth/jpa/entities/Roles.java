@@ -27,7 +27,15 @@ package de.alpharogroup.user.auth.jpa.entities;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import de.alpharogroup.db.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -56,10 +64,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Roles extends BaseEntity<Integer> implements Cloneable
 {
-	static final String TABLE_NAME = "roles";
 	static final String COLUMN_NAME_NAME = "name";
 	/** The serial Version UID. */
 	private static final long serialVersionUID = 1L;
+	static final String TABLE_NAME = "roles";
 	/** A description of the role. */
 	@Column(name = "description", length = 64)
 	String description;

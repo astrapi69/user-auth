@@ -1,7 +1,6 @@
 package de.alpharogroup.user.auth.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,11 +14,11 @@ import lombok.experimental.FieldDefaults;
 public class ApplicationProperties
 {
 
-	String dir;
-	String name;
-	String dbName;
 	String dbHost;
+	String dbName;
 	int dbPort;
 	String dbUrlPrefix;
+	String dir;
+	String name;
 
 }

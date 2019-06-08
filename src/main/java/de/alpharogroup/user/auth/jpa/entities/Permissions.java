@@ -24,7 +24,11 @@
  */
 package de.alpharogroup.user.auth.jpa.entities;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import de.alpharogroup.db.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -41,16 +45,18 @@ import lombok.experimental.FieldDefaults;
  * roles.
  */
 @Entity
-@Table(name = Permissions.TABLE_NAME, indexes = { @Index(name = BaseEntity.INDEX_PREFIX + Permissions.TABLE_NAME
-		+ BaseEntity.UNDERSCORE
-		+ Permissions.COLUMN_NAME_NAME + BaseEntity.UNDERSCORE + Permissions.COLUMN_NAME_SHORTCUT, columnList = Permissions.COLUMN_NAME_NAME + "," + Permissions.COLUMN_NAME_SHORTCUT, unique = true) },
-		uniqueConstraints = {
-		@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + Permissions.TABLE_NAME
-			+ BaseEntity.UNDERSCORE
-			+ Permissions.COLUMN_NAME_NAME, columnNames = { Permissions.COLUMN_NAME_NAME }),
-		@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + Permissions.TABLE_NAME
-			+ BaseEntity.UNDERSCORE + Permissions.COLUMN_NAME_SHORTCUT, columnNames = {
-					Permissions.COLUMN_NAME_SHORTCUT }) })
+@Table(name = Permissions.TABLE_NAME, indexes = { @Index(name = BaseEntity.INDEX_PREFIX
+	+ Permissions.TABLE_NAME + BaseEntity.UNDERSCORE + Permissions.COLUMN_NAME_NAME
+	+ BaseEntity.UNDERSCORE
+	+ Permissions.COLUMN_NAME_SHORTCUT, columnList = Permissions.COLUMN_NAME_NAME + ","
+		+ Permissions.COLUMN_NAME_SHORTCUT, unique = true) }, uniqueConstraints = {
+				@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX
+					+ Permissions.TABLE_NAME + BaseEntity.UNDERSCORE
+					+ Permissions.COLUMN_NAME_NAME, columnNames = { Permissions.COLUMN_NAME_NAME }),
+				@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX
+					+ Permissions.TABLE_NAME + BaseEntity.UNDERSCORE
+					+ Permissions.COLUMN_NAME_SHORTCUT, columnNames = {
+							Permissions.COLUMN_NAME_SHORTCUT }) })
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -61,12 +67,12 @@ import lombok.experimental.FieldDefaults;
 public class Permissions extends BaseEntity<Integer> implements Cloneable
 {
 
-	static final String TABLE_NAME = "permissions";
 	static final String COLUMN_NAME_NAME = "name";
 	static final String COLUMN_NAME_SHORTCUT = "shortcut";
-
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
+
+	static final String TABLE_NAME = "permissions";
 	/** A description for the permission. */
 	@Column(name = "description", length = 64)
 	String description;
