@@ -1,5 +1,6 @@
 package de.alpharogroup.user.auth.controller;
 
+import de.alpharogroup.user.auth.mapper.UserMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,8 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 
+import java.util.function.Function;
+
 @RestController
 @RequestMapping(ApplicationConfiguration.REST_VERSION + "/auth")
 @AllArgsConstructor
@@ -31,6 +34,8 @@ public class AuthenticationController
 {
 
 	AuthenticationsService authenticationsService;
+
+	UserMapper userMapper;
 
 	/**
 	 * Call this link <a href="https://localhost:8443/v1/auth/signin?username=foo&password=bar"></a>
@@ -50,10 +55,15 @@ public class AuthenticationController
 			.authenticate(emailOrUsername, password);
 		AuthenticationResult<User, AuthenticationErrors> result = AuthenticationResult
 			.<User, AuthenticationErrors> builder()
-			// .user()
+			.user(getMapper().apply(authenticate.getUser()))
 			.validationErrors(authenticate.getValidationErrors()).build();
 		return ResponseEntity.status(result.getValidationErrors().isEmpty()
 			? HttpStatus.OK.value()
 			: HttpStatus.UNAUTHORIZED.value()).body(result);
+	}
+
+	protected Function<Users, User> getMapper() {
+
+		return userMapper::entityToDto;
 	}
 }
