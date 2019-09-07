@@ -23,7 +23,7 @@ public class Permission
 	/** A description for the permission. */
 	String description;
 	/** The name from the permission. */
-	String permissionName;
+	String name;
 	/** A shortcut for the permission. */
 	String shortcut;
 }

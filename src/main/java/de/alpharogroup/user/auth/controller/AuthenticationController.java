@@ -63,7 +63,6 @@ public class AuthenticationController
 	}
 
 	protected Function<Users, User> getMapper() {
-
-		return userMapper::entityToDto;
+		return userMapper::toDto;
 	}
 }

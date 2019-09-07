@@ -29,5 +29,5 @@ public class Role
 	@Builder.Default
 	Set<Permission> permissions = new HashSet<>();
 	/** The name of the role. */
-	String rolename;
+	String name;
 }

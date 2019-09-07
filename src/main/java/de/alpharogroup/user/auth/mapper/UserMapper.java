@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface UserMapper {
 
-    User entityToDto(Users users);
+    User toDto(Users entity);
+
+    Users toEntity(User dto);
 
 }
