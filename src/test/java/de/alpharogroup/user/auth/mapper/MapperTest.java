@@ -36,7 +36,7 @@ public class MapperTest
 	UserTokenMapper userTokenMapper;
 
 	@Test
-	public void entityToDto()
+	public void testMapMethods()
 	{
 		Permissions permissions = Permissions.builder()
 			.description("Permission to view images")
