@@ -1,8 +1,10 @@
 package de.alpharogroup.user.auth.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,6 +24,11 @@ import de.alpharogroup.user.auth.service.UserDetailsServiceImpl;
 @EnableWebSecurity
 public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 {
+
+	@Autowired
+	@Qualifier("authenticationManagerBean")
+	AuthenticationManager authenticationManager;
+
 	@Autowired
 	RestAuthenticationEntryPoint authenticationEntryPoint;
 
@@ -37,6 +44,11 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Autowired
 	UserDetailsServiceImpl userDetailsService;
 
+	@Override
+	@Bean
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
 	@Bean
 	public DaoAuthenticationProvider authenticationProvider()
 	{
@@ -49,7 +61,8 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception
 	{
-		auth.authenticationProvider(authenticationProvider());
+		auth.parentAuthenticationManager(authenticationManagerBean())
+			.userDetailsService(userDetailsService);
 	}
 
 	@Override

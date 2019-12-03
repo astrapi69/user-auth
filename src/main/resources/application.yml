@@ -45,4 +45,6 @@ spring:
     enabled: true
     baseline-on-migrate: true
 
-  
+
+jwt:
+  secret: topsecret
