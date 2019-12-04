@@ -1,6 +1,7 @@
 package de.alpharogroup.user.auth.jpa.repositories;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ import de.alpharogroup.user.auth.jpa.entities.RelationPermissions;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 
 @Repository
-public interface RelationPermissionsRepository extends JpaRepository<RelationPermissions, Long>
+public interface RelationPermissionsRepository extends JpaRepository<RelationPermissions, UUID>
 {
 
 	/**

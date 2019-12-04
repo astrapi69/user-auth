@@ -1,6 +1,7 @@
 package de.alpharogroup.user.auth.jpa.repositories;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 
 @Repository
-public interface UsersRepository extends JpaRepository<Users, Long>
+public interface UsersRepository extends JpaRepository<Users, UUID>
 {
 
 	/**

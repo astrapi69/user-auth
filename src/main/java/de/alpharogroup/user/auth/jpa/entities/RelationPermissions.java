@@ -38,6 +38,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import de.alpharogroup.db.entity.BaseEntity;
+import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,7 +63,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RelationPermissions extends BaseEntity<Long> implements Cloneable
+public class RelationPermissions extends UUIDEntity implements Cloneable
 {
 
 	/** The serial Version UID */

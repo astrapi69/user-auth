@@ -32,6 +32,8 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import de.alpharogroup.db.entity.BaseEntity;
+import de.alpharogroup.db.entity.enums.DatabasePrefix;
+import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,11 +48,11 @@ import lombok.experimental.FieldDefaults;
  */
 @Entity
 @Table(name = UserTokens.TABLE_NAME, uniqueConstraints = {
-		@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + UserTokens.TABLE_NAME
-			+ BaseEntity.UNDERSCORE
+		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX + UserTokens.TABLE_NAME
+			+ DatabasePrefix.UNDERSCORE_PREFIX
 			+ UserTokens.COLUMN_NAME_TOKEN, columnNames = { UserTokens.COLUMN_NAME_TOKEN }),
-		@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + UserTokens.TABLE_NAME
-			+ BaseEntity.UNDERSCORE
+		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX + UserTokens.TABLE_NAME
+			+ DatabasePrefix.UNDERSCORE_PREFIX
 			+ UserTokens.COLUMN_NAME_USERNAME, columnNames = { UserTokens.COLUMN_NAME_USERNAME }) })
 @Getter
 @Setter
@@ -59,7 +61,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserTokens extends BaseEntity<Long> implements Cloneable
+public class UserTokens extends UUIDEntity implements Cloneable
 {
 
 	static final String COLUMN_NAME_TOKEN = "token";
@@ -68,9 +70,10 @@ public class UserTokens extends BaseEntity<Long> implements Cloneable
 	private static final long serialVersionUID = 1L;
 	static final String TABLE_NAME = "user_tokens";
 	/** The expiration date. */
+	@Column
 	LocalDateTime expiry;
 	/** The token for the user. */
-	@Column(name = "token", length = 128)
+	@Column(name = COLUMN_NAME_TOKEN, length = 128)
 	String token;
 	/** The user name. */
 	@Column(name = COLUMN_NAME_USERNAME, length = 256)

@@ -1,6 +1,12 @@
 # profile dev properties
+app:
+  db-name: authusers
+  db-host: localhost
+  db-port: 5432
+  db-username: postgres
+  db-password: postgres
 
 spring:  
   datasource:
-    username: postgres
-    password: postgres
+    username: ${app.db-username}
+    password: ${app.db-password}
