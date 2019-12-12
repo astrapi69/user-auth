@@ -38,6 +38,8 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import de.alpharogroup.db.entity.BaseEntity;
+import de.alpharogroup.db.entity.enums.DatabasePrefix;
+import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,8 +54,8 @@ import lombok.experimental.FieldDefaults;
  */
 @Entity
 @Table(name = Roles.TABLE_NAME, uniqueConstraints = {
-		@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + Roles.TABLE_NAME
-			+ BaseEntity.UNDERSCORE
+		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX + Roles.TABLE_NAME
+			+ DatabasePrefix.UNDERSCORE_PREFIX
 			+ Roles.COLUMN_NAME_NAME, columnNames = { Roles.COLUMN_NAME_NAME }) })
 @Getter
 @Setter
@@ -62,14 +64,15 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Roles extends BaseEntity<Integer> implements Cloneable
+public class Roles extends UUIDEntity implements Cloneable
 {
 	static final String COLUMN_NAME_NAME = "name";
+	static final String COLUMN_NAME_DESCRIPTION = "description";
 	/** The serial Version UID. */
 	private static final long serialVersionUID = 1L;
 	static final String TABLE_NAME = "roles";
 	/** A description of the role. */
-	@Column(name = "description", length = 64)
+	@Column(name = COLUMN_NAME_DESCRIPTION, length = 64)
 	String description;
 	/** The name of the role. */
 	@Column(name = COLUMN_NAME_NAME, length = 64)

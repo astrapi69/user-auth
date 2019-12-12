@@ -2,7 +2,7 @@ create sequence hibernate_sequence;
 
 create table permissions
 (
-    id          integer not null,
+    id          uuid not null,
     description varchar(64),
     name        varchar(64),
     shortcut    varchar(10),
@@ -16,7 +16,7 @@ create table permissions
 
 create table roles
 (
-    id          integer not null,
+    id          uuid not null,
     description varchar(64),
     name        varchar(64),
     constraint roles_pkey
@@ -27,8 +27,8 @@ create table roles
 
 create table role_permissions
 (
-    role_id       integer not null,
-    permission_id integer not null,
+    role_id       uuid not null,
+    permission_id uuid not null,
     constraint role_permissions_pkey
         primary key (role_id, permission_id),
     constraint fk_role_permissions_permission_id
@@ -39,7 +39,7 @@ create table role_permissions
 
 create table user_tokens
 (
-    id       bigint not null,
+    id       uuid not null,
     expiry   timestamp,
     token    varchar(128),
     username varchar(256),
@@ -53,7 +53,7 @@ create table user_tokens
 
 create table users
 (
-    id       bigint not null,
+    id       uuid not null,
     active   boolean,
     locked   boolean,
     pw       varchar(1024),
@@ -67,9 +67,9 @@ create table users
 
 create table relation_permissions
 (
-    id            bigint not null,
-    provider_id   bigint,
-    subscriber_id bigint,
+    id            uuid not null,
+    provider_id   uuid,
+    subscriber_id uuid,
     constraint relation_permissions_pkey
         primary key (id),
     constraint fk_user_relation_permissions_provider_id
@@ -80,11 +80,11 @@ create table relation_permissions
 
 create table reset_passwords
 (
-    id                 bigint not null,
+    id                 uuid not null,
     expiry_date        timestamp,
     generated_password varchar(1024),
     starttime          timestamp,
-    user_id            bigint,
+    user_id            uuid,
     constraint reset_passwords_pkey
         primary key (id),
     constraint fk_reset_passwords_user_id
@@ -93,8 +93,8 @@ create table reset_passwords
 
 create table user_relation_permissions
 (
-    user_relation_permission_id bigint  not null,
-    permission_id               integer not null,
+    user_relation_permission_id uuid  not null,
+    permission_id               uuid not null,
     constraint user_relation_permissions_pkey
         primary key (user_relation_permission_id, permission_id),
     constraint fk_user_relation_permissions_permission_id
@@ -105,8 +105,8 @@ create table user_relation_permissions
 
 create table user_roles
 (
-    user_id bigint  not null,
-    role_id integer not null,
+    user_id uuid  not null,
+    role_id uuid not null,
     constraint user_roles_pkey
         primary key (user_id, role_id),
     constraint fk_user_roles_role_id

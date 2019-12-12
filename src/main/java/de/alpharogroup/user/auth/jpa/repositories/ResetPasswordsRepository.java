@@ -2,6 +2,7 @@ package de.alpharogroup.user.auth.jpa.repositories;
 
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ import de.alpharogroup.user.auth.jpa.entities.ResetPasswords;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 
 @Repository
-public interface ResetPasswordsRepository extends JpaRepository<ResetPasswords, Long>
+public interface ResetPasswordsRepository extends JpaRepository<ResetPasswords, UUID>
 {
 
 	/**
