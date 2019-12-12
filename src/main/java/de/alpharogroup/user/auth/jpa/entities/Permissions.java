@@ -31,6 +31,8 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import de.alpharogroup.db.entity.BaseEntity;
+import de.alpharogroup.db.entity.enums.DatabasePrefix;
+import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,16 +47,16 @@ import lombok.experimental.FieldDefaults;
  * roles.
  */
 @Entity
-@Table(name = Permissions.TABLE_NAME, indexes = { @Index(name = BaseEntity.INDEX_PREFIX
-	+ Permissions.TABLE_NAME + BaseEntity.UNDERSCORE + Permissions.COLUMN_NAME_NAME
-	+ BaseEntity.UNDERSCORE
+@Table(name = Permissions.TABLE_NAME, indexes = { @Index(name = DatabasePrefix.INDEX_PREFIX
+	+ Permissions.TABLE_NAME + DatabasePrefix.UNDERSCORE_PREFIX + Permissions.COLUMN_NAME_NAME
+	+ DatabasePrefix.UNDERSCORE_PREFIX
 	+ Permissions.COLUMN_NAME_SHORTCUT, columnList = Permissions.COLUMN_NAME_NAME + ","
 		+ Permissions.COLUMN_NAME_SHORTCUT, unique = true) }, uniqueConstraints = {
-				@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX
-					+ Permissions.TABLE_NAME + BaseEntity.UNDERSCORE
+				@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX
+					+ Permissions.TABLE_NAME + DatabasePrefix.UNDERSCORE_PREFIX
 					+ Permissions.COLUMN_NAME_NAME, columnNames = { Permissions.COLUMN_NAME_NAME }),
-				@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX
-					+ Permissions.TABLE_NAME + BaseEntity.UNDERSCORE
+				@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX
+					+ Permissions.TABLE_NAME + DatabasePrefix.UNDERSCORE_PREFIX
 					+ Permissions.COLUMN_NAME_SHORTCUT, columnNames = {
 							Permissions.COLUMN_NAME_SHORTCUT }) })
 @Getter
@@ -64,17 +66,17 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Permissions extends BaseEntity<Integer> implements Cloneable
+public class Permissions extends UUIDEntity implements Cloneable
 {
-
+	static final String TABLE_NAME = "permissions";
 	static final String COLUMN_NAME_NAME = "name";
 	static final String COLUMN_NAME_SHORTCUT = "shortcut";
+	static final String COLUMN_NAME_DESCRIPTION = "description";
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
 
-	static final String TABLE_NAME = "permissions";
 	/** A description for the permission. */
-	@Column(name = "description", length = 64)
+	@Column(name = COLUMN_NAME_DESCRIPTION, length = 64)
 	String description;
 	/** The name from the permission. */
 	@Column(name = COLUMN_NAME_NAME, length = 64)

@@ -39,6 +39,8 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import de.alpharogroup.db.entity.BaseEntity;
+import de.alpharogroup.db.entity.enums.DatabasePrefix;
+import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,11 +54,11 @@ import lombok.experimental.FieldDefaults;
  * The entity class {@link Users} is keeping the information for the users from the application.
  */
 @Entity
-@Table(name = Users.TABLE_NAME, indexes = { @Index(name = BaseEntity.INDEX_PREFIX + Users.TABLE_NAME
-	+ BaseEntity.UNDERSCORE
+@Table(name = Users.TABLE_NAME, indexes = { @Index(name = DatabasePrefix.INDEX_PREFIX + Users.TABLE_NAME
+	+ DatabasePrefix.UNDERSCORE_PREFIX
 	+ Users.COLUMN_NAME_USERNAME, columnList = Users.COLUMN_NAME_USERNAME, unique = true) }, uniqueConstraints = {
-			@UniqueConstraint(name = BaseEntity.UNIQUE_CONSTRAINT_PREFIX + Users.TABLE_NAME
-				+ BaseEntity.UNDERSCORE
+			@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX + Users.TABLE_NAME
+				+ DatabasePrefix.UNDERSCORE_PREFIX
 				+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.COLUMN_NAME_USERNAME }) })
 @Getter
 @Setter
@@ -65,7 +67,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Users extends BaseEntity<Long> implements Cloneable
+public class Users extends UUIDEntity implements Cloneable
 {
 
 	static final String COLUMN_NAME_USERNAME = "username";
@@ -74,13 +76,13 @@ public class Users extends BaseEntity<Long> implements Cloneable
 
 	static final String TABLE_NAME = "users";
 	/** The attribute active, if true the user account is active. */
-	@Column(name = "active")
+	@Column
 	boolean active;
 	/** A Flag that indicates if the user account is locked or not. */
-	@Column(name = "locked")
+	@Column
 	boolean locked;
 	/** The hash from the password hashed with sha512. */
-	@Column(name = "pw", length = 1024)
+	@Column(length = 1024)
 	String pw;
 	/** The roles of the user. */
 	@Builder.Default
@@ -90,7 +92,7 @@ public class Users extends BaseEntity<Long> implements Cloneable
 					@JoinColumn(name = "role_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_roles_role_id")) })
 	Set<Roles> roles = new HashSet<>();
 	/** The salt that is used to compute the hash. */
-	@Column(name = "salt", length = 8)
+	@Column(length = 8)
 	String salt;
 	/** The user name. */
 	@Column(name = COLUMN_NAME_USERNAME, length = 256)

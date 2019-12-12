@@ -1,6 +1,7 @@
 package de.alpharogroup.user.auth.jpa.repositories;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import de.alpharogroup.user.auth.jpa.entities.UserTokens;
 
 @Repository
-public interface UserTokensRepository extends JpaRepository<UserTokens, Long>
+public interface UserTokensRepository extends JpaRepository<UserTokens, UUID>
 {
 
 	/**

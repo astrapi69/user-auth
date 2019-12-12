@@ -35,6 +35,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import de.alpharogroup.db.entity.BaseEntity;
+import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,7 +59,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResetPasswords extends BaseEntity<Long> implements Cloneable
+public class ResetPasswords extends UUIDEntity implements Cloneable
 {
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
