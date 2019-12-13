@@ -70,7 +70,7 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	{
 		// @formatter:off
 		http.authorizeRequests()
-				.antMatchers("/v1/auth/signin*").permitAll()
+				.antMatchers("/v1/auth/signin*", "/v1/jwt/authenticate").permitAll()
 				.anyRequest().authenticated()
 	            .and().csrf().disable()
 	            .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
