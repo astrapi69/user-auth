@@ -13,6 +13,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.alpharogroup.auth.beans.AuthenticationResult;
 import de.alpharogroup.auth.enums.AuthenticationErrors;
+import de.alpharogroup.collections.map.MapFactory;
+import de.alpharogroup.collections.pairs.KeyValuePair;
 import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
 import de.alpharogroup.user.auth.configuration.JwtTokenUtil;
 import de.alpharogroup.user.auth.controller.JwtAuthenticationController;
@@ -21,6 +23,7 @@ import de.alpharogroup.user.auth.jpa.entities.Users;
 import de.alpharogroup.user.auth.service.api.AuthenticationsService;
 import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
 import de.alpharogroup.xml.json.JsonToObjectExtensions;
+import de.alpharogroup.xml.json.ObjectMapperFactory;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,8 +50,12 @@ import io.jsonwebtoken.ExpiredJwtException;
 		String path = getPath(request);
 		if(AUTHENTICATE_PATH.equals(path)){
 			String payloadRequest = getBody(request);
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+			ObjectMapper mapper = ObjectMapperFactory
+				.newObjectMapper(
+					MapFactory.newHashMap(
+						KeyValuePair.<JsonParser.Feature, Boolean>builder()
+				.key(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
+							.value(true).build()));
 			JwtRequest jwtRequest = JsonToObjectExtensions
 				.toObject(payloadRequest, JwtRequest.class, mapper);
 			username = jwtRequest.getUsername();
