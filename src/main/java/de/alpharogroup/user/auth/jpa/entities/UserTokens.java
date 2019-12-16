@@ -49,10 +49,10 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Table(name = UserTokens.TABLE_NAME, uniqueConstraints = {
 		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX + UserTokens.TABLE_NAME
-			+ DatabasePrefix.UNDERSCORE_PREFIX
+			+ DatabasePrefix.UNDERSCORE
 			+ UserTokens.COLUMN_NAME_TOKEN, columnNames = { UserTokens.COLUMN_NAME_TOKEN }),
 		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX + UserTokens.TABLE_NAME
-			+ DatabasePrefix.UNDERSCORE_PREFIX
+			+ DatabasePrefix.UNDERSCORE
 			+ UserTokens.COLUMN_NAME_USERNAME, columnNames = { UserTokens.COLUMN_NAME_USERNAME }) })
 @Getter
 @Setter

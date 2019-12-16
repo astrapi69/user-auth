@@ -22,7 +22,7 @@ import de.alpharogroup.user.auth.dto.JwtRequest;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 import de.alpharogroup.user.auth.service.api.AuthenticationsService;
 import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
-import de.alpharogroup.xml.json.JsonToObjectExtensions;
+import de.alpharogroup.xml.json.JsonStringToObjectExtensions;
 import de.alpharogroup.xml.json.ObjectMapperFactory;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 						KeyValuePair.<JsonParser.Feature, Boolean>builder()
 				.key(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
 							.value(true).build()));
-			JwtRequest jwtRequest = JsonToObjectExtensions
+			JwtRequest jwtRequest = JsonStringToObjectExtensions
 				.toObject(payloadRequest, JwtRequest.class, mapper);
 			username = jwtRequest.getUsername();
 			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);

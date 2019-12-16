@@ -55,10 +55,10 @@ import lombok.experimental.FieldDefaults;
  */
 @Entity
 @Table(name = Users.TABLE_NAME, indexes = { @Index(name = DatabasePrefix.INDEX_PREFIX + Users.TABLE_NAME
-	+ DatabasePrefix.UNDERSCORE_PREFIX
+	+ DatabasePrefix.UNDERSCORE
 	+ Users.COLUMN_NAME_USERNAME, columnList = Users.COLUMN_NAME_USERNAME, unique = true) }, uniqueConstraints = {
 			@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX + Users.TABLE_NAME
-				+ DatabasePrefix.UNDERSCORE_PREFIX
+				+ DatabasePrefix.UNDERSCORE
 				+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.COLUMN_NAME_USERNAME }) })
 @Getter
 @Setter

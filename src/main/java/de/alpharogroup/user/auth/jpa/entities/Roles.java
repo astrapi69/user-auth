@@ -55,7 +55,7 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Table(name = Roles.TABLE_NAME, uniqueConstraints = {
 		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX + Roles.TABLE_NAME
-			+ DatabasePrefix.UNDERSCORE_PREFIX
+			+ DatabasePrefix.UNDERSCORE
 			+ Roles.COLUMN_NAME_NAME, columnNames = { Roles.COLUMN_NAME_NAME }) })
 @Getter
 @Setter

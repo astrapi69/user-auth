@@ -48,15 +48,15 @@ import lombok.experimental.FieldDefaults;
  */
 @Entity
 @Table(name = Permissions.TABLE_NAME, indexes = { @Index(name = DatabasePrefix.INDEX_PREFIX
-	+ Permissions.TABLE_NAME + DatabasePrefix.UNDERSCORE_PREFIX + Permissions.COLUMN_NAME_NAME
-	+ DatabasePrefix.UNDERSCORE_PREFIX
+	+ Permissions.TABLE_NAME + DatabasePrefix.UNDERSCORE + Permissions.COLUMN_NAME_NAME
+	+ DatabasePrefix.UNDERSCORE
 	+ Permissions.COLUMN_NAME_SHORTCUT, columnList = Permissions.COLUMN_NAME_NAME + ","
 		+ Permissions.COLUMN_NAME_SHORTCUT, unique = true) }, uniqueConstraints = {
 				@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX
-					+ Permissions.TABLE_NAME + DatabasePrefix.UNDERSCORE_PREFIX
+					+ Permissions.TABLE_NAME + DatabasePrefix.UNDERSCORE
 					+ Permissions.COLUMN_NAME_NAME, columnNames = { Permissions.COLUMN_NAME_NAME }),
 				@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX
-					+ Permissions.TABLE_NAME + DatabasePrefix.UNDERSCORE_PREFIX
+					+ Permissions.TABLE_NAME + DatabasePrefix.UNDERSCORE
 					+ Permissions.COLUMN_NAME_SHORTCUT, columnNames = {
 							Permissions.COLUMN_NAME_SHORTCUT }) })
 @Getter
