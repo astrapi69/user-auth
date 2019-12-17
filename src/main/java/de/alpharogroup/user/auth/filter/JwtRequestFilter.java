@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import javax.net.ssl.SSLException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import de.alpharogroup.xml.json.ObjectMapperFactory;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -62,7 +64,9 @@ import io.jsonwebtoken.ExpiredJwtException;
 			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 			AuthenticationResult<Users, AuthenticationErrors> authenticationResult = authenticationsService
 				.authenticate(username, jwtRequest.getPassword());
-			if(SecurityContextHolder.getContext().getAuthentication() == null){
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+			if(authentication != null){
 				jwtToken = jwtTokenUtil.generateToken(userDetails);
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 					userDetails, null, userDetails.getAuthorities());
@@ -70,6 +74,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 					.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext()
 					.setAuthentication(usernamePasswordAuthenticationToken);
+			} else{
+
 			}
 		} else{
 			final String requestTokenHeader = request.getHeader("Authorization");
@@ -118,6 +124,53 @@ import io.jsonwebtoken.ExpiredJwtException;
 		}
 
 		chain.doFilter(request, response);
+	}
+
+	/**
+	 * Checks if the current request is a is a sign request
+	 *
+	 * @param request
+	 *            the request
+	 * @return true, if the current request is a is a sign request
+	 * @throws SSLException
+	 *             occurs if the scheme is not https
+	 */
+	protected boolean isSigninRequest(@NonNull final HttpServletRequest request) throws SSLException
+	{
+		boolean isSigninRequest = false;
+		// check the request url path, if it is a sign in request
+		if(isSigninPath(getPath(request))){
+			// check if scheme is https
+			if (!isSecureRequest(request))
+			{
+				throw new SSLException("use https scheme");
+			}
+			isSigninRequest = true;
+		}
+		return isSigninRequest;
+	}
+
+	/**
+	 * Checks if the current request is a secure request, means that the scheme is https
+	 *
+	 * @param request the request
+	 * @return true, if is secure request
+	 */
+	protected boolean isSecureRequest(@NonNull final HttpServletRequest request){
+		return request.isSecure();
+	}
+
+	/**
+	 * Checks if the given path is a sign in path. Overwrite this method to provide specific sign in
+	 * path for your application.
+	 *
+	 * @param path
+	 *            the sign in path to check.
+	 * @return true, if the given path is a sign in path otherwise false.
+	 */
+	protected boolean isSigninPath(final String path)
+	{
+		return AUTHENTICATE_PATH.equals(path);
 	}
 
 	public static String getPath(@NonNull final HttpServletRequest request){

@@ -1,7 +1,7 @@
 
 plugins {
     id "io.franzbecker.gradle-lombok" version "3.2.0"
-    id "com.gradle.build-scan" version "2.0.2"
+    id "com.gradle.build-scan" version "3.1.1"
     id "org.springframework.boot" version "2.2.2.RELEASE"
     id "io.spring.dependency-management" version "1.0.8.RELEASE"
     id "java"
@@ -24,13 +24,13 @@ ext {
     jjwtVersion = "0.9.1"
     authApiVersion = "5.3"
     authVersion = "5.3.1"
-    cryptCoreVersion = "5.8"
+    mysticCryptVersion = "7.3"
     entApiVersion = "1.6"
     entCoreVersion = "1.9"
     pgEnumUsertypeVersion = "1"
     mapstructVersion = "1.3.1.Final"
     springfoxSwaggerVersion = "2.9.2"
-    springBootExtensionsVersion = "1.2.1"
+    springBootExtensionsVersion = "1.3"
     xmlExtensionsVersion = "7.2"
     sillyCollectionsVersion = "5.8"
 }
@@ -42,7 +42,7 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt:${jjwtVersion}"
     implementation "de.alpharogroup:auth-api:${authApiVersion}"
     implementation "de.alpharogroup:auth:${authVersion}"
-    implementation "de.alpharogroup:crypt-core:$cryptCoreVersion"
+    compile "de.alpharogroup:mystic-crypt:${mysticCryptVersion}"
     implementation "de.alpharogroup:ent-api:$entApiVersion"
     implementation "de.alpharogroup:ent-core:$entCoreVersion"
     implementation "de.alpharogroup:xml-extensions:$xmlExtensionsVersion"
