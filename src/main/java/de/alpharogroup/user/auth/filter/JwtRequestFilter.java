@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Optional;
 import javax.net.ssl.SSLException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -20,6 +21,7 @@ import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
 import de.alpharogroup.user.auth.configuration.JwtTokenUtil;
 import de.alpharogroup.user.auth.controller.JwtAuthenticationController;
 import de.alpharogroup.user.auth.dto.JwtRequest;
+import de.alpharogroup.user.auth.enums.HeaderKeyNames;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 import de.alpharogroup.user.auth.service.api.AuthenticationsService;
 import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
@@ -47,26 +49,42 @@ import io.jsonwebtoken.ExpiredJwtException;
 	@Override protected void doFilterInternal(HttpServletRequest request,
 		HttpServletResponse response, FilterChain chain) throws ServletException, IOException
 	{
-		String username = null;
-		String jwtToken = null;
-		String path = getPath(request);
-		if(AUTHENTICATE_PATH.equals(path)){
+		if(!isSecureRequest(request)){
+			chain.doFilter(request, response);
+			return;
+		}
+		boolean signinRequest = isSigninRequest(request);
+		Optional<String> optionalToken = getJwtToken(request);
+		String username;
+		String jwtToken;
+		if(optionalToken.isPresent()){
+			jwtToken = optionalToken.get();
+			username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+				UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
+				if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+						userDetails, null, userDetails.getAuthorities());
+					usernamePasswordAuthenticationToken
+						.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+					SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+				}
+			}
+		}
+		if (signinRequest)
+		{
 			String payloadRequest = getBody(request);
-			ObjectMapper mapper = ObjectMapperFactory
-				.newObjectMapper(
-					MapFactory.newHashMap(
-						KeyValuePair.<JsonParser.Feature, Boolean>builder()
-				.key(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
-							.value(true).build()));
+			ObjectMapper mapper = ObjectMapperFactory.newObjectMapper(MapFactory.newHashMap(
+				KeyValuePair.<JsonParser.Feature, Boolean>builder()
+					.key(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES).value(true).build()));
 			JwtRequest jwtRequest = JsonStringToObjectExtensions
 				.toObject(payloadRequest, JwtRequest.class, mapper);
 			username = jwtRequest.getUsername();
 			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 			AuthenticationResult<Users, AuthenticationErrors> authenticationResult = authenticationsService
 				.authenticate(username, jwtRequest.getPassword());
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-			if(authentication != null){
+			if(authenticationResult.getUser()!=null){
 				jwtToken = jwtTokenUtil.generateToken(userDetails);
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 					userDetails, null, userDetails.getAuthorities());
@@ -74,66 +92,26 @@ import io.jsonwebtoken.ExpiredJwtException;
 					.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext()
 					.setAuthentication(usernamePasswordAuthenticationToken);
-			} else{
-
-			}
-		} else{
-			final String requestTokenHeader = request.getHeader("Authorization");
-
-			// JWT Token is in the form "Bearer token". Remove Bearer word and get
-			// only the Token
-			if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer "))
-			{
-				jwtToken = requestTokenHeader.substring(7);
-				try
-				{
-					username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-				}
-				catch (IllegalArgumentException e)
-				{
-					System.out.println("Unable to get JWT Token");
-				}
-				catch (ExpiredJwtException e)
-				{
-					System.out.println("JWT Token has expired");
-				}
-			}
-			else
-			{
-				logger.warn("JWT Token does not begin with Bearer String");
-			}
-			// Once we get the token validate it.
-			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null)
-			{
-				UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
-				// if token is valid configure Spring Security to manually set
-				// authentication
-				if (jwtTokenUtil.validateToken(jwtToken, userDetails))
-				{
-					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-						userDetails, null, userDetails.getAuthorities());
-					usernamePasswordAuthenticationToken
-						.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-					// After setting the Authentication in the context, we specify
-					// that the current user is authenticated. So it passes the
-					// Spring Security Configurations successfully.
-					SecurityContextHolder.getContext()
-						.setAuthentication(usernamePasswordAuthenticationToken);
-				}
 			}
 		}
-
 		chain.doFilter(request, response);
+	}
+
+	protected Optional<String> getJwtToken(@NonNull final HttpServletRequest request)
+	{
+		final String requestTokenHeader = request.getHeader(HeaderKeyNames.AUTHORIZATION);
+		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+			return Optional.of(requestTokenHeader.substring(7));
+		}
+		return Optional.empty();
 	}
 
 	/**
 	 * Checks if the current request is a is a sign request
 	 *
-	 * @param request
-	 *            the request
+	 * @param request the request
 	 * @return true, if the current request is a is a sign request
-	 * @throws SSLException
-	 *             occurs if the scheme is not https
+	 * @throws SSLException occurs if the scheme is not https
 	 */
 	protected boolean isSigninRequest(@NonNull final HttpServletRequest request) throws SSLException
 	{
@@ -179,7 +157,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 
 	public static String getBody(HttpServletRequest request) throws IOException {
 
-		String body = null;
+		String body;
 		StringBuilder stringBuilder = new StringBuilder();
 		BufferedReader bufferedReader = null;
 
@@ -192,8 +170,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 				while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
 					stringBuilder.append(charBuffer, 0, bytesRead);
 				}
-			} else {
-				stringBuilder.append("");
 			}
 		} catch (IOException ex) {
 			throw ex;
