@@ -37,24 +37,21 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component public class JwtRequestFilter extends OncePerRequestFilter
 {
-	public static final String AUTHENTICATE_PATH = ApplicationConfiguration.REST_VERSION + JwtAuthenticationController.REST_PATH + JwtAuthenticationController.AUTHENTICATE;
 	@Autowired private JwtUserDetailsService jwtUserDetailsService;
 	@Autowired private JwtTokenExtensions jwtTokenExtensions;
-
 	@Autowired private AuthenticationsService authenticationsService;
 	@Autowired ApplicationProperties applicationProperties;
 
 	@Override protected void doFilterInternal(HttpServletRequest request,
 		HttpServletResponse response, FilterChain chain) throws ServletException, IOException
 	{
-		if(!isSecureRequest(request)){
+		if(!request.isSecure() || isPublicRequest(request) ){
 			chain.doFilter(request, response);
 			return;
 		}
-		boolean signinRequest = isSigninRequest(request);
-		Optional<String> optionalToken = getJwtToken(request);
 		String username;
 		String jwtToken;
+		Optional<String> optionalToken = getJwtToken(request);
 		if(optionalToken.isPresent()){
 			jwtToken = optionalToken.get();
 			username = jwtTokenExtensions.getUsername(jwtToken);
@@ -69,9 +66,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 					SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 				}
 			}
-		} else if (signinRequest)
+		} else if (isSigninRequest(request))
 		{
-			String payloadRequest = getBody(request);
+			String payloadRequest = HttpServletRequestExtensions.getBody(request);
 			if(payloadRequest.isEmpty()){
 				chain.doFilter(request, response);
 				return;
@@ -100,11 +97,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 	protected Optional<String> getJwtToken(@NonNull final HttpServletRequest request)
 	{
-		final String requestTokenHeader = request.getHeader(HeaderKeyNames.AUTHORIZATION);
-		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-			return Optional.of(requestTokenHeader.substring(7));
+		return HttpServletRequestExtensions.getAuthorizationHeader(request);
+	}
+
+	protected boolean isPublicRequest(@NonNull final HttpServletRequest request){
+		boolean isPublicRequest = false;
+		if(isPublicPath(getPath(request))){
+			isPublicRequest = true;
 		}
-		return Optional.empty();
+		return isPublicRequest;
 	}
 
 	/**
@@ -112,31 +113,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 	 *
 	 * @param request the request
 	 * @return true, if the current request is a is a sign request
-	 * @throws SSLException occurs if the scheme is not https
 	 */
-	protected boolean isSigninRequest(@NonNull final HttpServletRequest request) throws SSLException
+	protected boolean isSigninRequest(@NonNull final HttpServletRequest request)
 	{
 		boolean isSigninRequest = false;
 		// check the request url path, if it is a sign in request
 		if(isSigninPath(getPath(request))){
-			// check if scheme is https
-			if (!isSecureRequest(request))
-			{
-				throw new SSLException("use https scheme");
-			}
 			isSigninRequest = true;
 		}
 		return isSigninRequest;
-	}
-
-	/**
-	 * Checks if the current request is a secure request, means that the scheme is https
-	 *
-	 * @param request the request
-	 * @return true, if is secure request
-	 */
-	protected boolean isSecureRequest(@NonNull final HttpServletRequest request){
-		return request.isSecure();
 	}
 
 	/**
@@ -149,20 +134,24 @@ import org.springframework.web.filter.OncePerRequestFilter;
 	 */
 	protected boolean isSigninPath(final String path)
 	{
+		return applicationProperties.getSigninPaths().contains(path);
+	}
+
+	/**
+	 * Checks if the given path is a public path. Overwrite this method to provide specific public
+	 * path for your application.
+	 *
+	 * @param path
+	 *            the sign in path to check.
+	 * @return true, if the given path is a public path otherwise false.
+	 */
+	protected boolean isPublicPath(final String path)
+	{
 		return applicationProperties.getPublicPaths().contains(path);
 	}
 
-	public static String getPath(@NonNull final HttpServletRequest request){
-		return request.getRequestURI().substring(request.getContextPath().length());
+	public String getPath(@NonNull final HttpServletRequest request){
+		return HttpServletRequestExtensions.getPath(request);
 	}
 
-	public static String getBody(HttpServletRequest request) throws IOException {
-		try {
-			String characterEncoding = request.getCharacterEncoding();
-			return IOUtils.toString(request.getInputStream(), characterEncoding);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		return "";
-	}
 }

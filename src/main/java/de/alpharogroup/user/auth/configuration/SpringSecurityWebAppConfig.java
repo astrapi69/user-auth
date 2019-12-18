@@ -1,6 +1,5 @@
 package de.alpharogroup.user.auth.configuration;
 
-import de.alpharogroup.collections.array.ArrayExtensions;
 import de.alpharogroup.collections.list.ListExtensions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,6 +20,8 @@ import de.alpharogroup.user.auth.handler.SigninFailureHandler;
 import de.alpharogroup.user.auth.handler.SigninSuccessHandler;
 import de.alpharogroup.user.auth.handler.SignoutSuccessHandler;
 import de.alpharogroup.user.auth.service.UserDetailsServiceImpl;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -73,10 +74,13 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
-		String[] publicPaths = ListExtensions.toArray(applicationProperties.getPublicPaths());
+		List<String> publicPaths = applicationProperties.getPublicPaths();
+		List<String> signinPaths = applicationProperties.getSigninPaths();
+		publicPaths.addAll(signinPaths);
+		String[] allPublicPaths = ListExtensions.toArray(publicPaths);
 		// @formatter:off
 		http.authorizeRequests()
-				.antMatchers(publicPaths).permitAll()
+				.antMatchers(allPublicPaths).permitAll()
 				.anyRequest().authenticated()
 	            .and().csrf().disable()
 	            .exceptionHandling()
@@ -89,7 +93,9 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Override
 	public void configure(WebSecurity web)
 	{
-		web.ignoring().antMatchers("/resources/**");
+		List<String> ignorePatterns = applicationProperties.getIgnorePatterns();
+		String[] allIgnorePatterns = ListExtensions.toArray(ignorePatterns);
+		web.ignoring().antMatchers(allIgnorePatterns);
 	}
 
 	@Bean

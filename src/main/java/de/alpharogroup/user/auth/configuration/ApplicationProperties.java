@@ -24,5 +24,7 @@ public class ApplicationProperties
 	String name;
 	String jwtSecret;
 	List<String> publicPaths;
+	List<String> signinPaths;
+	List<String> ignorePatterns;
 
 }
