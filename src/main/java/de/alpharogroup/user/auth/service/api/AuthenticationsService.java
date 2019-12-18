@@ -38,7 +38,8 @@ public interface AuthenticationsService extends Serializable
 		Optional<Users> byUsername = getUsersService().findByUsername(emailOrUsername);
 		if (byUsername.isPresent())
 		{
-			return authorize(byUsername.get(), password);
+			Users users = byUsername.get();
+			return authorize(users, password);
 		}
 		// set validation errors
 		return AuthenticationResult.<Users, AuthenticationErrors> builder()
@@ -64,13 +65,13 @@ public interface AuthenticationsService extends Serializable
 			.build();
 		if (user != null && user.isActive())
 		{
-			String hashedPassword = "";
 			// Get hashed pw from db
 			final String dbHashedPassword = user.getPw();
 			// Get salt from db
 			final String salt = user.getSalt();
 			// get instance of PasswordEncryptor
 			final PasswordEncryptor passwordService = PasswordEncryptor.getInstance();
+			String hashedPassword = "";
 			try
 			{
 				hashedPassword = passwordService.hashAndHexPassword(password, salt);

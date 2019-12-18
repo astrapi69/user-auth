@@ -1,6 +1,7 @@
 package de.alpharogroup.user.auth.configuration;
 
 import de.alpharogroup.collections.list.ListExtensions;
+import de.alpharogroup.collections.list.ListFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -74,10 +75,8 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
-		List<String> publicPaths = applicationProperties.getPublicPaths();
 		List<String> signinPaths = applicationProperties.getSigninPaths();
-		publicPaths.addAll(signinPaths);
-		String[] allPublicPaths = ListExtensions.toArray(publicPaths);
+		String[] allPublicPaths = ListExtensions.toArray(signinPaths);
 		// @formatter:off
 		http.authorizeRequests()
 				.antMatchers(allPublicPaths).permitAll()
@@ -93,8 +92,8 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Override
 	public void configure(WebSecurity web)
 	{
-		List<String> ignorePatterns = applicationProperties.getIgnorePatterns();
-		String[] allIgnorePatterns = ListExtensions.toArray(ignorePatterns);
+		List<String> publicPaths = applicationProperties.getPublicPaths();
+		String[] allIgnorePatterns = ListExtensions.toArray(publicPaths);
 		web.ignoring().antMatchers(allIgnorePatterns);
 	}
 

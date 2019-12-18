@@ -56,7 +56,9 @@ public class AuthenticationController
 		AuthenticationResult<User, AuthenticationErrors> result = AuthenticationResult
 			.<User, AuthenticationErrors> builder()
 			.user(getMapper().apply(authenticate.getUser()))
-			.validationErrors(authenticate.getValidationErrors()).build();
+			.validationErrors(authenticate.getValidationErrors())
+			.valid(authenticate.isValid())
+			.build();
 		return ResponseEntity.status(result.getValidationErrors().isEmpty()
 			? HttpStatus.OK.value()
 			: HttpStatus.UNAUTHORIZED.value()).body(result);
