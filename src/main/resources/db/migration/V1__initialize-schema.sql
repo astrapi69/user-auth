@@ -37,20 +37,6 @@ create table role_permissions
         foreign key (role_id) references roles
 );
 
-create table user_tokens
-(
-    id       uuid not null,
-    expiry   timestamp,
-    token    varchar(128),
-    username varchar(256),
-    constraint user_tokens_pkey
-        primary key (id),
-    constraint uk_user_tokens_token
-        unique (token),
-    constraint uk_user_tokens_username
-        unique (username)
-);
-
 create table users
 (
     id       uuid not null,
