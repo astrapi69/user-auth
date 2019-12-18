@@ -42,20 +42,19 @@ public class JwtUserDetailsService implements UserDetailsService {
 	@Override
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
 		Optional<Users> optionalUser = usersRepository.findByUsername(username);
-		Users user = optionalUser.get();
-		if (user == null) {
+		if(!optionalUser.isPresent()){
 			throw new UsernameNotFoundException("User not found with username: " + username);
 		}
-		return new UsersPrincipal(optionalUser.get());
+		Users user = optionalUser.get();
+		return new UsersPrincipal(user);
 	}
-
 
 	public Users save(de.alpharogroup.user.auth.dto.User user) {
 		Users newUser = new Users();
 		newUser.setUsername(user.getUsername());
+		// TODO set password with PasswordService ...
 		newUser.setPw(bcryptEncoder.encode(user.getPw()));
 		return usersRepository.save(newUser);
-	}
+	}																																																																																																																		
 }

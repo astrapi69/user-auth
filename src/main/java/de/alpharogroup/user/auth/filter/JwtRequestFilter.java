@@ -1,9 +1,6 @@
 package de.alpharogroup.user.auth.filter;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Optional;
 import javax.net.ssl.SSLException;
 import javax.servlet.FilterChain;
@@ -18,7 +15,8 @@ import de.alpharogroup.auth.enums.AuthenticationErrors;
 import de.alpharogroup.collections.map.MapFactory;
 import de.alpharogroup.collections.pairs.KeyValuePair;
 import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
-import de.alpharogroup.user.auth.configuration.JwtTokenUtil;
+import de.alpharogroup.user.auth.configuration.ApplicationProperties;
+import de.alpharogroup.user.auth.configuration.JwtTokenExtensions;
 import de.alpharogroup.user.auth.controller.JwtAuthenticationController;
 import de.alpharogroup.user.auth.dto.JwtRequest;
 import de.alpharogroup.user.auth.enums.HeaderKeyNames;
@@ -28,23 +26,23 @@ import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
 import de.alpharogroup.xml.json.JsonStringToObjectExtensions;
 import de.alpharogroup.xml.json.ObjectMapperFactory;
 import lombok.NonNull;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import io.jsonwebtoken.ExpiredJwtException;
 
 @Component public class JwtRequestFilter extends OncePerRequestFilter
 {
 	public static final String AUTHENTICATE_PATH = ApplicationConfiguration.REST_VERSION + JwtAuthenticationController.REST_PATH + JwtAuthenticationController.AUTHENTICATE;
 	@Autowired private JwtUserDetailsService jwtUserDetailsService;
-	@Autowired private JwtTokenUtil jwtTokenUtil;
+	@Autowired private JwtTokenExtensions jwtTokenExtensions;
 
 	@Autowired private AuthenticationsService authenticationsService;
+	@Autowired ApplicationProperties applicationProperties;
 
 	@Override protected void doFilterInternal(HttpServletRequest request,
 		HttpServletResponse response, FilterChain chain) throws ServletException, IOException
@@ -59,11 +57,11 @@ import io.jsonwebtoken.ExpiredJwtException;
 		String jwtToken;
 		if(optionalToken.isPresent()){
 			jwtToken = optionalToken.get();
-			username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+			username = jwtTokenExtensions.getUsername(jwtToken);
 			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
 				UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
-				if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+				if (jwtTokenExtensions.validate(jwtToken, userDetails)) {
 					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
 					usernamePasswordAuthenticationToken
@@ -71,10 +69,13 @@ import io.jsonwebtoken.ExpiredJwtException;
 					SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 				}
 			}
-		}
-		if (signinRequest)
+		} else if (signinRequest)
 		{
 			String payloadRequest = getBody(request);
+			if(payloadRequest.isEmpty()){
+				chain.doFilter(request, response);
+				return;
+			}
 			ObjectMapper mapper = ObjectMapperFactory.newObjectMapper(MapFactory.newHashMap(
 				KeyValuePair.<JsonParser.Feature, Boolean>builder()
 					.key(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES).value(true).build()));
@@ -85,16 +86,16 @@ import io.jsonwebtoken.ExpiredJwtException;
 			AuthenticationResult<Users, AuthenticationErrors> authenticationResult = authenticationsService
 				.authenticate(username, jwtRequest.getPassword());
 			if(authenticationResult.getUser()!=null){
-				jwtToken = jwtTokenUtil.generateToken(userDetails);
+				jwtToken = jwtTokenExtensions.newJwtToken(userDetails);
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 					userDetails, null, userDetails.getAuthorities());
 				usernamePasswordAuthenticationToken
 					.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext()
 					.setAuthentication(usernamePasswordAuthenticationToken);
+				response.addHeader(HeaderKeyNames.AUTHORIZATION, HeaderKeyNames.BEARER_PREFIX + jwtToken);
 			}
 		}
-		chain.doFilter(request, response);
 	}
 
 	protected Optional<String> getJwtToken(@NonNull final HttpServletRequest request)
@@ -148,7 +149,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 	 */
 	protected boolean isSigninPath(final String path)
 	{
-		return AUTHENTICATE_PATH.equals(path);
+		return applicationProperties.getPublicPaths().contains(path);
 	}
 
 	public static String getPath(@NonNull final HttpServletRequest request){
@@ -156,34 +157,12 @@ import io.jsonwebtoken.ExpiredJwtException;
 	}
 
 	public static String getBody(HttpServletRequest request) throws IOException {
-
-		String body;
-		StringBuilder stringBuilder = new StringBuilder();
-		BufferedReader bufferedReader = null;
-
 		try {
-			InputStream inputStream = request.getInputStream();
-			if (inputStream != null) {
-				bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-				char[] charBuffer = new char[128];
-				int bytesRead = -1;
-				while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
-					stringBuilder.append(charBuffer, 0, bytesRead);
-				}
-			}
+			String characterEncoding = request.getCharacterEncoding();
+			return IOUtils.toString(request.getInputStream(), characterEncoding);
 		} catch (IOException ex) {
-			throw ex;
-		} finally {
-			if (bufferedReader != null) {
-				try {
-					bufferedReader.close();
-				} catch (IOException ex) {
-					throw ex;
-				}
-			}
+			ex.printStackTrace();
 		}
-
-		body = stringBuilder.toString();
-		return body;
+		return "";
 	}
 }

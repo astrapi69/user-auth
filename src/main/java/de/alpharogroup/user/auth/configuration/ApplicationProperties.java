@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "app")
@@ -20,5 +22,7 @@ public class ApplicationProperties
 	String dbUrlPrefix;
 	String dir;
 	String name;
+	String jwtSecret;
+	List<String> publicPaths;
 
 }

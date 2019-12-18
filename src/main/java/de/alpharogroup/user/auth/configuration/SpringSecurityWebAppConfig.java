@@ -1,5 +1,7 @@
 package de.alpharogroup.user.auth.configuration;
 
+import de.alpharogroup.collections.array.ArrayExtensions;
+import de.alpharogroup.collections.list.ListExtensions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +30,9 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Autowired
 	@Qualifier("authenticationManagerBean")
 	AuthenticationManager authenticationManager;
+
+	@Autowired
+	ApplicationProperties applicationProperties;
 
 	@Autowired
 	RestAuthenticationEntryPoint authenticationEntryPoint;
@@ -68,9 +73,10 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
+		String[] publicPaths = ListExtensions.toArray(applicationProperties.getPublicPaths());
 		// @formatter:off
 		http.authorizeRequests()
-				.antMatchers("/v1/auth/signin*", "/v1/jwt/authenticate").permitAll()
+				.antMatchers(publicPaths).permitAll()
 				.anyRequest().authenticated()
 	            .and().csrf().disable()
 	            .exceptionHandling()

@@ -5,15 +5,11 @@ import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class JwtRequest implements Serializable
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class JwtRequest
 {
-	private static final long serialVersionUID = -1L;
 	String username;
 	String password;
 }

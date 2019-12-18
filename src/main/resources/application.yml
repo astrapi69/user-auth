@@ -9,8 +9,8 @@ server:
     key-store-provider: SUN
     key-store-type: PKCS12
     key-password: f00B4r@gmol.org
-#  http2:
-#    enabled: true
+  http2:
+    enabled: true
 
 app:
   name: user-auth
@@ -21,6 +21,11 @@ app:
   db-url-prefix: jdbc:postgresql://
   db-username: postgres
   db-password: postgres
+  jwt-secret: cp*D33tZY(juumBUcBDVv8tJ!8w/T@JGpS)@)Sr6EYfjFBTRUJfu@&6jz-7*cFk5
+  public-paths:
+    - /v1/jwt/authenticate
+    - /v1/jwt/ispublic
+    - /v1/auth/signin
 
 spring:  
   datasource:
@@ -46,7 +51,3 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
-
-
-jwt:
-  secret: topsecret
