@@ -64,6 +64,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 					usernamePasswordAuthenticationToken
 						.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 					SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+					response.addHeader(HeaderKeyNames.AUTHORIZATION, HeaderKeyNames.BEARER_PREFIX + jwtToken);
 				}
 			}
 		} else if (isSigninRequest(request))
@@ -82,7 +83,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 			AuthenticationResult<Users, AuthenticationErrors> authenticationResult = authenticationsService
 				.authenticate(username, jwtRequest.getPassword());
-			if(authenticationResult.getUser()!=null){
+			if(authenticationResult.isValid()){
 				jwtToken = jwtTokenExtensions.newJwtToken(userDetails);
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 					userDetails, null, userDetails.getAuthorities());

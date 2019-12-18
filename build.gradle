@@ -28,7 +28,7 @@ ext {
     genericMapperVersion = "2.2"
     jjwtVersion = "0.10.7"
     authApiVersion = "5.3"
-    authVersion = "5.3.1"
+    authVersion = "5.4"
     mysticCryptVersion = "7.3"
     entApiVersion = "1.6"
     entCoreVersion = "1.9"
