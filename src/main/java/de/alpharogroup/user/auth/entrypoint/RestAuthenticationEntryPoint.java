@@ -20,16 +20,6 @@ import org.springframework.stereotype.Component;
 	@Override public void commence(HttpServletRequest request, HttpServletResponse response,
 		AuthenticationException authException) throws IOException, ServletException
 	{
-		Optional<String> authorizationHeader = HttpServletRequestExtensions
-			.getAuthorizationHeader(request);
-		if (authorizationHeader.isPresent())
-		{
-			String jwtToken = authorizationHeader.get();
-			response.addHeader(HeaderKeyNames.AUTHORIZATION, HeaderKeyNames.BEARER_PREFIX + jwtToken);
-		}else
-		{
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-		}
-
+		response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 	}
 }

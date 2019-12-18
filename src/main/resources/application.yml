@@ -26,7 +26,7 @@ app:
     - /v1/jwt/authenticate
     - /v1/auth/signin
   public-paths:
-    - /v1/jwt/ispublic
+    - /v1/auth/ispublic
     - /v1/public
   ignore-patterns:
     - /resources/**

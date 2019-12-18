@@ -56,10 +56,6 @@ public class JwtAuthenticationController {
 		return ResponseEntity.ok("This is a private message");
 	}
 
-	@RequestMapping(value = "/ispublic", method = RequestMethod.GET)
-	public ResponseEntity<?> getPublicMessage() {
-		return ResponseEntity.ok("This is a public message");
-	}
 
 	private void authenticate(String username, String password) throws Exception {
 		try {
