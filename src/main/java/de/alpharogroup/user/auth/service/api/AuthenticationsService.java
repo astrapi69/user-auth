@@ -103,6 +103,4 @@ public interface AuthenticationsService extends Serializable
 
 	UsersService getUsersService();
 
-	String newAuthenticationToken(String username);
-
 }

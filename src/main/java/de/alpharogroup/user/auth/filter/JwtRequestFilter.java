@@ -100,7 +100,9 @@ import lombok.NonNull;
 
 	protected Optional<String> getJwtToken(@NonNull final HttpServletRequest request)
 	{
-		return HttpServletRequestExtensions.getAuthorizationHeader(request);
+		Optional<String> authorizationHeader = HttpServletRequestExtensions
+			.getAuthorizationHeader(request);
+		return authorizationHeader;
 	}
 
 	protected boolean isPublicRequest(@NonNull final HttpServletRequest request){

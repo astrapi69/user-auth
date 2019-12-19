@@ -26,11 +26,11 @@ app:
     - /v1/jwt/authenticate
     - /v1/auth/signin
   public-path-patterns:
-    - /v1/auth/ispublic
+    - /v1/jwt/ispublic
+    - /v1/jwt/register
     - /v1/public
   ignore-path-patterns:
     - /resources/**
-    - /v1/jwt/**
 
 spring:  
   datasource:

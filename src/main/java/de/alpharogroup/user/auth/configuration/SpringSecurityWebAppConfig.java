@@ -90,9 +90,7 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 				.anyRequest().authenticated()
 	            .and().csrf().disable()
 	            .exceptionHandling()
-			.authenticationEntryPoint(authenticationEntryPoint)
-	            .and().formLogin().successHandler(signinSuccessHandler)
-	            .and().formLogin().failureHandler(signinFailureHandler);
+			.authenticationEntryPoint(authenticationEntryPoint);
         // @formatter:on
 	}
 
