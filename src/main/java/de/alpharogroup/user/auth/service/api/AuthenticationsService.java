@@ -86,6 +86,7 @@ public interface AuthenticationsService extends Serializable
 			if (passwordService.match(hashedPassword, dbHashedPassword))
 			{
 				authenticationResult.setUser(user);
+				authenticationResult.setValid(true);
 			}
 			else
 			{

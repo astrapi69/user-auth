@@ -22,10 +22,12 @@ app:
   db-username: postgres
   db-password: postgres
   jwt-secret: cp*D33tZY(juumBUcBDVv8tJ!8w/T@JGpS)@)Sr6EYfjFBTRUJfu@&6jz-7*cFk5
-  public-paths:
+  public-path-patterns:
     - /v1/jwt/authenticate
     - /v1/jwt/ispublic
     - /v1/auth/signin
+  signin-path-patterns:
+  ignore-path-patterns:
 
 spring:  
   datasource:

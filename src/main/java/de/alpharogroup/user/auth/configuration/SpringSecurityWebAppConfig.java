@@ -1,7 +1,6 @@
 package de.alpharogroup.user.auth.configuration;
 
-import de.alpharogroup.collections.array.ArrayExtensions;
-import de.alpharogroup.collections.list.ListExtensions;
+import de.alpharogroup.user.auth.filter.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -16,11 +15,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import de.alpharogroup.collections.list.ListExtensions;
 import de.alpharogroup.user.auth.entrypoint.RestAuthenticationEntryPoint;
 import de.alpharogroup.user.auth.handler.SigninFailureHandler;
 import de.alpharogroup.user.auth.handler.SigninSuccessHandler;
 import de.alpharogroup.user.auth.handler.SignoutSuccessHandler;
 import de.alpharogroup.user.auth.service.UserDetailsServiceImpl;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -49,6 +50,9 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Autowired
 	UserDetailsServiceImpl userDetailsService;
 
+	@Autowired
+	private JwtRequestFilter jwtRequestFilter;
+
 	@Override
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -73,9 +77,11 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
-		String[] publicPaths = ListExtensions.toArray(applicationProperties.getPublicPaths());
+		String[] publicPaths = ListExtensions.toArray(applicationProperties.getPublicPathPatterns());
 		// @formatter:off
-		http.authorizeRequests()
+		// Add a filter to validate the tokens with every request
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+			.csrf().disable().authorizeRequests()
 				.antMatchers(publicPaths).permitAll()
 				.anyRequest().authenticated()
 	            .and().csrf().disable()

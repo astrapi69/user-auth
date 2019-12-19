@@ -1,8 +1,6 @@
 package de.alpharogroup.user.auth.controller;
-import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
-import de.alpharogroup.user.auth.configuration.JwtTokenExtensions;
-import de.alpharogroup.user.auth.dto.JwtRequest;
-import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +9,16 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
+import de.alpharogroup.user.auth.configuration.JwtTokenExtensions;
+import de.alpharogroup.user.auth.dto.JwtRequest;
+import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
 
 @RestController
 @RequestMapping(ApplicationConfiguration.REST_VERSION + JwtAuthenticationController.REST_PATH)
@@ -61,7 +66,7 @@ public class JwtAuthenticationController {
 		return ResponseEntity.ok("This is a public message");
 	}
 
-	private void authenticate(String username, String password) throws Exception {
+	protected void authenticate(String username, String password) throws Exception {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		} catch (DisabledException e) {

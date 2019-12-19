@@ -2,14 +2,26 @@ package de.alpharogroup.user.auth.filter;
 
 import java.io.IOException;
 import java.util.Optional;
+
 import javax.net.ssl.SSLException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.alpharogroup.auth.beans.AuthenticationResult;
 import de.alpharogroup.auth.enums.AuthenticationErrors;
 import de.alpharogroup.collections.map.MapFactory;
@@ -26,14 +38,6 @@ import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
 import de.alpharogroup.xml.json.JsonStringToObjectExtensions;
 import de.alpharogroup.xml.json.ObjectMapperFactory;
 import lombok.NonNull;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component public class JwtRequestFilter extends OncePerRequestFilter
 {
@@ -58,7 +62,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 		if(optionalToken.isPresent()){
 			jwtToken = optionalToken.get();
 			username = jwtTokenExtensions.getUsername(jwtToken);
-			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			if (username != null) {
 
 				UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 				if (jwtTokenExtensions.validate(jwtToken, userDetails)) {
@@ -85,7 +90,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 			AuthenticationResult<Users, AuthenticationErrors> authenticationResult = authenticationsService
 				.authenticate(username, jwtRequest.getPassword());
-			if(authenticationResult.getUser()!=null){
+			if(authenticationResult.isValid()){
 				jwtToken = jwtTokenExtensions.newJwtToken(userDetails);
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 					userDetails, null, userDetails.getAuthorities());
@@ -149,7 +154,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 	 */
 	protected boolean isSigninPath(final String path)
 	{
-		return applicationProperties.getPublicPaths().contains(path);
+		return applicationProperties.getPublicPathPatterns().contains(path);
 	}
 
 	public static String getPath(@NonNull final HttpServletRequest request){

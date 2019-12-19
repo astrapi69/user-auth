@@ -1,6 +1,7 @@
 package de.alpharogroup.user.auth.controller;
 
-import de.alpharogroup.user.auth.mapper.UserMapper;
+import java.util.function.Function;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import de.alpharogroup.auth.enums.AuthenticationErrors;
 import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
 import de.alpharogroup.user.auth.dto.User;
 import de.alpharogroup.user.auth.jpa.entities.Users;
+import de.alpharogroup.user.auth.mapper.UserMapper;
 import de.alpharogroup.user.auth.service.api.AuthenticationsService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -23,8 +25,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
-
-import java.util.function.Function;
 
 @RestController
 @RequestMapping(ApplicationConfiguration.REST_VERSION + "/auth")
