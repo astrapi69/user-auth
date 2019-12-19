@@ -1,6 +1,7 @@
 package de.alpharogroup.user.auth.configuration;
 
-import de.alpharogroup.user.auth.filter.JwtRequestFilter;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -14,14 +15,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import de.alpharogroup.collections.list.ListExtensions;
 import de.alpharogroup.user.auth.entrypoint.RestAuthenticationEntryPoint;
+import de.alpharogroup.user.auth.filter.JwtRequestFilter;
 import de.alpharogroup.user.auth.handler.SigninFailureHandler;
 import de.alpharogroup.user.auth.handler.SigninSuccessHandler;
 import de.alpharogroup.user.auth.handler.SignoutSuccessHandler;
 import de.alpharogroup.user.auth.service.UserDetailsServiceImpl;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -77,12 +79,14 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
-		String[] publicPaths = ListExtensions.toArray(applicationProperties.getPublicPathPatterns());
+		List<String> signinPaths = applicationProperties.getSigninPathPatterns();
+		String[] allPublicPaths = ListExtensions.toArray(signinPaths);
 		// @formatter:off
-		// Add a filter to validate the tokens with every request
-		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-			.csrf().disable().authorizeRequests()
-				.antMatchers(publicPaths).permitAll()
+		http
+			.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+			.csrf().disable()
+			.authorizeRequests()
+				.antMatchers(allPublicPaths).permitAll()
 				.anyRequest().authenticated()
 	            .and().csrf().disable()
 	            .exceptionHandling()
@@ -95,7 +99,9 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Override
 	public void configure(WebSecurity web)
 	{
-		web.ignoring().antMatchers("/resources/**");
+		List<String> publicPaths = applicationProperties.getPublicPathPatterns();
+		String[] allIgnorePatterns = ListExtensions.toArray(publicPaths);
+		web.ignoring().antMatchers(allIgnorePatterns);
 	}
 
 	@Bean
