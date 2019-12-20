@@ -101,6 +101,10 @@ public interface AuthenticationsService extends Serializable
 		return authenticationResult;
 	}
 
+	default void signOut(final @NonNull Users user)
+	{
+	}
+
 	UsersService getUsersService();
 
 }

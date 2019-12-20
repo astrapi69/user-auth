@@ -1,9 +1,12 @@
 package de.alpharogroup.user.auth.filter
 
+import de.alpharogroup.user.auth.dto.ThrowableReport
 import de.alpharogroup.user.auth.enums.HeaderKeyNames
-import de.alpharogroup.user.auth.filter.HttpServletRequestExtensions.getRequestBody
 import org.apache.commons.io.IOUtils
-import java.io.IOException
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
+import java.time.LocalDateTime
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 

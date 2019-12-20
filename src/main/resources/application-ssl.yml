@@ -1,0 +1,13 @@
+# default properties
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-alias: selfsigned_authuserkeystore
+    key-store-password: f00B4r@gmol.org
+    key-store: classpath:ssl-rest-authusers.pfx
+    key-store-provider: SUN
+    key-store-type: PKCS12
+    key-password: f00B4r@gmol.org
+  http2:
+    enabled: true

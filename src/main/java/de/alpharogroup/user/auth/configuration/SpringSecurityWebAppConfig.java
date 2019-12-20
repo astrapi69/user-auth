@@ -20,9 +20,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import de.alpharogroup.collections.list.ListExtensions;
 import de.alpharogroup.user.auth.entrypoint.RestAuthenticationEntryPoint;
 import de.alpharogroup.user.auth.filter.JwtRequestFilter;
-import de.alpharogroup.user.auth.handler.SigninFailureHandler;
-import de.alpharogroup.user.auth.handler.SigninSuccessHandler;
-import de.alpharogroup.user.auth.handler.SignoutSuccessHandler;
 import de.alpharogroup.user.auth.service.UserDetailsServiceImpl;
 
 @Configuration
@@ -39,15 +36,6 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 
 	@Autowired
 	RestAuthenticationEntryPoint authenticationEntryPoint;
-
-	@Autowired
-	SigninFailureHandler signinFailureHandler;
-
-	@Autowired
-	SigninSuccessHandler signinSuccessHandler;
-
-	@Autowired
-	SignoutSuccessHandler signoutSuccessHandler;
 
 	@Autowired
 	UserDetailsServiceImpl userDetailsService;

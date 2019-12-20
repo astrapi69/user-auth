@@ -1,16 +1,6 @@
 # default properties
 server:
-  port: 8443
-  ssl:
-    enabled: true
-    key-alias: selfsigned_authuserkeystore
-    key-store-password: f00B4r@gmol.org
-    key-store: classpath:ssl-rest-authusers.pfx
-    key-store-provider: SUN
-    key-store-type: PKCS12
-    key-password: f00B4r@gmol.org
-  http2:
-    enabled: true
+  port: 8080
 
 app:
   name: user-auth
@@ -23,7 +13,6 @@ app:
   db-password: postgres
   jwt-secret: cp*D33tZY(juumBUcBDVv8tJ!8w/T@JGpS)@)Sr6EYfjFBTRUJfu@&6jz-7*cFk5
   signin-path-patterns:
-    - /v1/jwt/authenticate
     - /v1/auth/signin
   public-path-patterns:
     - /v1/jwt/ispublic
@@ -31,6 +20,7 @@ app:
     - /v1/public
   ignore-path-patterns:
     - /resources/**
+    - /v1/jwt/register
 
 spring:  
   datasource:

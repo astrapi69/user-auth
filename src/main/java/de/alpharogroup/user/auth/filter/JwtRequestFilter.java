@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -50,52 +51,73 @@ import lombok.NonNull;
 			return;
 		}
 		String username;
+		String password;
 		String jwtToken;
 		Optional<String> optionalToken = getJwtToken(request);
 		if(optionalToken.isPresent()){
 			jwtToken = optionalToken.get();
-			username = jwtTokenExtensions.getUsername(jwtToken);
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			if (username != null) {
-
-				UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
-				if (jwtTokenExtensions.validate(jwtToken, userDetails)) {
-					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-						userDetails, null, userDetails.getAuthorities());
-					usernamePasswordAuthenticationToken
-						.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-					SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-					response.addHeader(HeaderKeyNames.AUTHORIZATION, HeaderKeyNames.BEARER_PREFIX + jwtToken);
-				}
-			}
+			validateToken(request, response, jwtToken);
 		} else if (isSigninRequest(request))
 		{
 			String payloadRequest = HttpServletRequestExtensions.getBody(request);
 			if(payloadRequest.isEmpty()){
-				chain.doFilter(request, response);
-				return;
+				username = request.getParameter("username");
+				password = request.getParameter("password");
+				if(StringUtils.isEmpty(username) || StringUtils.isEmpty(password)){
+					chain.doFilter(request, response);
+					return;
+				}
+			}else{
+				ObjectMapper mapper = ObjectMapperFactory.newObjectMapper(MapFactory.newHashMap(
+					KeyValuePair.<JsonParser.Feature, Boolean>builder()
+						.key(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES).value(true).build()));
+				JwtRequest jwtRequest = JsonStringToObjectExtensions
+					.toObject(payloadRequest, JwtRequest.class, mapper);
+				username = jwtRequest.getUsername();
+				password = jwtRequest.getPassword();
 			}
-			ObjectMapper mapper = ObjectMapperFactory.newObjectMapper(MapFactory.newHashMap(
-				KeyValuePair.<JsonParser.Feature, Boolean>builder()
-					.key(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES).value(true).build()));
-			JwtRequest jwtRequest = JsonStringToObjectExtensions
-				.toObject(payloadRequest, JwtRequest.class, mapper);
-			username = jwtRequest.getUsername();
+			setNewToken(request, response, username, password);
+		}
+		chain.doFilter(request, response);
+	}
+
+	private void validateToken(HttpServletRequest request, HttpServletResponse response,
+		String jwtToken)
+	{
+		String username;
+		username = jwtTokenExtensions.getUsername(jwtToken);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (username != null) {
+
 			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
-			AuthenticationResult<Users, AuthenticationErrors> authenticationResult = authenticationsService
-				.authenticate(username, jwtRequest.getPassword());
-			if(authenticationResult.isValid()){
-				jwtToken = jwtTokenExtensions.newJwtToken(userDetails);
+			if (jwtTokenExtensions.validate(jwtToken, userDetails)) {
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 					userDetails, null, userDetails.getAuthorities());
 				usernamePasswordAuthenticationToken
 					.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				SecurityContextHolder.getContext()
-					.setAuthentication(usernamePasswordAuthenticationToken);
+				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 				response.addHeader(HeaderKeyNames.AUTHORIZATION, HeaderKeyNames.BEARER_PREFIX + jwtToken);
 			}
 		}
-		chain.doFilter(request, response);
+	}
+
+	private void setNewToken(HttpServletRequest request, HttpServletResponse response, String username,
+		String password)
+	{
+		String jwtToken;
+		UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
+		AuthenticationResult<Users, AuthenticationErrors> authenticationResult = authenticationsService
+			.authenticate(username, password);
+		if(authenticationResult.isValid()){
+			jwtToken = jwtTokenExtensions.newJwtToken(userDetails);
+			UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+				userDetails, null, userDetails.getAuthorities());
+			usernamePasswordAuthenticationToken
+				.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+			SecurityContextHolder.getContext()
+				.setAuthentication(usernamePasswordAuthenticationToken);
+			response.addHeader(HeaderKeyNames.AUTHORIZATION, HeaderKeyNames.BEARER_PREFIX + jwtToken);
+		}
 	}
 
 	protected Optional<String> getJwtToken(@NonNull final HttpServletRequest request)
