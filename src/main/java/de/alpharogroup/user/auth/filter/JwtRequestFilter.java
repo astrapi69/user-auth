@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.alpharogroup.user.auth.service.JwtTokenService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +27,6 @@ import de.alpharogroup.auth.enums.AuthenticationErrors;
 import de.alpharogroup.collections.map.MapFactory;
 import de.alpharogroup.collections.pairs.KeyValuePair;
 import de.alpharogroup.user.auth.configuration.ApplicationProperties;
-import de.alpharogroup.user.auth.configuration.JwtTokenExtensions;
 import de.alpharogroup.user.auth.dto.JwtRequest;
 import de.alpharogroup.user.auth.enums.HeaderKeyNames;
 import de.alpharogroup.user.auth.jpa.entities.Users;
@@ -39,7 +39,7 @@ import lombok.NonNull;
 @Component public class JwtRequestFilter extends OncePerRequestFilter
 {
 	@Autowired private JwtUserDetailsService jwtUserDetailsService;
-	@Autowired private JwtTokenExtensions jwtTokenExtensions;
+	@Autowired private JwtTokenService jwtTokenService;
 	@Autowired private AuthenticationsService authenticationsService;
 	@Autowired ApplicationProperties applicationProperties;
 
@@ -84,13 +84,10 @@ import lombok.NonNull;
 	private void validateToken(HttpServletRequest request, HttpServletResponse response,
 		String jwtToken)
 	{
-		String username;
-		username = jwtTokenExtensions.getUsername(jwtToken);
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = jwtTokenService.getUsername(jwtToken);
 		if (username != null) {
-
 			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
-			if (jwtTokenExtensions.validate(jwtToken, userDetails)) {
+			if (jwtTokenService.validate(jwtToken, userDetails)) {
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 					userDetails, null, userDetails.getAuthorities());
 				usernamePasswordAuthenticationToken
@@ -109,7 +106,7 @@ import lombok.NonNull;
 		AuthenticationResult<Users, AuthenticationErrors> authenticationResult = authenticationsService
 			.authenticate(username, password);
 		if(authenticationResult.isValid()){
-			jwtToken = jwtTokenExtensions.newJwtToken(userDetails);
+			jwtToken = jwtTokenService.newJwtToken(userDetails);
 			UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 				userDetails, null, userDetails.getAuthorities());
 			usernamePasswordAuthenticationToken

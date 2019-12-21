@@ -48,4 +48,12 @@ public class UsersServiceImpl implements UsersService
 		return user.getRoles().contains(role);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override public boolean signOut(@NonNull Users user)
+	{
+		return true;
+	}
+
 }

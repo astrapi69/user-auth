@@ -21,6 +21,12 @@ app:
   ignore-path-patterns:
     - /resources/**
     - /v1/jwt/register
+    - /v2/api-docs # swagger ui
+    - /configuration/ui # swagger ui
+    - /swagger-resources/** # swagger ui
+    - /configuration/security # swagger ui
+    - /swagger-ui.html # swagger ui
+    - /webjars/** # swagger ui
 
 spring:  
   datasource:

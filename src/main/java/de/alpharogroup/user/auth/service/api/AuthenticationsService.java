@@ -24,6 +24,8 @@ public interface AuthenticationsService extends Serializable
 
 	/**
 	 * Perform the authentication with the given email and password and return the result.
+	 * authentication (who are you?) with username<br>
+	 *     and authorization with password and the roles that the user have
 	 *
 	 * @param emailOrUsername
 	 *            the email or the user name of the {@link Users} object.
@@ -48,7 +50,7 @@ public interface AuthenticationsService extends Serializable
 	}
 
 	/**
-	 * Authorize given Users object.
+	 * Authorize given {@link Users} object with the given password
 	 *
 	 * @param user
 	 *            the user
@@ -101,8 +103,18 @@ public interface AuthenticationsService extends Serializable
 		return authenticationResult;
 	}
 
+	/**
+	 * Signs the given {@link Users} object out. Can be used to delete or clean up temporary user
+	 * related data
+	 *
+	 * @param user
+	 *            the user
+	 *
+	 * @return true, if the {@link Users} object successfully sign out
+	 */
 	default void signOut(final @NonNull Users user)
 	{
+		getUsersService().signOut(user);
 	}
 
 	UsersService getUsersService();

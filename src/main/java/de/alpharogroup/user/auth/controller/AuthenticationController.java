@@ -1,7 +1,9 @@
 package de.alpharogroup.user.auth.controller;
 
+import java.util.UUID;
 import java.util.function.Function;
 
+import de.alpharogroup.user.auth.service.JwtTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
+import de.alpharogroup.user.auth.dto.JwtRequest;
+import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(ApplicationConfiguration.REST_VERSION + "/auth")
@@ -33,9 +40,32 @@ import lombok.experimental.FieldDefaults;
 public class AuthenticationController
 {
 
+	public static final String AUTHENTICATE = "/authenticate";
 	AuthenticationsService authenticationsService;
 
 	UserMapper userMapper;
+
+	@Autowired
+	private JwtTokenService jwtTokenService;
+
+	@Autowired
+	private JwtUserDetailsService userDetailsService;
+
+	/**
+	 * Call this link <a href="https://localhost:8443/v1/auth/authenticate"></a>
+	 */
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = AUTHENTICATE, method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "authenticationRequest", value = "The username", dataType = "JwtRequest", paramType = "body") })
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+
+		final String token = jwtTokenService.newJwtToken(userDetails);
+
+		return ResponseEntity.ok(token);
+	}
 
 	/**
 	 * Call this link <a href="https://localhost:8443/v1/auth/signin?username=foo&password=bar"></a>
@@ -47,21 +77,15 @@ public class AuthenticationController
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "username", value = "The username", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "password", value = "The plain password", dataType = "string", paramType = "query") })
-	public ResponseEntity<AuthenticationResult<User, AuthenticationErrors>> signIn(
+	public ResponseEntity<String> signIn(
 		@RequestParam(value = "username") @NonNull final String emailOrUsername,
 		@RequestParam(value = "password") @NonNull final String password)
 	{
 		AuthenticationResult<Users, AuthenticationErrors> authenticate = authenticationsService
 			.authenticate(emailOrUsername, password);
-		AuthenticationResult<User, AuthenticationErrors> result = AuthenticationResult
-			.<User, AuthenticationErrors> builder()
-			.user(getMapper().apply(authenticate.getUser()))
-			.validationErrors(authenticate.getValidationErrors())
-			.valid(authenticate.isValid())
-			.build();
-		return ResponseEntity.status(result.getValidationErrors().isEmpty()
+		return ResponseEntity.status(authenticate.isValid()
 			? HttpStatus.OK.value()
-			: HttpStatus.UNAUTHORIZED.value()).body(result);
+			: HttpStatus.UNAUTHORIZED.value()).body(authenticate.getUser().getId().toString());
 	}
 
 	protected Function<Users, User> getMapper() {

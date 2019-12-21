@@ -42,4 +42,15 @@ public interface UsersService
 	 */
 	boolean isInRole(final @NonNull Users user, final @NonNull Roles role);
 
+	/**
+	 * Signs the given {@link Users} object out. Can be used to delete or clean up temporary user
+	 * related data
+	 *
+	 * @param user
+	 *            the user
+	 *
+	 * @return true, if the {@link Users} object successfully sign out
+	 */
+	boolean signOut(final @NonNull Users user);
+
 }
