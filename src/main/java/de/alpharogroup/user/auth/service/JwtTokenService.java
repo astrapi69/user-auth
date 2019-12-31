@@ -1,7 +1,8 @@
 package de.alpharogroup.user.auth.service;
 
+import de.alpharogroup.servlet.extensions.enums.HeaderKeyNames;
 import de.alpharogroup.user.auth.configuration.ApplicationProperties;
-import de.alpharogroup.user.auth.enums.HeaderKeyNames;
+import de.alpharogroup.user.auth.enums.ApplicationHeaderKeyNames;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,10 +10,8 @@ import io.jsonwebtoken.security.Keys;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -63,12 +62,12 @@ public class JwtTokenService
 		var token = Jwts.builder()
 			.signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
 			.setHeaderParam(HeaderKeyNames.TOKEN_TYPE_KEY, HeaderKeyNames.DEFAULT_TOKEN_TYPE)
-			.setIssuer(HeaderKeyNames.DEFAULT_TOKEN_ISSUER)
-			.setAudience(HeaderKeyNames.DEFAULT_TOKEN_AUDIENCE)
+			.setIssuer(ApplicationHeaderKeyNames.DEFAULT_TOKEN_ISSUER)
+			.setAudience(ApplicationHeaderKeyNames.DEFAULT_TOKEN_AUDIENCE)
 			.setSubject(userDetails.getUsername())
 			.setExpiration(new Date(System.currentTimeMillis()
 				+ Integer.valueOf(HeaderKeyNames.DEFAULT_DURABILITY))) // in 2 hours
-			.claim(HeaderKeyNames.HEADER_KEY_ROLES, roles)
+			.claim(ApplicationHeaderKeyNames.HEADER_KEY_ROLES, roles)
 			.compact();
 		return token;
 	}

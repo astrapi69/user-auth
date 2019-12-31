@@ -8,11 +8,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.alpharogroup.servlet.extensions.enums.HeaderKeyNames;
+import de.alpharogroup.servlet.extensions.HttpServletRequestExtensions;
 import de.alpharogroup.user.auth.service.JwtTokenService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -28,7 +29,7 @@ import de.alpharogroup.collections.map.MapFactory;
 import de.alpharogroup.collections.pairs.KeyValuePair;
 import de.alpharogroup.user.auth.configuration.ApplicationProperties;
 import de.alpharogroup.user.auth.dto.JwtRequest;
-import de.alpharogroup.user.auth.enums.HeaderKeyNames;
+import de.alpharogroup.user.auth.enums.ApplicationHeaderKeyNames;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 import de.alpharogroup.user.auth.service.api.AuthenticationsService;
 import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
@@ -113,7 +114,8 @@ import lombok.NonNull;
 				.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 			SecurityContextHolder.getContext()
 				.setAuthentication(usernamePasswordAuthenticationToken);
-			response.addHeader(HeaderKeyNames.AUTHORIZATION, HeaderKeyNames.BEARER_PREFIX + jwtToken);
+			response.addHeader(
+				HeaderKeyNames.AUTHORIZATION, HeaderKeyNames.BEARER_PREFIX + jwtToken);
 		}
 	}
 
