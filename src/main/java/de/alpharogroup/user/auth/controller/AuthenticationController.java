@@ -1,25 +1,30 @@
 package de.alpharogroup.user.auth.controller;
 
-import java.util.UUID;
 import java.util.function.Function;
 
-import de.alpharogroup.user.auth.service.JwtTokenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.alpharogroup.auth.beans.AuthenticationResult;
 import de.alpharogroup.auth.enums.AuthenticationErrors;
 import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
+import de.alpharogroup.user.auth.dto.JwtRequest;
 import de.alpharogroup.user.auth.dto.User;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 import de.alpharogroup.user.auth.mapper.UserMapper;
+import de.alpharogroup.user.auth.service.JwtTokenService;
 import de.alpharogroup.user.auth.service.api.AuthenticationsService;
+import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -27,11 +32,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
-import de.alpharogroup.user.auth.dto.JwtRequest;
-import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(ApplicationConfiguration.REST_VERSION + "/auth")
