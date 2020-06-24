@@ -1,14 +1,13 @@
-plugins {
-    id 'java'
-}
-
-group 'de.alpharogroup'
-version '0.0.1-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation project(":auth-viewmodels")
+    implementation project(":auth-entities")
+
+    implementation("de.alpharogroup:generic-mapper:$genericMapperVersion")
+    implementation("de.alpharogroup:ent-api:$entApiVersion")
+    implementation("de.alpharogroup:ent-core:$entCoreVersion")
+    implementation("org.springframework.boot:spring-boot-starter")
+    testImplementation project(":auth-application")
+    testImplementation("de.alpharogroup:silly-collections:$sillyCollectionsVersion")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

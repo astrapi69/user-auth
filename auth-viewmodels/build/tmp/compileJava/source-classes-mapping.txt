@@ -1,0 +1,21 @@
+de/alpharogroup/user/auth/dto/ThrowableReport.java
+ de.alpharogroup.user.auth.dto.ThrowableReport
+ de.alpharogroup.user.auth.dto.ThrowableReport$ThrowableReportBuilder
+de/alpharogroup/user/auth/dto/JwtRequest.java
+ de.alpharogroup.user.auth.dto.JwtRequest
+ de.alpharogroup.user.auth.dto.JwtRequest$JwtRequestBuilder
+de/alpharogroup/user/auth/dto/User.java
+ de.alpharogroup.user.auth.dto.User
+ de.alpharogroup.user.auth.dto.User$UserBuilder
+de/alpharogroup/user/auth/dto/Permission.java
+ de.alpharogroup.user.auth.dto.Permission
+ de.alpharogroup.user.auth.dto.Permission$PermissionBuilder
+de/alpharogroup/user/auth/dto/ResetPassword.java
+ de.alpharogroup.user.auth.dto.ResetPassword
+ de.alpharogroup.user.auth.dto.ResetPassword$ResetPasswordBuilder
+de/alpharogroup/user/auth/dto/Role.java
+ de.alpharogroup.user.auth.dto.Role
+ de.alpharogroup.user.auth.dto.Role$RoleBuilder
+de/alpharogroup/user/auth/dto/RelationPermission.java
+ de.alpharogroup.user.auth.dto.RelationPermission
+ de.alpharogroup.user.auth.dto.RelationPermission$RelationPermissionBuilder

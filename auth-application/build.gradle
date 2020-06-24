@@ -1,21 +1,36 @@
-plugins {
-    id 'org.springframework.boot' version '2.2.6.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-    id 'java'
-}
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation project(':auth-entities')
     implementation project(":auth-mappers")
     implementation project(":auth-services")
     implementation project(":auth-viewmodels")
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
-}
 
-test {
-    useJUnitPlatform()
+    implementation("de.alpharogroup:generic-mapper:$genericMapperVersion")
+    implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
+    implementation("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
+    implementation("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
+    implementation("de.alpharogroup:auth-api:$authApiVersion")
+    implementation("de.alpharogroup:servlet-kt-extensions:$servletKtExtensionsVersion")
+    implementation("de.alpharogroup:auth:$authVersion")
+    implementation("de.alpharogroup:mystic-crypt:$mysticCryptVersion")
+    implementation("de.alpharogroup:ent-api:$entApiVersion")
+    implementation("de.alpharogroup:ent-core:$entCoreVersion")
+    implementation("de.alpharogroup:xml-extensions:$xmlExtensionsVersion")
+    implementation("de.alpharogroup:silly-collections:$sillyCollectionsVersion")
+    implementation("de.alpharogroup:pg-enum-usertype:$pgEnumUsertypeVersion")
+    implementation("io.springfox:springfox-swagger2:$springfoxSwaggerVersion")
+    implementation("io.springfox:springfox-swagger-ui:$springfoxSwaggerVersion")
+    implementation("de.alpharogroup:spring-tool-extensions:$springToolExtensionsVersion")
+    implementation("de.alpharogroup:spring-boot-extensions:$springBootExtensionsVersion")
+    implementation("org.postgresql:postgresql")
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.security:spring-security-web")
+    implementation("org.springframework.security:spring-security-config")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

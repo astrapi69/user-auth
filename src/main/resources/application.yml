@@ -11,7 +11,8 @@ app:
   db-url-prefix: jdbc:postgresql://
   db-username: postgres
   db-password: postgres
-  jwt-secret: cp*D33tZY(juumBUcBDVv8tJ!8w/T@JGpS)@)Sr6EYfjFBTRUJfu@&6jz-7*cFk5
+  jwt:
+    secret: cp*D33tZY(juumBUcBDVv8tJ!8w/T@JGpS)@)Sr6EYfjFBTRUJfu@&6jz-7*cFk5
   signin-path-patterns:
     - /v1/auth/signin
   public-path-patterns:
