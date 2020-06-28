@@ -3,6 +3,7 @@ dependencies {
     implementation project(":auth-entities")
     implementation project(":auth-mappers")
     implementation project(":auth-viewmodels")
+    implementation("de.alpharogroup:bean-mapper-api:$beanMapperApiVersion")
     implementation("de.alpharogroup:generic-mapper:$genericMapperVersion")
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     implementation("io.jsonwebtoken:jjwt-impl:$jjwtVersion")

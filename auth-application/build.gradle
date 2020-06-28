@@ -15,7 +15,7 @@ dependencies {
     implementation("de.alpharogroup:mystic-crypt:$mysticCryptVersion")
     implementation("de.alpharogroup:ent-api:$entApiVersion")
     implementation("de.alpharogroup:ent-core:$entCoreVersion")
-    implementation("de.alpharogroup:xml-extensions:$xmlExtensionsVersion")
+    implementation("de.alpharogroup:json-extensions:$jsonExtensionsVersion")
     implementation("de.alpharogroup:silly-collections:$sillyCollectionsVersion")
     implementation("de.alpharogroup:pg-enum-usertype:$pgEnumUsertypeVersion")
     implementation("io.springfox:springfox-swagger2:$springfoxSwaggerVersion")

@@ -8,6 +8,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.alpharogroup.json.JsonStringToObjectExtensions;
+import de.alpharogroup.json.factory.ObjectMapperFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,8 +34,6 @@ import de.alpharogroup.user.auth.jpa.entities.Users;
 import de.alpharogroup.user.auth.service.JwtTokenService;
 import de.alpharogroup.user.auth.service.api.AuthenticationsService;
 import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
-import de.alpharogroup.xml.json.JsonStringToObjectExtensions;
-import de.alpharogroup.xml.json.ObjectMapperFactory;
 import lombok.NonNull;
 
 @Component public class JwtRequestFilter extends OncePerRequestFilter
