@@ -48,7 +48,7 @@ public class JwtTokenService
 		return Jwts.parserBuilder()
 			.setSigningKey(applicationProperties.getSecret().getBytes())
 			.build()
-			.parseClaimsJwt(token.replace(HeaderKeyNames.BEARER_PREFIX, ""))
+			.parseClaimsJws(token)
 			.getBody();
 	}
 
