@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.servlet.http.HttpServletRequest;
 
+import de.alpharogroup.spring.exceptionhandling.ExceptionHandlerExtensions;
+import de.alpharogroup.throwable.ThrowableExtensions;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,22 +32,12 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler
 	@ExceptionHandler
 	public ResponseEntity<Object> handleException(Exception e, HttpServletRequest request)
 	{
-		return newResponseEntity(
-			newThrowableReport(request, HttpStatus.BAD_REQUEST, e.getLocalizedMessage()));
-	}
-
-	ResponseEntity<Object> newResponseEntity(ThrowableReport throwableReport)
-	{
-		return new ResponseEntity<>(throwableReport, throwableReport.getStatus());
-	}
-
-	ThrowableReport newThrowableReport(HttpServletRequest httpServletRequest, HttpStatus status,
-		String message)
-	{
-		return ThrowableReport.builder().status(status)
-			.requestDescription(
-				ServletUriComponentsBuilder.fromRequest(httpServletRequest).build().toUriString())
-			.message(message).occurred(LocalDateTime.now()).build();
+		return ExceptionHandlerExtensions.newResponseEntity(
+			ExceptionHandlerExtensions
+				.newExceptionViewModel(request,
+					HttpStatus.BAD_REQUEST,
+					ThrowableExtensions.newThrowableMessage(e, e.getMessage()),
+					e.getLocalizedMessage()));
 	}
 
 }
