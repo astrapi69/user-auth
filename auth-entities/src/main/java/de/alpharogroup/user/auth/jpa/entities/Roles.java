@@ -47,6 +47,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 /**
  * The entity class {@link Roles} is keeping the information for the user roles.
@@ -61,12 +62,20 @@ import lombok.experimental.FieldDefaults;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Roles extends UUIDEntity implements Cloneable
 {
 	static final String COLUMN_NAME_NAME = "name";
 	static final String COLUMN_NAME_DESCRIPTION = "description";
+	static final String JOIN_TABLE_NAME_ROLE_PERMISSIONS = "role_permissions";
+	static final String JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_ROLE_ID = "role_id";
+	static final String JOIN_TABLE_ROLE_PERMISSIONS_USER_REFERENCED_COLUMN_NAME = "id";
+	static final String JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_PERMISSION_ID = "permission_id";
+	static final String JOIN_TABLE_ROLE_PERMISSIONS_ROLES_REFERENCED_COLUMN_NAME = "id";
+	static final String JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_ROLE_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_ROLE_PERMISSIONS + DatabasePrefix.UNDERSCORE + JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_ROLE_ID;
+	static final String JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_PERMISSION_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_ROLE_PERMISSIONS + DatabasePrefix.UNDERSCORE + JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_PERMISSION_ID;
+
 	/** The serial Version UID. */
 	private static final long serialVersionUID = 1L;
 	static final String TABLE_NAME = "roles";
@@ -79,9 +88,13 @@ public class Roles extends UUIDEntity implements Cloneable
 	/** The permissions of the role. */
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "role_permissions", joinColumns = {
-			@JoinColumn(name = "role_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_role_permissions_role_id")) }, inverseJoinColumns = {
-					@JoinColumn(name = "permission_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_role_permissions_permission_id")) })
+	@JoinTable(name = JOIN_TABLE_NAME_ROLE_PERMISSIONS, joinColumns = {
+			@JoinColumn(name = JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_ROLE_ID,
+				referencedColumnName = JOIN_TABLE_ROLE_PERMISSIONS_USER_REFERENCED_COLUMN_NAME,
+				foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_ROLE_ID)) }, inverseJoinColumns = {
+					@JoinColumn(name = JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_PERMISSION_ID,
+						referencedColumnName = JOIN_TABLE_ROLE_PERMISSIONS_ROLES_REFERENCED_COLUMN_NAME,
+						foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_PERMISSION_ID)) })
 	Set<Permissions> permissions = new HashSet<>();
 
 	/**

@@ -1,6 +1,7 @@
 package de.alpharogroup.user.auth.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -44,33 +45,38 @@ public class JwtTokenService
 
 	private Claims getAllClaims(String token)
 	{
-		return Jwts.parser()
+		return Jwts.parserBuilder()
 			.setSigningKey(applicationProperties.getSecret().getBytes())
-			.parseClaimsJws(token.replace(HeaderKeyNames.BEARER_PREFIX, ""))
+			.build()
+			.parseClaimsJwt(token.replace(HeaderKeyNames.BEARER_PREFIX, ""))
 			.getBody();
 	}
 
 	public String newJwtToken(UserDetails userDetails)
 	{
-		var roles = userDetails.getAuthorities()
-			.stream()
-			.map(GrantedAuthority::getAuthority)
-			.collect(Collectors.toList());
+		long expirationDate = System.currentTimeMillis()
+			+ Integer.valueOf(HeaderKeyNames.DEFAULT_DURABILITY); // in 2 hours
+		return buildJwtToken(userDetails,
+			userDetails.getAuthorities()
+				.stream()
+				.map(GrantedAuthority::getAuthority)
+				.collect(Collectors.toList()),
+			applicationProperties.getSecret().getBytes(),
+			expirationDate);
+	}
 
-		String jwtSecret = applicationProperties.getSecret();
-		var signingKey = jwtSecret.getBytes();
-
-		var token = Jwts.builder()
+	private String buildJwtToken(UserDetails userDetails, List<String> roles, byte[] signingKey,
+		long expirationDate)
+	{
+		return Jwts.builder()
 			.signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
 			.setHeaderParam(HeaderKeyNames.TOKEN_TYPE_KEY, HeaderKeyNames.DEFAULT_TOKEN_TYPE)
 			.setIssuer(ApplicationHeaderKeyNames.DEFAULT_TOKEN_ISSUER)
 			.setAudience(ApplicationHeaderKeyNames.DEFAULT_TOKEN_AUDIENCE)
 			.setSubject(userDetails.getUsername())
-			.setExpiration(new Date(System.currentTimeMillis()
-				+ Integer.valueOf(HeaderKeyNames.DEFAULT_DURABILITY))) // in 2 hours
+			.setExpiration(new Date(expirationDate))
 			.claim(ApplicationHeaderKeyNames.HEADER_KEY_ROLES, roles)
 			.compact();
-		return token;
 	}
 
 	public Boolean validate(String token, UserDetails userDetails)

@@ -34,6 +34,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import de.alpharogroup.db.entity.enums.DatabasePrefix;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -63,17 +64,30 @@ public class ResetPasswords extends UUIDEntity implements Cloneable
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
 	static final String TABLE_NAME = "reset_passwords";
+	static final String COLUMN_NAME_EXPIRY_DATE = "expiry_date";
+	static final String COLUMN_NAME_GENERATED_PASSWORD = "generated_password";
+	static final String COLUMN_NAME_START_TIME = "starttime";
+
+	static final String JOIN_TABLE_NAME_USER_ROLES = "user_roles";
+	static final String JOIN_COLUMN_NAME_USER_ID = "user_id";
+	static final String JOIN_REFERENCED_COLUMN_NAME = "id";
+	static final String JOIN_FOREIGN_KEY_RESET_PASSWORDS_USER_ID =
+		DatabasePrefix.FOREIGN_KEY_PREFIX + TABLE_NAME +
+			DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_USER_ID;
+
 	/** The date which this data expire */
-	@Column(name = "expiry_date")
+	@Column(name = COLUMN_NAME_EXPIRY_DATE)
 	LocalDateTime expiryDate;
 	/** mapping */
-	@Column(name = "generated_password", length = 1024)
+	@Column(name = COLUMN_NAME_GENERATED_PASSWORD, length = 1024)
 	String generatedPassword;
 	/** The time that the user send the form */
-	@Column(name = "starttime")
+	@Column(name = COLUMN_NAME_START_TIME)
 	LocalDateTime starttime;
 	/** The user attribute that references to the Entity class {@link Users} */
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_reset_passwords_user_id"))
+	@JoinColumn(name = JOIN_COLUMN_NAME_USER_ID,
+		referencedColumnName = JOIN_REFERENCED_COLUMN_NAME,
+		foreignKey = @ForeignKey(name = JOIN_FOREIGN_KEY_RESET_PASSWORDS_USER_ID))
 	Users user;
 }

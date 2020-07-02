@@ -48,6 +48,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 /**
  * The entity class {@link Users} is keeping the information for the users from the application.
@@ -64,7 +65,7 @@ import lombok.experimental.FieldDefaults;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Users extends UUIDEntity implements Cloneable
 {
@@ -74,6 +75,14 @@ public class Users extends UUIDEntity implements Cloneable
 	private static final long serialVersionUID = 1L;
 
 	static final String TABLE_NAME = "users";
+	static final String JOIN_TABLE_NAME_USER_ROLES = "user_roles";
+	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID = "user_id";
+	static final String JOIN_TABLE_USER_ROLES_USER_REFERENCED_COLUMN_NAME = "id";
+	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID = "role_id";
+	static final String JOIN_TABLE_USER_ROLES_ROLES_REFERENCED_COLUMN_NAME = "id";
+	static final String JOIN_TABLE_FOREIGN_KEY_USER_ROLES_USER_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_USER_ROLES + DatabasePrefix.UNDERSCORE + JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID;
+	static final String JOIN_TABLE_FOREIGN_KEY_USER_ROLES_ROLE_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_USER_ROLES + DatabasePrefix.UNDERSCORE + JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID;
+
 	/** The attribute active, if true the user account is active. */
 	@Column
 	boolean active;
@@ -86,9 +95,14 @@ public class Users extends UUIDEntity implements Cloneable
 	/** The roles of the user. */
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "user_roles", joinColumns = {
-			@JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_roles_user_id")) }, inverseJoinColumns = {
-					@JoinColumn(name = "role_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_roles_role_id")) })
+	@JoinTable(name = JOIN_TABLE_NAME_USER_ROLES, joinColumns = {
+			@JoinColumn(name = JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID,
+				referencedColumnName = JOIN_TABLE_USER_ROLES_USER_REFERENCED_COLUMN_NAME,
+				foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_ROLES_USER_ID)) },
+		inverseJoinColumns = {
+					@JoinColumn(name = JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID,
+						referencedColumnName = JOIN_TABLE_USER_ROLES_ROLES_REFERENCED_COLUMN_NAME,
+						foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_ROLES_ROLE_ID)) })
 	Set<Roles> roles = new HashSet<>();
 	/** The salt that is used to compute the hash. */
 	@Column(length = 8)

@@ -1,8 +1,2 @@
-
 rootProject.name = 'user-auth'
-include 'auth-entities'
-include 'auth-application'
-include 'auth-mappers'
-include 'auth-services'
-include 'auth-viewmodels'
-
+include 'auth-application', 'auth-services',  'auth-entities',  'auth-viewmodels', 'auth-mappers'

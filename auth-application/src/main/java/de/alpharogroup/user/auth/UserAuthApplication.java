@@ -10,6 +10,8 @@ import de.alpharogroup.file.search.PathFinder;
 import de.alpharogroup.spring.boot.application.ApplicationHooks;
 import de.alpharogroup.user.auth.configuration.ApplicationProperties;
 
+import java.io.File;
+
 @EnableTransactionManagement
 @EnableConfigurationProperties({ ApplicationProperties.class, JwtProperties.class })
 @SpringBootApplication
@@ -20,7 +22,10 @@ public class UserAuthApplication
 	{
 		SpringApplication application = new SpringApplication(UserAuthApplication.class);
 		ApplicationHooks instance = ApplicationHooks.INSTANCE;
-		instance.addDatabaseIfNotExists(application, PathFinder.getSrcMainResourcesDir(),
+		File projectSrcMainResourcesDir = PathFinder
+			.getRelativePath(PathFinder.getProjectDirectory(),
+			"auth-application", "src", "main", "resources");
+		instance.addDatabaseIfNotExists(application, projectSrcMainResourcesDir,
 			"application-dev.yml");
 		application.run(args);
 	}
