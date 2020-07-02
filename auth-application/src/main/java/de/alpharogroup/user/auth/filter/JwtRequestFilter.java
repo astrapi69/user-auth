@@ -85,7 +85,9 @@ import lombok.NonNull;
 		String jwtToken)
 	{
 		String username = jwtTokenService.getUsername(jwtToken);
-		if (username != null) {
+		if (username != null
+			&& SecurityContextHolder.getContext().getAuthentication() == null
+		) {
 			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 			if (jwtTokenService.validate(jwtToken, userDetails)) {
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
