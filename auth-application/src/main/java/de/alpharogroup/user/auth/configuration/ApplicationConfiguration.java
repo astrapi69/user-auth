@@ -1,5 +1,11 @@
 package de.alpharogroup.user.auth.configuration;
 
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.NonNull;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +14,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
+import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -15,6 +25,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Configuration
 @ComponentScan(basePackages = "de.alpharogroup.user.auth")
@@ -26,17 +38,59 @@ import lombok.experimental.FieldDefaults;
 public class ApplicationConfiguration implements WebMvcConfigurer
 {
 
-	public static final String REST_VERSION = "/v1";
+	public static final String VERSION_API_1 = "v1";
+	public static final String REST_VERSION = "/" + VERSION_API_1;
+
+	ApplicationProperties applicationProperties;
 
 	@SuppressWarnings("unused")
 	Environment env;
 
+	public static ObjectMapper initialize(final @NonNull ObjectMapper objectMapper)
+	{
+		SimpleModule module;
+		JavaTimeModule javaTimeModule;
+		SimpleAbstractTypeResolver resolver;
+
+		module = new SimpleModule("user-auth", Version.unknownVersion());
+		resolver = new SimpleAbstractTypeResolver();
+		module.setAbstractTypes(resolver);
+		objectMapper.registerModule(module);
+
+		javaTimeModule = new JavaTimeModule();
+		objectMapper.registerModule(javaTimeModule);
+		return objectMapper;
+	}
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry)
 	{
 		registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 			.allowedOrigins("*");
+	}
+
+	@Override
+	public void configureMessageConverters(List<HttpMessageConverter<?>> converters)
+	{
+		converters.add(createXmlHttpMessageConverter());
+		converters.add(newMappingJackson2HttpMessageConverter());
+	}
+
+	private MappingJackson2HttpMessageConverter newMappingJackson2HttpMessageConverter()
+	{
+		MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+		return mappingJackson2HttpMessageConverter;
+	}
+
+	private HttpMessageConverter<Object> createXmlHttpMessageConverter()
+	{
+		MarshallingHttpMessageConverter xmlConverter = new MarshallingHttpMessageConverter();
+
+		XStreamMarshaller xstreamMarshaller = new XStreamMarshaller();
+		xmlConverter.setMarshaller(xstreamMarshaller);
+		xmlConverter.setUnmarshaller(xstreamMarshaller);
+
+		return xmlConverter;
 	}
 
 	@Bean
@@ -46,6 +100,12 @@ public class ApplicationConfiguration implements WebMvcConfigurer
 		messageSource.setBasenames("messages/errors");
 		messageSource.setDefaultEncoding("UTF-8");
 		return messageSource;
+	}
+
+	@Bean
+	public ObjectMapper objectMapper()
+	{
+		return initialize(new ObjectMapper());
 	}
 
 }

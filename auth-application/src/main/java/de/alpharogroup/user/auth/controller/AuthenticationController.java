@@ -34,13 +34,15 @@ import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 
 @RestController
-@RequestMapping(ApplicationConfiguration.REST_VERSION + "/auth")
+@RequestMapping(ApplicationConfiguration.REST_VERSION + AuthenticationController.REST_PATH)
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationController
 {
 
+	public static final String REST_PATH = "/auth";
 	public static final String AUTHENTICATE = "/authenticate";
+	public static final String SIGNIN = "/signin";
 	AuthenticationsService authenticationsService;
 
 	UserMapper userMapper;
@@ -74,7 +76,7 @@ public class AuthenticationController
 	 * and adapt to your parameters.
 	 */
 	@CrossOrigin(origins = "*")
-	@GetMapping(path = "/signin", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = SIGNIN, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "authenticate with the given username and password")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "username", value = "The username", dataType = "string", paramType = "query"),
@@ -87,11 +89,8 @@ public class AuthenticationController
 			.authenticate(emailOrUsername, password);
 		return ResponseEntity.status(authenticate.isValid()
 			? HttpStatus.OK.value()
-			: HttpStatus.UNAUTHORIZED.value()).body(authenticate.getUser().getId().toString());
-	}
-
-	public void login(org.springframework.security.core.userdetails.User user){
-		
+			: HttpStatus.UNAUTHORIZED.value()).body(authenticate.isValid()
+			? authenticate.getUser().getId().toString():"Invalid username or password");
 	}
 
 	protected Function<Users, User> getMapper() {
