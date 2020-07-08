@@ -1,6 +1,6 @@
 
 dependencies {
-    implementation project(':auth-entities')
+    implementation project(":auth-entities")
     implementation project(":auth-mappers")
     implementation project(":auth-services")
     implementation project(":auth-viewmodels")

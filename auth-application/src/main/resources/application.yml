@@ -16,6 +16,7 @@ app:
   signin-path-patterns:
     - /v1/auth/signin
   public-path-patterns:
+    - /v1/auth/authenticate
     - /v1/jwt/ispublic
     - /v1/jwt/register
     - /v1/public

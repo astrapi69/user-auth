@@ -55,7 +55,9 @@ public class AuthenticationController
 	 * Call this link <a href="https://localhost:8443/v1/auth/authenticate"></a>
 	 */
 	@CrossOrigin(origins = "*")
-	@RequestMapping(value = AUTHENTICATE, method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = AUTHENTICATE, method = RequestMethod.POST,
+		consumes = MediaType.APPLICATION_JSON_VALUE,
+		produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "authenticationRequest", value = "The username", dataType = "JwtRequest", paramType = "body") })
@@ -86,6 +88,10 @@ public class AuthenticationController
 		return ResponseEntity.status(authenticate.isValid()
 			? HttpStatus.OK.value()
 			: HttpStatus.UNAUTHORIZED.value()).body(authenticate.getUser().getId().toString());
+	}
+
+	public void login(org.springframework.security.core.userdetails.User user){
+		
 	}
 
 	protected Function<Users, User> getMapper() {

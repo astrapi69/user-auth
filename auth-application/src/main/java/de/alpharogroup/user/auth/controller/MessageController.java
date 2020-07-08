@@ -17,7 +17,9 @@ public class MessageController
 	public static final String REST_PATH = "/jwt";
 	public static final String PRIVATE_PATH = "/private";
 	public static final String ISPUBLIC_PATH = "/ispublic";
-
+	/**
+	 * Call this link <a href="https://localhost:8443/v1/jwt/private"></a>
+	 */
 	@RequestMapping(value = PRIVATE_PATH, method = RequestMethod.GET)
 	public ResponseEntity<?> getPrivateMessage() {
 		return ResponseEntity.ok("This is a private message");
