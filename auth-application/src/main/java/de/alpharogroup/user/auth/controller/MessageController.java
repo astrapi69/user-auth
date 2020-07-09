@@ -17,6 +17,7 @@ public class MessageController
 	public static final String REST_PATH = "/jwt";
 	public static final String PRIVATE_PATH = "/private";
 	public static final String ISPUBLIC_PATH = "/ispublic";
+	public static final String UNAUTHORIZED_PATH = "/unauthorized";
 	/**
 	 * Call this link <a href="https://localhost:8443/v1/jwt/private"></a>
 	 */
@@ -28,6 +29,11 @@ public class MessageController
 	@RequestMapping(value = ISPUBLIC_PATH, method = RequestMethod.GET)
 	public ResponseEntity<?> getPublicMessage() {
 		return ResponseEntity.ok("This is a public message");
+	}
+
+	@RequestMapping(value = UNAUTHORIZED_PATH, method = RequestMethod.GET)
+	public ResponseEntity<?> getUnauthorized() {
+		return ResponseEntity.ok("Sign in failed");
 	}
 
 }

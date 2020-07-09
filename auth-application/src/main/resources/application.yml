@@ -13,7 +13,7 @@ app:
   db-url-prefix: jdbc:postgresql://
   db-username: postgres
   db-password: postgres
-  context-path: ${app.uri-scheme}://${app.host}:${server.port}/${app.name}
+  context-path: ${app.uri-scheme}://${app.host}:${server.port}/
   signin-failed-page: unauthorized.html
   jwt:
     secret: cp*D33tZY(juumBUcBDVv8tJ!8w/T@JGpS)@)Sr6EYfjFBTRUJfu@&6jz-7*cFk5
@@ -21,12 +21,14 @@ app:
     - /v1/auth/signin
   public-path-patterns:
     - /v1/auth/authenticate
+    - /v1/auth/signup
     - /v1/jwt/ispublic
     - /v1/jwt/register
     - /v1/public
   ignore-path-patterns:
     - /resources/**
     - /v1/jwt/register
+    - /v1/jwt/unauthorized
     - /v2/api-docs # swagger ui
     - /configuration/ui # swagger ui
     - /swagger-resources/** # swagger ui

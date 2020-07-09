@@ -2,6 +2,8 @@ package de.alpharogroup.user.auth.controller;
 
 import java.util.function.Function;
 
+import de.alpharogroup.user.auth.configuration.ApplicationProperties;
+import de.alpharogroup.user.auth.service.jwt.JwtProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,6 +45,7 @@ public class AuthenticationController
 	public static final String REST_PATH = "/auth";
 	public static final String AUTHENTICATE = "/authenticate";
 	public static final String SIGNIN = "/signin";
+	ApplicationProperties applicationProperties;
 	AuthenticationsService authenticationsService;
 
 	UserMapper userMapper;
@@ -87,10 +90,15 @@ public class AuthenticationController
 	{
 		AuthenticationResult<Users, AuthenticationErrors> authenticate = authenticationsService
 			.authenticate(emailOrUsername, password);
+		String unauthorizedRedirectPath = "redirect:" +
+				applicationProperties.getContextPath()+
+				ApplicationConfiguration.REST_VERSION + MessageController.REST_PATH +
+				MessageController.UNAUTHORIZED_PATH;
 		return ResponseEntity.status(authenticate.isValid()
 			? HttpStatus.OK.value()
 			: HttpStatus.UNAUTHORIZED.value()).body(authenticate.isValid()
-			? authenticate.getUser().getId().toString():"Invalid username or password");
+			? authenticate.getUser().getId().toString()
+				: unauthorizedRedirectPath);
 	}
 
 	protected Function<Users, User> getMapper() {
