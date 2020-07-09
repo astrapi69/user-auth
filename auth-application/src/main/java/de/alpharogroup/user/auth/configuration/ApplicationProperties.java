@@ -16,10 +16,14 @@ import lombok.experimental.FieldDefaults;
 public class ApplicationProperties
 {
 
+	String uriScheme;
+	String host;
 	String dbHost;
 	String dbName;
 	int dbPort;
 	String dbUrlPrefix;
+	String contextPath;
+	String signinFailedPage;
 	String dir;
 	String name;
 	List<String> publicPathPatterns;

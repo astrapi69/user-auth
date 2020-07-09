@@ -5,12 +5,16 @@ server:
 app:
   name: user-auth
   dir: ${user.home}/.${app.name}
+  host: localhost
+  uri-scheme: http
   db-name: authusers
-  db-host: localhost
+  db-host: ${app.host}
   db-port: 5432
   db-url-prefix: jdbc:postgresql://
   db-username: postgres
   db-password: postgres
+  context-path: ${app.uri-scheme}://${app.host}:${server.port}/${app.name}
+  signin-failed-page: unauthorized.html
   jwt:
     secret: cp*D33tZY(juumBUcBDVv8tJ!8w/T@JGpS)@)Sr6EYfjFBTRUJfu@&6jz-7*cFk5
   signin-path-patterns:
@@ -30,7 +34,7 @@ app:
     - /swagger-ui.html # swagger ui
     - /webjars/** # swagger ui
 
-spring:  
+spring:
   datasource:
     username: postgres
     password: postgres
