@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 @ControllerAdvice(annotations = RestController.class)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @AllArgsConstructor
-public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler
+public class ControllerExceptionHandler extends ResponseEntityExceptionHandler
 {
 	@Getter
 	MessageSource messageSource;
