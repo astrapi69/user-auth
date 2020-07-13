@@ -1,6 +1,6 @@
 # default properties
 server:
-  port: 8443
+  port: 10443
   ssl:
     enabled: true
     key-alias: selfsigned_authuserkeystore

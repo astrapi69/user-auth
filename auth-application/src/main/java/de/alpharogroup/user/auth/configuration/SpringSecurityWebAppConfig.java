@@ -68,6 +68,8 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	protected void configure(HttpSecurity http) throws Exception
 	{
 		List<String> signinPaths = applicationProperties.getSigninPathPatterns();
+		List<String> ignorePathPatterns = applicationProperties.getIgnorePathPatterns();
+		signinPaths.addAll(ignorePathPatterns);
 		String[] allPublicPaths = ListExtensions.toArray(signinPaths);
 		// @formatter:off
 		http
