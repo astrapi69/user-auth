@@ -37,6 +37,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import de.alpharogroup.db.entity.enums.DatabasePrefix;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -67,20 +68,48 @@ public class RelationPermissions extends UUIDEntity implements Cloneable
 
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
-	static final String TABLE_NAME = "relation_permissions";
+	static final String SINGULAR_ENTITY_NAME = "relation_permission";
+	static final String TABLE_NAME = SINGULAR_ENTITY_NAME+"s";
+	static final String JOIN_COLUMN_NAME_PROVIDER_ID = "provider_id";
+	static final String JOIN_COLUMN_NAME_SUBSCRIBER_ID = "subscriber_id";
+	static final String JOIN_TABLE_NAME_USER_RELATION_PERMISSIONS = "user_" + TABLE_NAME;
+	static final String JOIN_TABLE_USER_RELATION_COLUMN_NAME_USER_RELATION_PERMISSION_ID = "user_relation_permission_id";
+	static final String JOIN_TABLE_USER_RELATION_COLUMN_NAME_PERMISSION_ID = "permission_id";
+	static final String JOIN_TABLE_FOREIGN_KEY_USER_RELATION_PERMISSIONS_USER_RELATION_PERMISSION_ID = DatabasePrefix.FOREIGN_KEY_PREFIX +
+		JOIN_TABLE_NAME_USER_RELATION_PERMISSIONS + DatabasePrefix.UNDERSCORE +
+		JOIN_TABLE_USER_RELATION_COLUMN_NAME_USER_RELATION_PERMISSION_ID;
+	static final String JOIN_TABLE_FOREIGN_KEY_USER_RELATION_PERMISSIONS_PERMISSION_ID = DatabasePrefix.FOREIGN_KEY_PREFIX +
+		JOIN_TABLE_NAME_USER_RELATION_PERMISSIONS + DatabasePrefix.UNDERSCORE +
+		JOIN_TABLE_USER_RELATION_COLUMN_NAME_PERMISSION_ID;
+	static final String JOIN_COLUMN_FOREIGN_KEY_USER_RELATION_PERMISSIONS_PROVIDER_ID = DatabasePrefix.FOREIGN_KEY_PREFIX  +
+		JOIN_TABLE_NAME_USER_RELATION_PERMISSIONS + DatabasePrefix.UNDERSCORE +
+		JOIN_COLUMN_NAME_PROVIDER_ID;
+	static final String JOIN_COLUMN_FOREIGN_KEY_USER_RELATION_PERMISSIONS_SUBSCRIBER_ID = DatabasePrefix.FOREIGN_KEY_PREFIX  +
+		JOIN_TABLE_NAME_USER_RELATION_PERMISSIONS + DatabasePrefix.UNDERSCORE +
+		JOIN_COLUMN_NAME_SUBSCRIBER_ID;
+
 	/** The permissions of the role. */
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "user_relation_permissions", joinColumns = {
-			@JoinColumn(name = "user_relation_permission_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_relation_permissions_user_relation_permission_id")) }, inverseJoinColumns = {
-					@JoinColumn(name = "permission_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_relation_permissions_permission_id")) })
+	@JoinTable(name = JOIN_TABLE_NAME_USER_RELATION_PERMISSIONS, joinColumns = {
+			@JoinColumn(name = JOIN_TABLE_USER_RELATION_COLUMN_NAME_USER_RELATION_PERMISSION_ID,
+				referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
+				foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_RELATION_PERMISSIONS_USER_RELATION_PERMISSION_ID)) },
+		inverseJoinColumns = {
+					@JoinColumn(name = JOIN_TABLE_USER_RELATION_COLUMN_NAME_PERMISSION_ID,
+						referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
+						foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_RELATION_PERMISSIONS_PERMISSION_ID)) })
 	Set<Permissions> permissions = new HashSet<>();
 	/** The provider of the permissions. */
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "provider_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_relation_permissions_provider_id"))
+	@JoinColumn(name = JOIN_COLUMN_NAME_PROVIDER_ID, nullable = true,
+		referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
+		foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_USER_RELATION_PERMISSIONS_PROVIDER_ID))
 	Users provider;
 	/** The subscriber of the permissions. */
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "subscriber_id", nullable = true, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_relation_permissions_subscriber_id"))
+	@JoinColumn(name = JOIN_COLUMN_NAME_SUBSCRIBER_ID, nullable = true,
+		referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
+		foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_USER_RELATION_PERMISSIONS_SUBSCRIBER_ID))
 	Users subscriber;
 }

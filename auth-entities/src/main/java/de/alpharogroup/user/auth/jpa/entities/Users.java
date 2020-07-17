@@ -70,16 +70,14 @@ import lombok.experimental.SuperBuilder;
 public class Users extends UUIDEntity implements Cloneable
 {
 
-	static final String COLUMN_NAME_USERNAME = "username";
 	/** The serial Version UID. */
 	private static final long serialVersionUID = 1L;
-
-	static final String TABLE_NAME = "users";
+	static final String SINGULAR_ENTITY_NAME = "user";
+	static final String TABLE_NAME = SINGULAR_ENTITY_NAME+"s";
+	static final String COLUMN_NAME_USERNAME = "username";
 	static final String JOIN_TABLE_NAME_USER_ROLES = "user_roles";
 	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID = "user_id";
-	static final String JOIN_TABLE_USER_ROLES_USER_REFERENCED_COLUMN_NAME = "id";
 	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID = "role_id";
-	static final String JOIN_TABLE_USER_ROLES_ROLES_REFERENCED_COLUMN_NAME = "id";
 	static final String JOIN_TABLE_FOREIGN_KEY_USER_ROLES_USER_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_USER_ROLES + DatabasePrefix.UNDERSCORE + JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID;
 	static final String JOIN_TABLE_FOREIGN_KEY_USER_ROLES_ROLE_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_USER_ROLES + DatabasePrefix.UNDERSCORE + JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID;
 
@@ -97,11 +95,11 @@ public class Users extends UUIDEntity implements Cloneable
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = JOIN_TABLE_NAME_USER_ROLES, joinColumns = {
 			@JoinColumn(name = JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID,
-				referencedColumnName = JOIN_TABLE_USER_ROLES_USER_REFERENCED_COLUMN_NAME,
+				referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
 				foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_ROLES_USER_ID)) },
 		inverseJoinColumns = {
 					@JoinColumn(name = JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID,
-						referencedColumnName = JOIN_TABLE_USER_ROLES_ROLES_REFERENCED_COLUMN_NAME,
+						referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
 						foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_ROLES_ROLE_ID)) })
 	Set<Roles> roles = new HashSet<>();
 	/** The salt that is used to compute the hash. */

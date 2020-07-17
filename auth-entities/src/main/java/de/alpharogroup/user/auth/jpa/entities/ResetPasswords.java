@@ -63,15 +63,16 @@ public class ResetPasswords extends UUIDEntity implements Cloneable
 {
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
-	static final String TABLE_NAME = "reset_passwords";
+
+	static final String SINGULAR_ENTITY_NAME = "reset_password";
+	static final String TABLE_NAME = SINGULAR_ENTITY_NAME+"s";
 	static final String COLUMN_NAME_EXPIRY_DATE = "expiry_date";
 	static final String COLUMN_NAME_GENERATED_PASSWORD = "generated_password";
 	static final String COLUMN_NAME_START_TIME = "starttime";
 
 	static final String JOIN_TABLE_NAME_USER_ROLES = "user_roles";
 	static final String JOIN_COLUMN_NAME_USER_ID = "user_id";
-	static final String JOIN_REFERENCED_COLUMN_NAME = "id";
-	static final String JOIN_FOREIGN_KEY_RESET_PASSWORDS_USER_ID =
+	static final String JOIN_COLUMN_FOREIGN_KEY_RESET_PASSWORDS_USER_ID =
 		DatabasePrefix.FOREIGN_KEY_PREFIX + TABLE_NAME +
 			DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_USER_ID;
 
@@ -87,7 +88,7 @@ public class ResetPasswords extends UUIDEntity implements Cloneable
 	/** The user attribute that references to the Entity class {@link Users} */
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = JOIN_COLUMN_NAME_USER_ID,
-		referencedColumnName = JOIN_REFERENCED_COLUMN_NAME,
-		foreignKey = @ForeignKey(name = JOIN_FOREIGN_KEY_RESET_PASSWORDS_USER_ID))
+		referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
+		foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_RESET_PASSWORDS_USER_ID))
 	Users user;
 }

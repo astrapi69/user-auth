@@ -67,12 +67,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Permissions extends UUIDEntity implements Cloneable
 {
-	static final String TABLE_NAME = "permissions";
+	/** The serial Version UID */
+	private static final long serialVersionUID = 1L;
+	static final String SINGULAR_ENTITY_NAME = "permission";
+	static final String TABLE_NAME = SINGULAR_ENTITY_NAME+"s";
 	static final String COLUMN_NAME_NAME = "name";
 	static final String COLUMN_NAME_SHORTCUT = "shortcut";
 	static final String COLUMN_NAME_DESCRIPTION = "description";
-	/** The serial Version UID */
-	private static final long serialVersionUID = 1L;
 
 	/** A description for the permission. */
 	@Column(name = COLUMN_NAME_DESCRIPTION, length = 64)
