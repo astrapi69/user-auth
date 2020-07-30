@@ -23,9 +23,12 @@ public class SwaggerConfiguration
 	@Bean
 	public Docket api()
 	{
-		return new Docket(DocumentationType.SWAGGER_2).select()
+		return new Docket(DocumentationType.SWAGGER_2)
+			.select()
 			.apis(RequestHandlerSelectors.basePackage("de.alpharogroup.user.auth"))
-			.paths(regex(VERSION_API_1 + "/.*|")).build().apiInfo(metaData());
+			.paths(regex(VERSION_API_1 + "/.*|"))
+			.build()
+			.apiInfo(metaData());
 	}
 
 	private ApiInfo metaData()
