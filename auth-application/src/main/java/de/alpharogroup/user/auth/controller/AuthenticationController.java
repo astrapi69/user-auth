@@ -1,8 +1,14 @@
 package de.alpharogroup.user.auth.controller;
 
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import de.alpharogroup.user.auth.configuration.ApplicationProperties;
+import de.alpharogroup.user.auth.dto.JwtResponse;
+import de.alpharogroup.user.auth.dto.Signup;
+import de.alpharogroup.user.auth.jpa.entities.Roles;
+import de.alpharogroup.user.auth.service.api.UsersService;
 import de.alpharogroup.user.auth.service.jwt.JwtProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,6 +41,8 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(ApplicationConfiguration.REST_VERSION + AuthenticationController.REST_PATH)
 @AllArgsConstructor
@@ -45,16 +53,13 @@ public class AuthenticationController
 	public static final String REST_PATH = "/auth";
 	public static final String AUTHENTICATE = "/authenticate";
 	public static final String SIGNIN = "/signin";
+	public static final String SIGNUP = "/signup";
+
 	ApplicationProperties applicationProperties;
 	AuthenticationsService authenticationsService;
-
-	UserMapper userMapper;
-
-	@Autowired
-	private JwtTokenService jwtTokenService;
-
-	@Autowired
-	private JwtUserDetailsService userDetailsService;
+	JwtTokenService jwtTokenService;
+	JwtUserDetailsService userDetailsService;
+	UsersService usersService;
 
 	/**
 	 * Call this link <a href="https://localhost:8443/v1/auth/authenticate"></a>
@@ -84,24 +89,49 @@ public class AuthenticationController
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "username", value = "The username", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "password", value = "The plain password", dataType = "string", paramType = "query") })
-	public ResponseEntity<String> signIn(
+	public ResponseEntity<?> signIn(
 		@RequestParam(value = "username") @NonNull final String emailOrUsername,
 		@RequestParam(value = "password") @NonNull final String password)
 	{
 		AuthenticationResult<Users, AuthenticationErrors> authenticate = authenticationsService
 			.authenticate(emailOrUsername, password);
+		if(authenticate.isValid()) {
+			final UserDetails userDetails = userDetailsService.loadUserByUsername(emailOrUsername);
+			final String token = jwtTokenService.newJwtToken(userDetails);
+			Set<String> roles =
+				authenticate.getUser().getRoles().stream().map(roles1 -> roles1.getName()).collect(
+					Collectors.toSet());
+			JwtResponse jwtResponse = JwtResponse.builder()
+				.token(token)
+				.type("Bearer")
+				.username(emailOrUsername)
+				.roles(roles)
+				.build();
+
+			return ResponseEntity.status(
+				 HttpStatus.OK.value()
+				).body(jwtResponse);
+		}
 		String unauthorizedRedirectPath = "redirect:" +
 				applicationProperties.getContextPath()+
 				ApplicationConfiguration.REST_VERSION + MessageController.REST_PATH +
 				MessageController.UNAUTHORIZED_PATH;
-		return ResponseEntity.status(authenticate.isValid()
-			? HttpStatus.OK.value()
-			: HttpStatus.UNAUTHORIZED.value()).body(authenticate.isValid()
-			? authenticate.getUser().getId().toString()
-				: unauthorizedRedirectPath);
+		return ResponseEntity
+			.status(HttpStatus.UNAUTHORIZED.value())
+			.body(unauthorizedRedirectPath);
 	}
 
-	protected Function<Users, User> getMapper() {
-		return userMapper::toDto;
+	@RequestMapping(value = SIGNUP, method = RequestMethod.POST,
+		consumes = MediaType.APPLICATION_JSON_VALUE,
+		produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> signUp(@Valid @RequestBody Signup signUpRequest) {
+		if(usersService.existsByUsername(signUpRequest.getUsername()) ) {
+			return ResponseEntity
+				.status(HttpStatus.BAD_REQUEST.value())
+				.body("Username already exists");
+		}
+
+		return null;
 	}
+
 }

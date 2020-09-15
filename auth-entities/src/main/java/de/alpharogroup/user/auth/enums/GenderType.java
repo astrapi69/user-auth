@@ -18,6 +18,8 @@ public enum GenderType
 	/** The constant if the gender is undefined. */
 	UNDEFINED;
 
+	public static final String ENUM_CLASS_NAME_VALUE = "de.alpharogroup.user.auth.enums.GenderType";
+
 	/**
 	 * Gets the all genders without the gender type {@link GenderType#UNDEFINED} and
 	 * {@link GenderType#INCORPORATION}.
