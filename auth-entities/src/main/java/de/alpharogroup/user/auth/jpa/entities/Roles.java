@@ -24,30 +24,15 @@
  */
 package de.alpharogroup.user.auth.jpa.entities;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
 import de.alpharogroup.db.entity.enums.DatabasePrefix;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The entity class {@link Roles} is keeping the information for the user roles.
@@ -71,7 +56,7 @@ public class Roles extends UUIDEntity implements Cloneable
 	private static final long serialVersionUID = 1L;
 
 	static final String SINGULAR_ENTITY_NAME = "role";
-	static final String TABLE_NAME = SINGULAR_ENTITY_NAME+"s";
+	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String COLUMN_NAME_NAME = "name";
 	static final String COLUMN_NAME_DESCRIPTION = "description";
 	static final String JOIN_TABLE_NAME_ROLE_PERMISSIONS = "role_permissions";

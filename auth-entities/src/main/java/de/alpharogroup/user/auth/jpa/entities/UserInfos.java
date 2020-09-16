@@ -1,38 +1,23 @@
 package de.alpharogroup.user.auth.jpa.entities;
 
+import de.alpharogroup.db.DatabaseDefaults;
+import de.alpharogroup.db.entity.enums.DatabasePrefix;
+import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
+import de.alpharogroup.user.auth.enums.GenderType;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Parameter;
+
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import de.alpharogroup.user.auth.enums.GenderType;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-
-import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
 
 /**
  * The entity class {@link UserInfos} UserInfos hold user specific information
@@ -40,8 +25,10 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = UserInfos.TABLE_NAME)
 @TypeDefs({
-	@TypeDef(name = "genderConverter", typeClass = de.alpharogroup.db.postgres.usertype.PGEnumUserType.class, parameters = {
-		@org.hibernate.annotations.Parameter(name = "enumClassName", value = "de.alpharogroup.user.auth.enums.GenderType") }) })
+	@TypeDef(name = UserInfos.CONVERTER_NAME_GENDER,
+		typeClass = de.alpharogroup.db.postgres.usertype.PGEnumUserType.class, parameters = {
+		@Parameter(name = DatabaseDefaults.ENUM_CLASS_NAME,
+			value = GenderType.ENUM_CLASS_NAME_VALUE) }) })
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -52,31 +39,38 @@ import lombok.experimental.SuperBuilder;
 public class UserInfos extends UUIDEntity
 {
 
-	static final String TABLE_NAME = "user_infos";
+	static final String SINGULAR_ENTITY_NAME = "user_info";
+	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
+	static final String COLUMN_NAME_OWNER = "owner";
+	static final String CONVERTER_NAME_GENDER = "genderConverter";
+	static final String JOIN_TABLE_NAME_USER_CONTACTMETHODS = "user_" + Contactmethods.TABLE_NAME;
+
 	/** The owner of this user data. */
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "owner", foreignKey = @ForeignKey(name = "fk_user_infos_users_id"))
+	@JoinColumn(name = COLUMN_NAME_OWNER, foreignKey = @ForeignKey(name = "fk_user_infos_users_id"))
 	private Users owner;
 	/** The birth name from the user if he or she had one. */
-	@Column(name = "birthname", length = 64)
+	@Column(length = 64)
 	private String birthname;
 	/** The contact data of the user. */
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
 	@Cascade({ CascadeType.SAVE_UPDATE, CascadeType.DELETE })
-	@JoinTable(name = "user_contactmethods", joinColumns = {
-			@JoinColumn(name = "user_infos_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_infos_user_infos_id")) }, inverseJoinColumns = {
+	@JoinTable(name = JOIN_TABLE_NAME_USER_CONTACTMETHODS, joinColumns = {
+			@JoinColumn(name = "user_infos_id",
+				referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
+				foreignKey = @ForeignKey(name = "fk_user_infos_user_infos_id")) }, inverseJoinColumns = {
 					@JoinColumn(name = "contactmethods_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_infos_contactmethods_id")) })
 	private Set<Contactmethods> contactmethods = new HashSet<>();
 	/** The date of birth from the user. */
 	private Date dateofbirth;
 	/** The first name of the user. */
-	@Column(name = "firstname", length = 64)
+	@Column(length = 64)
 	private String firstname;
 	/** The enum for the gender of the user. */
 	@Enumerated(EnumType.STRING)
-	@Column(name = "gender")
-	@Type(type = "genderConverter")
+	@Column
+	@Type(type = CONVERTER_NAME_GENDER)
 	private GenderType gender;
 	/** The ip address from where the user has register his self. */
 	@Column(name = "ip_address", length = 16)

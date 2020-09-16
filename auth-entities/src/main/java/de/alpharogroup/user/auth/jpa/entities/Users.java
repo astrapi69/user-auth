@@ -24,31 +24,15 @@
  */
 package de.alpharogroup.user.auth.jpa.entities;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
 import de.alpharogroup.db.entity.enums.DatabasePrefix;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The entity class {@link Users} is keeping the information for the users from the application.
@@ -73,7 +57,7 @@ public class Users extends UUIDEntity implements Cloneable
 	/** The serial Version UID. */
 	private static final long serialVersionUID = 1L;
 	static final String SINGULAR_ENTITY_NAME = "user";
-	static final String TABLE_NAME = SINGULAR_ENTITY_NAME+"s";
+	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String COLUMN_NAME_USERNAME = "username";
 	static final String JOIN_TABLE_NAME_USER_ROLES = "user_roles";
 	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID = "user_id";

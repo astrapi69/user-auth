@@ -40,7 +40,8 @@ import lombok.experimental.SuperBuilder;
 public class Contactmethods extends UUIDEntity
 {
 
-	static final String TABLE_NAME = "contactmethods";
+	static final String SINGULAR_ENTITY_NAME = "contactmethod";
+	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String COLUMN_NAME_CONTACTMETHOD = "contactmethod";
 	static final String COLUMN_NAME_CONTACTVALUE = "contactvalue";
 	static final String CONVERTER_NAME_CONTACTMETHOD = "contactmethodConverter";

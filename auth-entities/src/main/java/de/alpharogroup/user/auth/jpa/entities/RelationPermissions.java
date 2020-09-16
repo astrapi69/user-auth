@@ -24,29 +24,14 @@
  */
 package de.alpharogroup.user.auth.jpa.entities;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import de.alpharogroup.db.entity.enums.DatabasePrefix;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class describes the permissions that a user can give to another user. For instance: if a
@@ -69,7 +54,7 @@ public class RelationPermissions extends UUIDEntity implements Cloneable
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
 	static final String SINGULAR_ENTITY_NAME = "relation_permission";
-	static final String TABLE_NAME = SINGULAR_ENTITY_NAME+"s";
+	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String JOIN_COLUMN_NAME_PROVIDER_ID = "provider_id";
 	static final String JOIN_COLUMN_NAME_SUBSCRIBER_ID = "subscriber_id";
 	static final String JOIN_TABLE_NAME_USER_RELATION_PERMISSIONS = "user_" + TABLE_NAME;

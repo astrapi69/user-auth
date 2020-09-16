@@ -24,22 +24,12 @@
  */
 package de.alpharogroup.user.auth.jpa.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
 import de.alpharogroup.db.entity.enums.DatabasePrefix;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import javax.persistence.*;
 
 /**
  * The entity class {@link Permissions} is keeping the information for the permissions of a role or
@@ -70,7 +60,7 @@ public class Permissions extends UUIDEntity implements Cloneable
 	/** The serial Version UID */
 	private static final long serialVersionUID = 1L;
 	static final String SINGULAR_ENTITY_NAME = "permission";
-	static final String TABLE_NAME = SINGULAR_ENTITY_NAME+"s";
+	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String COLUMN_NAME_NAME = "name";
 	static final String COLUMN_NAME_SHORTCUT = "shortcut";
 	static final String COLUMN_NAME_DESCRIPTION = "description";
