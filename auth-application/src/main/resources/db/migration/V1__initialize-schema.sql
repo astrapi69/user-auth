@@ -115,3 +115,43 @@ create table user_roles
         foreign key (user_id) references users
 );
 
+create table contactmethods
+(
+    id            uuid not null,
+    contactmethod varchar(255),
+    contactvalue  varchar(1024),
+    constraint contactmethods_pkey
+        primary key (id)
+);
+
+create table user_infos
+(
+    id          uuid not null,
+    birthname   varchar(64),
+    credits     double precision,
+    dateofbirth timestamp,
+    firstname   varchar(64),
+    gender      varchar(255),
+    ip_address  varchar(16),
+    lastname    varchar(64),
+    locale      varchar(12),
+    stripe_customer_id varchar(64),
+    owner       uuid,
+    constraint user_infos_pkey
+        primary key (id),
+    constraint fk_user_infos_users_id
+        foreign key (owner) references users
+);
+
+create table user_contactmethods
+(
+    user_infos_id     uuid not null,
+    contactmethods_id uuid not null,
+    constraint user_contactmethods_pkey
+        primary key (user_infos_id, contactmethods_id),
+    constraint fk_user_infos_contactmethods_id
+        foreign key (contactmethods_id) references contactmethods,
+    constraint fk_user_infos_user_infos_id
+        foreign key (user_infos_id) references user_infos
+);
+
