@@ -39,7 +39,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserInfos extends UUIDEntity
 {
-
 	static final String SINGULAR_ENTITY_NAME = "user_info";
 	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String COLUMN_NAME_OWNER = "owner";
@@ -48,7 +47,7 @@ public class UserInfos extends UUIDEntity
 	static final String CONVERTER_NAME_GENDER = "genderConverter";
 	static final String JOIN_COLUMN_NAME_USER_INFOS_ID = TABLE_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
 	static final String JOIN_COLUMN_NAME_CONTACTMETHODS_ID = Contactmethods.TABLE_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
-	static final String JOIN_TABLE_NAME_USER_CONTACTMETHODS = "user_" + Contactmethods.TABLE_NAME;
+	static final String JOIN_TABLE_NAME_USER_CONTACTMETHODS = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Contactmethods.TABLE_NAME;
 	static final String JOIN_TABLE_FOREIGN_KEY_USER_INFOS_USER_INFOS_ID = DatabasePrefix.FOREIGN_KEY_PREFIX +
 		TABLE_NAME + DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_USER_INFOS_ID;
 	static final String JOIN_TABLE_FOREIGN_KEY_USER_INFOS_CONTACTMETHODS_ID = DatabasePrefix.FOREIGN_KEY_PREFIX +
@@ -60,10 +59,10 @@ public class UserInfos extends UUIDEntity
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = COLUMN_NAME_OWNER,
 		foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_USER_INFOS_USER_ID))
-	private Users owner;
+	Users owner;
 	/** The birth name from the user if he or she had one. */
 	@Column(length = 64)
-	private String birthname;
+	String birthname;
 	/** The contact data of the user. */
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -76,31 +75,31 @@ public class UserInfos extends UUIDEntity
 					@JoinColumn(name = JOIN_COLUMN_NAME_CONTACTMETHODS_ID,
 						referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
 						foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_INFOS_CONTACTMETHODS_ID)) })
-	private Set<Contactmethods> contactmethods = new HashSet<>();
+	Set<Contactmethods> contactmethods = new HashSet<>();
 	/** The date of birth from the user. */
-	private Date dateofbirth;
+	Date dateofbirth;
 	/** The first name of the user. */
 	@Column(length = 64)
-	private String firstname;
+	String firstname;
 	/** The enum for the gender of the user. */
 	@Enumerated(EnumType.STRING)
 	@Column
 	@Type(type = CONVERTER_NAME_GENDER)
-	private GenderType gender;
+	GenderType gender;
 	/** The ip address from where the user has register his self. */
 	@Column(name = COLUMN_NAME_IP_ADDRESS, length = 16)
-	private String ipAddress;
+	String ipAddress;
 	/** The last name of the user. */
 	@Column(length = 64)
-	private String lastname;
+	String lastname;
 	/** The locale from the user when she/he registered. */
 	@Column(length = 12)
-	private String locale;
+	String locale;
 	/** The unit points that the user have bought */
 	@Column(nullable = true)
 	Long credits;
 	/** The customer id from stripe */
 	@Column(name = COLUMN_NAME_STRIPE_CUSTOMER_ID, length = 64)
-	private String stripeCustomerId;
+	String stripeCustomerId;
 
 }

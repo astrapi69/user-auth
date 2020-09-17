@@ -13,5 +13,7 @@ public enum RuleViolationReason
 	/** The constant rule violation for advertising reason. */
 	ADVERTISING,
 	/** The constant rule violation for other reason. */
-	OTHER
+	OTHER;
+
+	public static final String ENUM_CLASS_NAME_VALUE = "de.alpharogroup.user.auth.enums.RuleViolationReason";
 }

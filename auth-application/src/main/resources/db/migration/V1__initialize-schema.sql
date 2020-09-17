@@ -1,5 +1,14 @@
 create sequence hibernate_sequence;
 
+create table contactmethods
+(
+    id            uuid not null,
+    contactmethod varchar(255),
+    contactvalue  varchar(1024),
+    constraint contactmethods_pkey
+        primary key (id)
+);
+
 create table permissions
 (
     id          uuid not null,
@@ -37,20 +46,6 @@ create table role_permissions
         foreign key (role_id) references roles
 );
 
-create table user_tokens
-(
-    id       uuid not null,
-    expiry   timestamp,
-    token    varchar(128),
-    username varchar(256),
-    constraint user_tokens_pkey
-        primary key (id),
-    constraint uk_user_tokens_token
-        unique (token),
-    constraint uk_user_tokens_username
-        unique (username)
-);
-
 create table users
 (
     id       uuid not null,
@@ -68,8 +63,8 @@ create table users
 create table relation_permissions
 (
     id            uuid not null,
-    provider_id   uuid,
-    subscriber_id uuid,
+    provider_id   uuid not null,
+    subscriber_id uuid not null,
     constraint relation_permissions_pkey
         primary key (id),
     constraint fk_user_relation_permissions_provider_id
@@ -113,15 +108,6 @@ create table user_roles
         foreign key (role_id) references roles,
     constraint fk_user_roles_user_id
         foreign key (user_id) references users
-);
-
-create table contactmethods
-(
-    id            uuid not null,
-    contactmethod varchar(255),
-    contactvalue  varchar(1024),
-    constraint contactmethods_pkey
-        primary key (id)
 );
 
 create table user_infos

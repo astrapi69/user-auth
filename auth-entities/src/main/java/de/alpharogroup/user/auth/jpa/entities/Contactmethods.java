@@ -39,13 +39,11 @@ import lombok.experimental.SuperBuilder;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Contactmethods extends UUIDEntity
 {
-
 	static final String SINGULAR_ENTITY_NAME = "contactmethod";
 	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String COLUMN_NAME_CONTACTMETHOD = "contactmethod";
 	static final String COLUMN_NAME_CONTACTVALUE = "contactvalue";
 	static final String CONVERTER_NAME_CONTACTMETHOD = "contactmethodConverter";
-	public static final String ENUM_CLASS_NAME = "enumClassName";
 
 	/** The contact method like email, telefon etc. */
 	@Enumerated(EnumType.STRING)

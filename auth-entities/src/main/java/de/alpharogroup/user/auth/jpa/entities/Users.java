@@ -25,6 +25,7 @@
 package de.alpharogroup.user.auth.jpa.entities;
 
 import de.alpharogroup.db.entity.enums.DatabasePrefix;
+import de.alpharogroup.db.entity.identifiable.Identifiable;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -41,7 +42,7 @@ import java.util.Set;
 @Table(name = Users.TABLE_NAME, indexes = { @Index(name = DatabasePrefix.INDEX_PREFIX + Users.TABLE_NAME
 	+ DatabasePrefix.UNDERSCORE
 	+ Users.COLUMN_NAME_USERNAME, columnList = Users.COLUMN_NAME_USERNAME, unique = true) }, uniqueConstraints = {
-			@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX + Users.TABLE_NAME
+			@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
 				+ DatabasePrefix.UNDERSCORE
 				+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.COLUMN_NAME_USERNAME }) })
 @Getter
@@ -51,17 +52,15 @@ import java.util.Set;
 @AllArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Users extends UUIDEntity implements Cloneable
+public class Users extends UUIDEntity
 {
 
-	/** The serial Version UID. */
-	private static final long serialVersionUID = 1L;
 	static final String SINGULAR_ENTITY_NAME = "user";
 	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String COLUMN_NAME_USERNAME = "username";
-	static final String JOIN_TABLE_NAME_USER_ROLES = "user_roles";
-	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID = "user_id";
-	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID = "role_id";
+	static final String JOIN_TABLE_NAME_USER_ROLES = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Roles.TABLE_NAME;
+	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID = Roles.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
 	static final String JOIN_TABLE_FOREIGN_KEY_USER_ROLES_USER_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_USER_ROLES + DatabasePrefix.UNDERSCORE + JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID;
 	static final String JOIN_TABLE_FOREIGN_KEY_USER_ROLES_ROLE_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_USER_ROLES + DatabasePrefix.UNDERSCORE + JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID;
 

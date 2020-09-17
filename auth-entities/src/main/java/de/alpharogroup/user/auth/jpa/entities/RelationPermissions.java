@@ -29,13 +29,15 @@ import de.alpharogroup.db.entity.identifiable.Identifiable;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class describes the permissions that a user can give to another user. For instance: if a
+ * This class describes the permissions that a user(provider) can grant to another user(subscriber).
+ * For instance: if a
  * user(the provider of the permissions) have private resources like images and want to release them
  * to another user(the subscriber) so he can see this resources, than an entry of a provider and the
  * specified permission have to be added in the set of permission.
@@ -47,19 +49,16 @@ import java.util.Set;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RelationPermissions extends UUIDEntity implements Cloneable
+public class RelationPermissions extends UUIDEntity
 {
-
-	/** The serial Version UID */
-	private static final long serialVersionUID = 1L;
 	static final String SINGULAR_ENTITY_NAME = "relation_permission";
 	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
-	static final String COLUMN_NAME_PROVIDER = "provider";
-	static final String COLUMN_NAME_SUBSCRIBER = "subscriber";
-	static final String JOIN_COLUMN_NAME_PROVIDER_ID = COLUMN_NAME_PROVIDER + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
-	static final String JOIN_COLUMN_NAME_SUBSCRIBER_ID = COLUMN_NAME_SUBSCRIBER + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+	static final String COLUMN_NAME_PROVIDER_PREFIX = "provider";
+	static final String COLUMN_NAME_SUBSCRIBER_PREFIX = "subscriber";
+	static final String JOIN_COLUMN_NAME_PROVIDER_ID = COLUMN_NAME_PROVIDER_PREFIX + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+	static final String JOIN_COLUMN_NAME_SUBSCRIBER_ID = COLUMN_NAME_SUBSCRIBER_PREFIX + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
 	static final String JOIN_TABLE_NAME_USER_RELATION_PERMISSIONS = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + TABLE_NAME;
 	static final String JOIN_TABLE_USER_RELATION_COLUMN_NAME_USER_RELATION_PERMISSION_ID = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE +
 		RelationPermissions.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
@@ -77,7 +76,7 @@ public class RelationPermissions extends UUIDEntity implements Cloneable
 		JOIN_TABLE_NAME_USER_RELATION_PERMISSIONS + DatabasePrefix.UNDERSCORE +
 		JOIN_COLUMN_NAME_SUBSCRIBER_ID;
 
-	/** The permissions of the role. */
+	/** The permissions that are granted to this subscriber */
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = JOIN_TABLE_NAME_USER_RELATION_PERMISSIONS, joinColumns = {
@@ -90,16 +89,16 @@ public class RelationPermissions extends UUIDEntity implements Cloneable
 						foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_RELATION_PERMISSIONS_PERMISSION_ID)) })
 	Set<Permissions> permissions = new HashSet<>();
 
-	/** The provider of the permissions. */
+	/** The provider that granted the permissions to this subscriber */
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = JOIN_COLUMN_NAME_PROVIDER_ID, nullable = true,
+	@JoinColumn(name = JOIN_COLUMN_NAME_PROVIDER_ID, nullable = false,
 		referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
 		foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_USER_RELATION_PERMISSIONS_PROVIDER_ID))
 	Users provider;
 
-	/** The subscriber of the permissions. */
+	/** The subscriber of the permissions */
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = JOIN_COLUMN_NAME_SUBSCRIBER_ID, nullable = true,
+	@JoinColumn(name = JOIN_COLUMN_NAME_SUBSCRIBER_ID, nullable = false,
 		referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
 		foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_USER_RELATION_PERMISSIONS_SUBSCRIBER_ID))
 	Users subscriber;

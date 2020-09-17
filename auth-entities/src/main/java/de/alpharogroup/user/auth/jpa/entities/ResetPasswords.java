@@ -25,9 +25,11 @@
 package de.alpharogroup.user.auth.jpa.entities;
 
 import de.alpharogroup.db.entity.enums.DatabasePrefix;
+import de.alpharogroup.db.entity.identifiable.Identifiable;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -44,21 +46,17 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResetPasswords extends UUIDEntity implements Cloneable
+public class ResetPasswords extends UUIDEntity
 {
-	/** The serial Version UID */
-	private static final long serialVersionUID = 1L;
-
 	static final String SINGULAR_ENTITY_NAME = "reset_password";
 	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String COLUMN_NAME_EXPIRY_DATE = "expiry_date";
 	static final String COLUMN_NAME_GENERATED_PASSWORD = "generated_password";
 	static final String COLUMN_NAME_START_TIME = "starttime";
 
-	static final String JOIN_TABLE_NAME_USER_ROLES = "user_roles";
-	static final String JOIN_COLUMN_NAME_USER_ID = "user_id";
+	static final String JOIN_COLUMN_NAME_USER_ID = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
 	static final String JOIN_COLUMN_FOREIGN_KEY_RESET_PASSWORDS_USER_ID =
 		DatabasePrefix.FOREIGN_KEY_PREFIX + TABLE_NAME +
 			DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_USER_ID;

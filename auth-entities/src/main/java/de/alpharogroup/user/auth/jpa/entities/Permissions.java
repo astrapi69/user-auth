@@ -27,7 +27,7 @@ package de.alpharogroup.user.auth.jpa.entities;
 import de.alpharogroup.db.entity.enums.DatabasePrefix;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.experimental.*;
 
 import javax.persistence.*;
 
@@ -41,10 +41,10 @@ import javax.persistence.*;
 	+ DatabasePrefix.UNDERSCORE
 	+ Permissions.COLUMN_NAME_SHORTCUT, columnList = Permissions.COLUMN_NAME_NAME + ","
 		+ Permissions.COLUMN_NAME_SHORTCUT, unique = true) }, uniqueConstraints = {
-				@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX
+				@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX
 					+ Permissions.TABLE_NAME + DatabasePrefix.UNDERSCORE
 					+ Permissions.COLUMN_NAME_NAME, columnNames = { Permissions.COLUMN_NAME_NAME }),
-				@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX
+				@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX
 					+ Permissions.TABLE_NAME + DatabasePrefix.UNDERSCORE
 					+ Permissions.COLUMN_NAME_SHORTCUT, columnNames = {
 							Permissions.COLUMN_NAME_SHORTCUT }) })
@@ -53,12 +53,10 @@ import javax.persistence.*;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Permissions extends UUIDEntity implements Cloneable
+public class Permissions extends UUIDEntity
 {
-	/** The serial Version UID */
-	private static final long serialVersionUID = 1L;
 	static final String SINGULAR_ENTITY_NAME = "permission";
 	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String COLUMN_NAME_NAME = "name";

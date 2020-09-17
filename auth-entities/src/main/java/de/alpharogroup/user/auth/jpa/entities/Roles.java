@@ -25,6 +25,7 @@
 package de.alpharogroup.user.auth.jpa.entities;
 
 import de.alpharogroup.db.entity.enums.DatabasePrefix;
+import de.alpharogroup.db.entity.identifiable.Identifiable;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -39,7 +40,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = Roles.TABLE_NAME, uniqueConstraints = {
-		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PREFIX + Roles.TABLE_NAME
+		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Roles.TABLE_NAME
 			+ DatabasePrefix.UNDERSCORE
 			+ Roles.COLUMN_NAME_NAME, columnNames = { Roles.COLUMN_NAME_NAME }) })
 @Getter
@@ -49,19 +50,15 @@ import java.util.Set;
 @AllArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Roles extends UUIDEntity implements Cloneable
+public class Roles extends UUIDEntity
 {
-
-	/** The serial Version UID. */
-	private static final long serialVersionUID = 1L;
-
 	static final String SINGULAR_ENTITY_NAME = "role";
 	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String COLUMN_NAME_NAME = "name";
 	static final String COLUMN_NAME_DESCRIPTION = "description";
-	static final String JOIN_TABLE_NAME_ROLE_PERMISSIONS = "role_permissions";
-	static final String JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_ROLE_ID = "role_id";
-	static final String JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_PERMISSION_ID = "permission_id";
+	static final String JOIN_TABLE_NAME_ROLE_PERMISSIONS = Roles.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Permissions.TABLE_NAME;
+	static final String JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_ROLE_ID = Roles.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+	static final String JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_PERMISSION_ID = Permissions.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
 	static final String JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_ROLE_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_ROLE_PERMISSIONS + DatabasePrefix.UNDERSCORE + JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_ROLE_ID;
 	static final String JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_PERMISSION_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_ROLE_PERMISSIONS + DatabasePrefix.UNDERSCORE + JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_PERMISSION_ID;
 
