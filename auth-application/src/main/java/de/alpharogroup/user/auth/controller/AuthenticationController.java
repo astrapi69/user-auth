@@ -146,7 +146,6 @@ public class AuthenticationController
 		final String email = signUpRequest.getEmail();
 		final String password = signUpRequest.getPassword();
 
-		// TODO resolve roles and set
 		Set<Roles> roles = signUpRequest.getRoles().stream()
 			.filter(s -> rolesService.existsByName(s))
 			.map(strRole-> rolesService.findByName(strRole).get()).collect(
