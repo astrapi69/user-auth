@@ -32,6 +32,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,7 +45,10 @@ import java.util.Set;
 	+ Users.COLUMN_NAME_USERNAME, columnList = Users.COLUMN_NAME_USERNAME, unique = true) }, uniqueConstraints = {
 			@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
 				+ DatabasePrefix.UNDERSCORE
-				+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.COLUMN_NAME_USERNAME }) })
+				+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.COLUMN_NAME_USERNAME }),
+			@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
+				+ DatabasePrefix.UNDERSCORE
+				+ Users.COLUMN_NAME_EMAIL, columnNames = { Users.COLUMN_NAME_EMAIL })})
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -58,6 +62,7 @@ public class Users extends UUIDEntity
 	static final String SINGULAR_ENTITY_NAME = "user";
 	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String COLUMN_NAME_USERNAME = "username";
+	static final String COLUMN_NAME_EMAIL = "email";
 	static final String JOIN_TABLE_NAME_USER_ROLES = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Roles.TABLE_NAME;
 	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
 	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID = Roles.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
@@ -67,12 +72,15 @@ public class Users extends UUIDEntity
 	/** The attribute active, if true the user account is active. */
 	@Column
 	boolean active;
+
 	/** A Flag that indicates if the user account is locked or not. */
 	@Column
 	boolean locked;
+
 	/** The hash from the password hashed with sha512. */
 	@Column(length = 1024)
-	String pw;
+	String password;
+
 	/** The roles of the user. */
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -85,12 +93,19 @@ public class Users extends UUIDEntity
 						referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
 						foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_ROLES_ROLE_ID)) })
 	Set<Roles> roles = new HashSet<>();
+
 	/** The salt that is used to compute the hash. */
 	@Column(length = 8)
 	String salt;
+
 	/** The user name. */
 	@Column(name = COLUMN_NAME_USERNAME, length = 256)
 	String username;
+
+	/** The email of this user. */
+	@Column(name = COLUMN_NAME_EMAIL, length = 512)
+	@Email
+	private String email;
 
 	/**
 	 * Adds the given role to this {@link Users} object

@@ -34,6 +34,15 @@ public class UsersServiceImpl implements UsersService
 	 * {@inheritDoc}
 	 */
 	@Override
+	public boolean existsByEmail(@NonNull String email)
+	{
+		return usersRepository.existsByEmail(email);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Optional<Users> findByUsername(final @NonNull String username)
 	{
 		return usersRepository.findByUsername(username);

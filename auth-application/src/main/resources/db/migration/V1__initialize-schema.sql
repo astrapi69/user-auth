@@ -51,13 +51,16 @@ create table users
     id       uuid not null,
     active   boolean,
     locked   boolean,
-    pw       varchar(1024),
     salt     varchar(8),
     username varchar(256),
+    email varchar(512),
+    password       varchar(1024),
     constraint users_pkey
         primary key (id),
     constraint uk_users_username
-        unique (username)
+        unique (username),
+    constraint uk_users_email
+        unique (email)
 );
 
 create table relation_permissions

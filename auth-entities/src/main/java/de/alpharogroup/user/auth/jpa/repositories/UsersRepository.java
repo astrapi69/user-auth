@@ -22,6 +22,15 @@ public interface UsersRepository extends JpaRepository<Users, UUID>
 	boolean existsByUsername(final String username);
 
 	/**
+	 * Checks if an {@link Users} object exists with the given email
+	 *
+	 * @param email
+	 *            the email
+	 * @return true if a {@link Users} object exists with the given email
+	 */
+	boolean existsByEmail(final String email);
+
+	/**
 	 * Find {@link Users} object from the given user name.
 	 *
 	 * @param username

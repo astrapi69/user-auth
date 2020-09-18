@@ -8,6 +8,8 @@ import de.alpharogroup.user.auth.configuration.ApplicationProperties;
 import de.alpharogroup.user.auth.dto.JwtResponse;
 import de.alpharogroup.user.auth.dto.Signup;
 import de.alpharogroup.user.auth.jpa.entities.Roles;
+import de.alpharogroup.user.auth.jpa.repositories.UsersRepository;
+import de.alpharogroup.user.auth.service.api.RolesService;
 import de.alpharogroup.user.auth.service.api.UsersService;
 import de.alpharogroup.user.auth.service.jwt.JwtProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,7 +62,10 @@ public class AuthenticationController
 	AuthenticationsService authenticationsService;
 	JwtTokenService jwtTokenService;
 	JwtUserDetailsService userDetailsService;
+	RolesService rolesService;
 	UsersService usersService;
+	UsersRepository usersRepository;
+	PasswordEncoder encoder;
 
 	/**
 	 * Call this link <a href="https://localhost:8443/v1/auth/authenticate"></a>
@@ -130,8 +136,33 @@ public class AuthenticationController
 				.status(HttpStatus.BAD_REQUEST.value())
 				.body("Username already exists");
 		}
+		if(usersService.existsByEmail(signUpRequest.getEmail())) {
+			return ResponseEntity
+				.status(HttpStatus.BAD_REQUEST.value())
+				.body("Username already exists");
+		}
 
-		return null;
+		final String username = signUpRequest.getUsername();
+		final String email = signUpRequest.getEmail();
+		final String password = signUpRequest.getPassword();
+
+		// TODO resolve roles and set
+		Set<Roles> roles = signUpRequest.getRoles().stream()
+			.filter(s -> rolesService.existsByName(s))
+			.map(strRole-> rolesService.findByName(strRole).get()).collect(
+				Collectors.toSet());
+
+		Users newUser = Users.builder()
+			.active(true)
+			.locked(false)
+			.username(username)
+			.email(email)
+			.password(encoder.encode(password))
+			.roles(roles)
+			.build();
+		Users savedUser = usersRepository.save(newUser);
+		return ResponseEntity.ok("User with id" + savedUser.getId() +
+			" successfully created and signed up");
 	}
 
 }

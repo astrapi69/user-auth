@@ -18,7 +18,7 @@ public class User
 	/** A Flag that indicates if the user account is locked or not. */
 	boolean locked;
 	/** The hash from the password hashed with sha512. */
-	String pw;
+	String password;
 	/** The roles of the user. */
 	@Builder.Default
 	Set<Role> roles = new HashSet<>();
@@ -26,4 +26,7 @@ public class User
 	String salt;
 	/** The user name. */
 	String username;
+
+	/** The email */
+	String email;
 }

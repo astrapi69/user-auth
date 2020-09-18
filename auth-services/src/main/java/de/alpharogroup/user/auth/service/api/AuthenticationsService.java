@@ -67,8 +67,8 @@ public interface AuthenticationsService extends Serializable
 		if (user != null && user.isActive())
 		{
 			String hashedPassword = "";
-			// Get hashed pw from db
-			final String dbHashedPassword = user.getPw();
+			// Get hashed password from db
+			final String dbHashedPassword = user.getPassword();
 			// Get salt from db
 			final String salt = user.getSalt();
 			// get instance of PasswordEncryptor

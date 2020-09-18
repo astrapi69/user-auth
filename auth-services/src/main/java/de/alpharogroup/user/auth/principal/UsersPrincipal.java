@@ -40,7 +40,7 @@ public class UsersPrincipal implements UserDetails
 	@Override
 	public String getPassword()
 	{
-		return user.getPw();
+		return user.getPassword();
 	}
 
 	@Override

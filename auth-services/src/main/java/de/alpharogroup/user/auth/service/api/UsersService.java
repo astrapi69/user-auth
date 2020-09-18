@@ -23,6 +23,15 @@ public interface UsersService
 	boolean existsByUsername(final @NonNull String username);
 
 	/**
+	 * Checks if a user exists with the given email
+	 *
+	 * @param email
+	 *            the email
+	 * @return true, if successful
+	 */
+	boolean existsByEmail(final @NonNull String email);
+
+	/**
 	 * Find {@link Users} object from the given user name.
 	 *
 	 * @param username
