@@ -19,6 +19,7 @@ app:
     secret: cp*D33tZY(juumBUcBDVv8tJ!8w/T@JGpS)@)Sr6EYfjFBTRUJfu@&6jz-7*cFk5
   signin-path-patterns:
     - /v1/auth/signin
+    - /v1/auth/login
   public-path-patterns:
     - /v1/auth/authenticate
     - /v1/auth/signup

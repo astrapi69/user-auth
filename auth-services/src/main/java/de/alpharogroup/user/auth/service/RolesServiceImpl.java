@@ -2,6 +2,7 @@ package de.alpharogroup.user.auth.service;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,13 @@ public class RolesServiceImpl implements RolesService
 	{
 		return rolesRepository.save(
 			Roles.builder().name(name).description(description).permissions(permissions).build());
+	}
+
+	@Override
+	public Set<Roles> getRoles(Set<String> stringRoles) {
+		return stringRoles.stream()
+			.filter(s -> existsByName(s))
+			.map(strRole -> findByName(strRole).get()).collect(Collectors.toSet());
 	}
 
 }

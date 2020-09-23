@@ -112,9 +112,9 @@ public interface AuthenticationsService extends Serializable
 	 *
 	 * @return true, if the {@link Users} object successfully sign out
 	 */
-	default void signOut(final @NonNull Users user)
+	default boolean signOut(final @NonNull Users user)
 	{
-		getUsersService().signOut(user);
+		return getUsersService().signOut(user);
 	}
 
 	UsersService getUsersService();

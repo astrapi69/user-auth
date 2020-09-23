@@ -1,8 +1,10 @@
 package de.alpharogroup.user.auth.service;
 
 import java.util.Optional;
+import java.util.Set;
 
 import de.alpharogroup.auth.enums.ValidationErrors;
+import de.alpharogroup.crypto.pw.PasswordEncryptor;
 import de.alpharogroup.user.auth.dto.Signup;
 import org.springframework.stereotype.Service;
 
@@ -82,5 +84,36 @@ public class UsersServiceImpl implements UsersService
 			return Optional.of(ValidationErrors.USERNAME_EXISTS_ERROR);
 		}
 		return Optional.empty();
+	}
+
+
+	public Users signUpUser(Signup model, Set<Roles> roles)
+	{
+		final String username = model.getUsername();
+		final String email = model.getEmail();
+		final String password = model.getPassword();
+
+		final PasswordEncryptor passwordService = PasswordEncryptor.getInstance();
+
+		final String salt = passwordService.getRandomSalt(8);
+		String hashedPassword = "";
+		try
+		{
+			hashedPassword = passwordService.hashAndHexPassword(password, salt);
+		}
+		catch (final Exception e)
+		{
+			throw new IllegalArgumentException(e);
+		}
+		Users newUser = Users.builder()
+			.active(true)
+			.locked(false)
+			.username(username)
+			.email(email)
+			.salt(salt)
+			.password(hashedPassword)
+			.roles(roles).build();
+		Users savedUser = usersRepository.save(newUser);
+		return savedUser;
 	}
 }

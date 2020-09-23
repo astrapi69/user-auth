@@ -58,4 +58,12 @@ public interface RolesService
 	Roles save(final @NonNull String name, final @NonNull String description,
 		final @NonNull Set<Permissions> permissions);
 
+	/**
+	 * Resolves the {@link Roles} objects from the given set of string role names
+	 * @param stringRoles
+	 *            the role names as string objects
+	 * @return the found {@link Roles} objects
+	 */
+	Set<Roles> getRoles(final @NonNull Set<String> stringRoles);
+
 }

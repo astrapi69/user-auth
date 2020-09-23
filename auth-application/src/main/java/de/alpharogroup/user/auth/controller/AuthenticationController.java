@@ -2,10 +2,13 @@ package de.alpharogroup.user.auth.controller;
 
 import de.alpharogroup.auth.beans.AuthenticationResult;
 import de.alpharogroup.auth.enums.AuthenticationErrors;
+import de.alpharogroup.auth.enums.ValidationErrors;
+import de.alpharogroup.crypto.pw.PasswordEncryptor;
 import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
 import de.alpharogroup.user.auth.configuration.ApplicationProperties;
 import de.alpharogroup.user.auth.dto.JwtRequest;
 import de.alpharogroup.user.auth.dto.JwtResponse;
+import de.alpharogroup.user.auth.dto.MessageBox;
 import de.alpharogroup.user.auth.dto.Signup;
 import de.alpharogroup.user.auth.jpa.entities.Roles;
 import de.alpharogroup.user.auth.jpa.entities.Users;
@@ -33,6 +36,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -55,7 +60,6 @@ public class AuthenticationController
 	JwtUserDetailsService userDetailsService;
 	RolesService rolesService;
 	UsersService usersService;
-	UsersRepository usersRepository;
 	PasswordEncoder encoder;
 
 	/**
@@ -111,12 +115,10 @@ public class AuthenticationController
 			.body(unauthorizedRedirectPath);
 	}
 
-	/**
-	 * Call this link <a href="https://localhost:8443/v1/auth/login?username=foo&password=bar"></a>
-	 * and adapt to your parameters.
-	 */
 	@CrossOrigin(origins = "*")
-	@GetMapping(path = LOGIN, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = LOGIN,
+		method = RequestMethod.GET,
+		produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "authenticate with the given username and password") @ApiImplicitParams({
 		@ApiImplicitParam(name = "username", value = "The username", dataType = "string", paramType = "query"),
 		@ApiImplicitParam(name = "password", value = "The plain password", dataType = "string", paramType = "query") })
@@ -150,30 +152,33 @@ public class AuthenticationController
 	public ResponseEntity<?> signUp(
 		@Valid @RequestBody Signup signUpRequest)
 	{
-		if (usersService.existsByUsername(signUpRequest.getUsername()))
-		{
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
-				.body("Username already exists");
+		Optional<ValidationErrors> validationErrors = usersService.validate(signUpRequest);
+		if(validationErrors.isPresent()){
+			ValidationErrors error = validationErrors.get();
+			if(ValidationErrors.EMAIL_EXISTS_ERROR.equals(error)){
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
+					.body("Email already exists");
+			}
+			if(ValidationErrors.USERNAME_EXISTS_ERROR.equals(error)){
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
+					.body("Username already exists");
+			}
 		}
-		if (usersService.existsByEmail(signUpRequest.getEmail()))
-		{
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
-				.body("Username already exists");
+		Set<Roles> roles;
+
+		if(signUpRequest.getRoles() != null && !signUpRequest.getRoles().isEmpty()) {
+			roles = rolesService.getRoles(signUpRequest.getRoles());
+		} else {
+			Set<String> stringRoles = new HashSet<>();
+			stringRoles.add("member");
+			roles = rolesService.getRoles(stringRoles);
 		}
+		Users savedUser = usersService.signUpUser(signUpRequest, roles);
 
-		final String username = signUpRequest.getUsername();
-		final String email = signUpRequest.getEmail();
-		final String password = signUpRequest.getPassword();
-
-		Set<Roles> roles = signUpRequest.getRoles().stream()
-			.filter(s -> rolesService.existsByName(s))
-			.map(strRole -> rolesService.findByName(strRole).get()).collect(Collectors.toSet());
-
-		Users newUser = Users.builder().active(true).locked(false).username(username).email(email)
-			.password(encoder.encode(password)).roles(roles).build();
-		Users savedUser = usersRepository.save(newUser);
 		return ResponseEntity
-			.ok("User with id" + savedUser.getId() + " successfully created and signed up");
+			.ok(MessageBox.builder()
+				.message("User with id" + savedUser.getId() + " successfully created and signed up")
+				.build());
 	}
 
 }

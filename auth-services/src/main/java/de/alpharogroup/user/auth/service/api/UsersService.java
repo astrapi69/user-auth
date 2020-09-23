@@ -1,6 +1,7 @@
 package de.alpharogroup.user.auth.service.api;
 
 import java.util.Optional;
+import java.util.Set;
 
 import de.alpharogroup.auth.enums.ValidationErrors;
 import de.alpharogroup.user.auth.dto.Signup;
@@ -73,5 +74,16 @@ public interface UsersService
 	 * otherwise the optional with the validation error will be return
 	 */
 	Optional<ValidationErrors> validate(@NonNull Signup model);
+
+	/**
+	 * Sign up process for insert a new user in the database
+	 *
+	 * @param model
+	 *            the model
+	 * @param roles
+	 *            the roles
+	 * @return the {@link Users} object
+	 */
+	Users signUpUser(Signup model, Set<Roles> roles);
 
 }
