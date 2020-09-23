@@ -25,6 +25,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +36,16 @@ import javax.validation.Valid;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@RestController @RequestMapping(ApplicationConfiguration.REST_VERSION + AuthenticationController.REST_PATH) @AllArgsConstructor @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true) public class AuthenticationController
+@RestController
+@RequestMapping(ApplicationConfiguration.REST_VERSION + AuthenticationController.REST_PATH)
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class AuthenticationController
 {
 
 	public static final String REST_PATH = "/auth";
 	public static final String AUTHENTICATE = "/authenticate";
+	public static final String LOGIN = "/login";
 	public static final String SIGNIN = "/signin";
 	public static final String SIGNUP = "/signup";
 
@@ -51,9 +59,15 @@ import java.util.stream.Collectors;
 	PasswordEncoder encoder;
 
 	/**
-	 * Call this link <a href="https://localhost:8443/v1/auth/authenticate"></a>
+	 * Call this link <a href="https://localhost:8443/v1/auth/authenticate"> with post http-method </a>
 	 */
-	@CrossOrigin(origins = "*") @RequestMapping(value = AUTHENTICATE, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) @ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password") @ApiImplicitParams({
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = AUTHENTICATE,
+		method = RequestMethod.POST,
+		consumes = MediaType.APPLICATION_JSON_VALUE,
+		produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password")
+	@ApiImplicitParams({
 		@ApiImplicitParam(name = "authenticationRequest", value = "The username", dataType = "JwtRequest", paramType = "body") })
 	public ResponseEntity<?> createAuthenticationToken(
 		@RequestBody JwtRequest authenticationRequest)
@@ -67,13 +81,46 @@ import java.util.stream.Collectors;
 	}
 
 	/**
-	 * Call this link <a href="https://localhost:8443/v1/auth/signin?username=foo&password=bar"></a>
+	 * Call this link <a href="https://localhost:8443/v1/auth/signin"> with post http-method </a>
+	 */
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = SIGNIN,
+		method = RequestMethod.POST,
+		consumes = MediaType.APPLICATION_JSON_VALUE,
+		produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "loginRequest", value = "The username", dataType = "JwtRequest", paramType = "body") })
+	public ResponseEntity<?> signIn(@Valid @RequestBody JwtRequest loginRequest)
+	{
+		AuthenticationResult<Users, AuthenticationErrors> authenticate = authenticationsService
+			.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
+		if (authenticate.isValid())
+		{
+			final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+			final String token = jwtTokenService.newJwtToken(userDetails);
+			Set<String> roles = authenticate.getUser().getRoles().stream()
+				.map(roles1 -> roles1.getName()).collect(Collectors.toSet());
+			JwtResponse jwtResponse = JwtResponse.builder().token(token).type("Bearer")
+				.username(loginRequest.getUsername()).roles(roles).build();
+			return ResponseEntity.status(HttpStatus.OK.value()).body(jwtResponse);
+		}
+		String unauthorizedRedirectPath = "redirect:" + applicationProperties
+			.getContextPath() + ApplicationConfiguration.REST_VERSION + MessageController.REST_PATH + MessageController.UNAUTHORIZED_PATH;
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value())
+			.body(unauthorizedRedirectPath);
+	}
+
+	/**
+	 * Call this link <a href="https://localhost:8443/v1/auth/login?username=foo&password=bar"></a>
 	 * and adapt to your parameters.
 	 */
-	@CrossOrigin(origins = "*") @GetMapping(path = SIGNIN, produces = MediaType.APPLICATION_JSON_VALUE) @ApiOperation(value = "authenticate with the given username and password") @ApiImplicitParams({
+	@CrossOrigin(origins = "*")
+	@GetMapping(path = LOGIN, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "authenticate with the given username and password") @ApiImplicitParams({
 		@ApiImplicitParam(name = "username", value = "The username", dataType = "string", paramType = "query"),
 		@ApiImplicitParam(name = "password", value = "The plain password", dataType = "string", paramType = "query") })
-	public ResponseEntity<?> signIn(
+	public ResponseEntity<?> login(
 		@RequestParam(value = "username") @NonNull final String emailOrUsername,
 		@RequestParam(value = "password") @NonNull final String password)
 	{
@@ -96,7 +143,11 @@ import java.util.stream.Collectors;
 			.body(unauthorizedRedirectPath);
 	}
 
-	@RequestMapping(value = SIGNUP, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) public ResponseEntity<?> signUp(
+	@RequestMapping(value = SIGNUP,
+		method = RequestMethod.POST,
+		consumes = MediaType.APPLICATION_JSON_VALUE,
+		produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> signUp(
 		@Valid @RequestBody Signup signUpRequest)
 	{
 		if (usersService.existsByUsername(signUpRequest.getUsername()))

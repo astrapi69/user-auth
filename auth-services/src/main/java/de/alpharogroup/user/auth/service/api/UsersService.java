@@ -2,6 +2,8 @@ package de.alpharogroup.user.auth.service.api;
 
 import java.util.Optional;
 
+import de.alpharogroup.auth.enums.ValidationErrors;
+import de.alpharogroup.user.auth.dto.Signup;
 import de.alpharogroup.user.auth.jpa.entities.Roles;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 import lombok.NonNull;
@@ -61,5 +63,15 @@ public interface UsersService
 	 * @return true, if the {@link Users} object successfully sign out
 	 */
 	boolean signOut(final @NonNull Users user);
+
+	/**
+	 * Validate the given {@link Signup} object.
+	 *
+	 * @param model
+	 *            the {@link Signup} object.
+	 * @return If successful an empty optional of {@link ValidationErrors} object will be return
+	 * otherwise the optional with the validation error will be return
+	 */
+	Optional<ValidationErrors> validate(@NonNull Signup model);
 
 }

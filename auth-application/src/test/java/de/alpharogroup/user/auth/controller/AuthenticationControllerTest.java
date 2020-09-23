@@ -86,13 +86,13 @@ public class AuthenticationControllerTest
 	}
 
 //	@Ignore
-	@Test public void signIn()
+	@Test public void login()
 	{
 		Map<String, String> urlParams;
 		String restUrl;
 		HttpHeaders headers;
 		ResponseEntity<String> entity;
-			restUrl = UrlExtensions.generateUrl(getBaseUrl(randomServerPort), AuthenticationController.SIGNIN);
+			restUrl = UrlExtensions.generateUrl(getBaseUrl(randomServerPort), AuthenticationController.LOGIN);
 
 		urlParams = new HashMap<>();
 		urlParams.put("username", "foo");

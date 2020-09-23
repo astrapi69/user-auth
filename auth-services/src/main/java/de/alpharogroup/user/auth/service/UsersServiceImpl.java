@@ -2,6 +2,8 @@ package de.alpharogroup.user.auth.service;
 
 import java.util.Optional;
 
+import de.alpharogroup.auth.enums.ValidationErrors;
+import de.alpharogroup.user.auth.dto.Signup;
 import org.springframework.stereotype.Service;
 
 import de.alpharogroup.user.auth.jpa.entities.Roles;
@@ -65,4 +67,20 @@ public class UsersServiceImpl implements UsersService
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Optional<ValidationErrors> validate(final @NonNull Signup model)
+	{
+		if (existsByEmail(model.getEmail()))
+		{
+			return Optional.of(ValidationErrors.EMAIL_EXISTS_ERROR);
+		}
+		if (existsByUsername(model.getUsername()))
+		{
+			return Optional.of(ValidationErrors.USERNAME_EXISTS_ERROR);
+		}
+		return Optional.empty();
+	}
 }
