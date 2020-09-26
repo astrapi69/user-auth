@@ -94,19 +94,19 @@ public class AuthenticationController
 		produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name = "loginRequest", value = "The username", dataType = "JwtRequest", paramType = "body") })
-	public ResponseEntity<?> signIn(@Valid @RequestBody JwtRequest loginRequest)
+		@ApiImplicitParam(name = "jwtRequest", value = "The username", dataType = "JwtRequest", paramType = "body") })
+	public ResponseEntity<?> signIn(@Valid @RequestBody JwtRequest jwtRequest)
 	{
 		AuthenticationResult<Users, AuthenticationErrors> authenticate = authenticationsService
-			.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
+			.authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
 		if (authenticate.isValid())
 		{
-			final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+			final UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUsername());
 			final String token = jwtTokenService.newJwtToken(userDetails);
 			Set<String> roles = authenticate.getUser().getRoles().stream()
 				.map(roles1 -> roles1.getName()).collect(Collectors.toSet());
 			JwtResponse jwtResponse = JwtResponse.builder().token(token).type("Bearer")
-				.username(loginRequest.getUsername()).roles(roles).build();
+				.username(jwtRequest.getUsername()).roles(roles).build();
 			return ResponseEntity.status(HttpStatus.OK.value()).body(jwtResponse);
 		}
 		String unauthorizedRedirectPath = "redirect:" + applicationProperties

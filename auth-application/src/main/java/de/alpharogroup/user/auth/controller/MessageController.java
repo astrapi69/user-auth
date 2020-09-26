@@ -1,6 +1,7 @@
 package de.alpharogroup.user.auth.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +17,7 @@ public class MessageController
 
 	public static final String REST_PATH = "/jwt";
 	public static final String PRIVATE_PATH = "/private";
+	public static final String MEMBER_PATH = "/member";
 	public static final String ISPUBLIC_PATH = "/ispublic";
 	public static final String UNAUTHORIZED_PATH = "/unauthorized";
 	/**
@@ -34,6 +36,13 @@ public class MessageController
 	@RequestMapping(value = UNAUTHORIZED_PATH, method = RequestMethod.GET)
 	public ResponseEntity<?> getUnauthorized() {
 		return ResponseEntity.ok("Sign in failed");
+	}
+
+
+	@RequestMapping(value = MEMBER_PATH, method = RequestMethod.GET)
+	@PreAuthorize("hasRole('MEMBER')")
+	public String member() {
+		return "Member area";
 	}
 
 }

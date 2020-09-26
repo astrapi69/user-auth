@@ -1,6 +1,12 @@
 package de.alpharogroup.user.auth.controller;
 
+import de.alpharogroup.collections.set.SetFactory;
+import de.alpharogroup.json.ObjectToJsonExtensions;
+import de.alpharogroup.throwable.RuntimeExceptionDecorator;
 import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
+import de.alpharogroup.user.auth.dto.JwtResponse;
+import de.alpharogroup.user.auth.dto.Signup;
+import de.alpharogroup.user.auth.enums.UserRole;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -9,13 +15,9 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,15 +26,10 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import de.alpharogroup.collections.array.ArrayFactory;
 import de.alpharogroup.collections.list.ListFactory;
-import de.alpharogroup.spring.generics.ParameterizedTypeReferenceFactory;
 import de.alpharogroup.spring.web.util.UrlExtensions;
 
 @RunWith(SpringRunner.class)
@@ -85,21 +82,50 @@ public class AuthenticationControllerTest
 		assertEquals(entity.getStatusCode(), HttpStatus.OK);
 	}
 
-//	@Ignore
-	@Test public void login()
+	@Test public void signin()
 	{
-		Map<String, String> urlParams;
 		String restUrl;
 		HttpHeaders headers;
-		ResponseEntity<String> entity;
-			restUrl = UrlExtensions.generateUrl(getBaseUrl(randomServerPort), AuthenticationController.LOGIN);
-
-		urlParams = new HashMap<>();
-		urlParams.put("username", "foo");
-		urlParams.put("password", "bar");
-		entity = this.restTemplate.getForEntity(restUrl, String.class, urlParams);
+		HttpEntity<String> requestEntity;
+		restUrl = UrlExtensions.generateUrl(getBaseUrl(randomServerPort), AuthenticationController.SIGNIN);
+		List<MediaType> acceptableMediaTypes = ListFactory.newArrayList();
+		acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
+		headers = new HttpHeaders();
+		headers.setAccept(acceptableMediaTypes);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		String json = "{\n" + "  \"username\": \"foo\",\n" + "  \"password\": \"bar\"\n" + "}";
+		requestEntity = new HttpEntity<>(json, headers);
+		ResponseEntity<JwtResponse> entity = this.restTemplate.postForEntity(restUrl,
+			requestEntity,
+			JwtResponse.class);
 		assertNotNull(entity);
-		assertEquals(entity.getStatusCode(), HttpStatus.BAD_REQUEST);
+		assertEquals(entity.getStatusCode(), HttpStatus.OK);
+		JwtResponse body = entity.getBody();
+		assertEquals(body.getUsername(), "foo");
+		assertEquals(body.getType(), "Bearer");
+	}
+
+	@Ignore // TODO remove when implemented properly...
+	@Test public void signup()
+	{
+		String restUrl;
+		HttpHeaders headers;
+		HttpEntity<String> requestEntity;
+		restUrl = UrlExtensions.generateUrl(getBaseUrl(randomServerPort), AuthenticationController.SIGNUP);
+		List<MediaType> acceptableMediaTypes = ListFactory.newArrayList();
+		acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
+		headers = new HttpHeaders();
+		headers.setAccept(acceptableMediaTypes);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		Signup signup = Signup.builder().username("xy").email("xy@z.org").password("z").roles(SetFactory.newHashSet(
+			UserRole.member.name())).build();
+		String json = RuntimeExceptionDecorator.decorate(() -> ObjectToJsonExtensions.toJson(signup));
+		requestEntity = new HttpEntity<>(json, headers);
+		ResponseEntity<String> entity = this.restTemplate.postForEntity(restUrl,
+			requestEntity,
+			String.class);
+		assertNotNull(entity);
+		assertEquals(entity.getStatusCode(), HttpStatus.OK);
 	}
 
 }
