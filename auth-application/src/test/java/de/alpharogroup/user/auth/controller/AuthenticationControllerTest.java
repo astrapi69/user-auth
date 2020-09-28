@@ -7,6 +7,8 @@ import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
 import de.alpharogroup.user.auth.dto.JwtResponse;
 import de.alpharogroup.user.auth.dto.Signup;
 import de.alpharogroup.user.auth.enums.UserRole;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -20,6 +22,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -33,13 +37,14 @@ import de.alpharogroup.collections.list.ListFactory;
 import de.alpharogroup.spring.web.util.UrlExtensions;
 
 @RunWith(SpringRunner.class)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthenticationControllerTest
 {
 
 	@Autowired
-	private TestRestTemplate restTemplate;
+	TestRestTemplate restTemplate;
 
 	@LocalServerPort
 	int randomServerPort;
@@ -60,26 +65,6 @@ public class AuthenticationControllerTest
 		{
 			System.out.println(converter.toString());
 		}
-	}
-
-	@Test public void createAuthenticationToken()
-	{
-		String restUrl;
-		HttpHeaders headers;
-		HttpEntity<String> requestEntity;
-		restUrl = UrlExtensions.generateUrl(getBaseUrl(randomServerPort), AuthenticationController.AUTHENTICATE);
-		List<MediaType> acceptableMediaTypes = ListFactory.newArrayList();
-		acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
-		headers = new HttpHeaders();
-		headers.setAccept(acceptableMediaTypes);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		String json = "{\n" + "  \"username\": \"foo\",\n" + "  \"password\": \"bar\"\n" + "}";
-		requestEntity = new HttpEntity<>(json, headers);
-		ResponseEntity<String> entity = this.restTemplate.postForEntity(restUrl,
-			requestEntity,
-			String.class);
-		assertNotNull(entity);
-		assertEquals(entity.getStatusCode(), HttpStatus.OK);
 	}
 
 	@Test public void signin()

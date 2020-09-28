@@ -3,7 +3,6 @@ package de.alpharogroup.user.auth.controller;
 import de.alpharogroup.auth.beans.AuthenticationResult;
 import de.alpharogroup.auth.enums.AuthenticationErrors;
 import de.alpharogroup.auth.enums.ValidationErrors;
-import de.alpharogroup.crypto.pw.PasswordEncryptor;
 import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
 import de.alpharogroup.user.auth.configuration.ApplicationProperties;
 import de.alpharogroup.user.auth.dto.JwtRequest;
@@ -12,7 +11,6 @@ import de.alpharogroup.user.auth.dto.MessageBox;
 import de.alpharogroup.user.auth.dto.Signup;
 import de.alpharogroup.user.auth.jpa.entities.Roles;
 import de.alpharogroup.user.auth.jpa.entities.Users;
-import de.alpharogroup.user.auth.jpa.repositories.UsersRepository;
 import de.alpharogroup.user.auth.service.JwtTokenService;
 import de.alpharogroup.user.auth.service.api.AuthenticationsService;
 import de.alpharogroup.user.auth.service.api.RolesService;
@@ -23,14 +21,10 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -41,11 +35,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping(ApplicationConfiguration.REST_VERSION + AuthenticationController.REST_PATH)
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AuthenticationController
+@RestController @RequestMapping(ApplicationConfiguration.REST_VERSION + AuthenticationController.REST_PATH) @AllArgsConstructor @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true) public class AuthenticationController
 {
 
 	public static final String REST_PATH = "/auth";
@@ -63,45 +53,18 @@ public class AuthenticationController
 	PasswordEncoder encoder;
 
 	/**
-	 * Call this link <a href="https://localhost:8443/v1/auth/authenticate"> with post http-method </a>
-	 */
-	@CrossOrigin(origins = "*")
-	@RequestMapping(value = AUTHENTICATE,
-		method = RequestMethod.POST,
-		consumes = MediaType.APPLICATION_JSON_VALUE,
-		produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "authenticationRequest", value = "The username", dataType = "JwtRequest", paramType = "body") })
-	public ResponseEntity<?> createAuthenticationToken(
-		@RequestBody JwtRequest authenticationRequest)
-	{
-		final UserDetails userDetails = userDetailsService
-			.loadUserByUsername(authenticationRequest.getUsername());
-
-		final String token = jwtTokenService.newJwtToken(userDetails);
-
-		return ResponseEntity.ok(token);
-	}
-
-	/**
 	 * Call this link <a href="https://localhost:8443/v1/auth/signin"> with post http-method </a>
 	 */
-	@CrossOrigin(origins = "*")
-	@RequestMapping(value = SIGNIN,
-		method = RequestMethod.POST,
-		consumes = MediaType.APPLICATION_JSON_VALUE,
-		produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "jwtRequest", value = "The username", dataType = "JwtRequest", paramType = "body") })
-	public ResponseEntity<?> signIn(@Valid @RequestBody JwtRequest jwtRequest)
+	@CrossOrigin(origins = "*") @RequestMapping(value = SIGNIN, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) @ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password") @ApiImplicitParams({
+		@ApiImplicitParam(name = "jwtRequest", value = "The username", dataType = "JwtRequest", paramType = "body") }) public ResponseEntity<?> signIn(
+		@Valid @RequestBody JwtRequest jwtRequest)
 	{
 		AuthenticationResult<Users, AuthenticationErrors> authenticate = authenticationsService
 			.authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
 		if (authenticate.isValid())
 		{
-			final UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUsername());
+			final UserDetails userDetails = userDetailsService
+				.loadUserByUsername(jwtRequest.getUsername());
 			final String token = jwtTokenService.newJwtToken(userDetails);
 			Set<String> roles = authenticate.getUser().getRoles().stream()
 				.map(roles1 -> roles1.getName()).collect(Collectors.toSet());
@@ -115,70 +78,41 @@ public class AuthenticationController
 			.body(unauthorizedRedirectPath);
 	}
 
-	@CrossOrigin(origins = "*")
-	@RequestMapping(value = LOGIN,
-		method = RequestMethod.GET,
-		produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(value = "authenticate with the given username and password") @ApiImplicitParams({
-		@ApiImplicitParam(name = "username", value = "The username", dataType = "string", paramType = "query"),
-		@ApiImplicitParam(name = "password", value = "The plain password", dataType = "string", paramType = "query") })
-	public ResponseEntity<?> login(
-		@RequestParam(value = "username") @NonNull final String emailOrUsername,
-		@RequestParam(value = "password") @NonNull final String password)
-	{
-		AuthenticationResult<Users, AuthenticationErrors> authenticate = authenticationsService
-			.authenticate(emailOrUsername, password);
-		if (authenticate.isValid())
-		{
-			final UserDetails userDetails = userDetailsService.loadUserByUsername(emailOrUsername);
-			final String token = jwtTokenService.newJwtToken(userDetails);
-			Set<String> roles = authenticate.getUser().getRoles().stream()
-				.map(roles1 -> roles1.getName()).collect(Collectors.toSet());
-			JwtResponse jwtResponse = JwtResponse.builder().token(token).type("Bearer")
-				.username(emailOrUsername).roles(roles).build();
-
-			return ResponseEntity.status(HttpStatus.OK.value()).body(jwtResponse);
-		}
-		String unauthorizedRedirectPath = "redirect:" + applicationProperties
-			.getContextPath() + ApplicationConfiguration.REST_VERSION + MessageController.REST_PATH + MessageController.UNAUTHORIZED_PATH;
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value())
-			.body(unauthorizedRedirectPath);
-	}
-
-	@RequestMapping(value = SIGNUP,
-		method = RequestMethod.POST,
-		consumes = MediaType.APPLICATION_JSON_VALUE,
-		produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> signUp(
+	@RequestMapping(value = SIGNUP, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) public ResponseEntity<?> signUp(
 		@Valid @RequestBody Signup signUpRequest)
 	{
 		Optional<ValidationErrors> validationErrors = usersService.validate(signUpRequest);
-		if(validationErrors.isPresent()){
+		if (validationErrors.isPresent())
+		{
 			ValidationErrors error = validationErrors.get();
-			if(ValidationErrors.EMAIL_EXISTS_ERROR.equals(error)){
+			if (ValidationErrors.EMAIL_EXISTS_ERROR.equals(error))
+			{
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
 					.body("Email already exists");
 			}
-			if(ValidationErrors.USERNAME_EXISTS_ERROR.equals(error)){
+			if (ValidationErrors.USERNAME_EXISTS_ERROR.equals(error))
+			{
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
 					.body("Username already exists");
 			}
 		}
 		Set<Roles> roles;
 
-		if(signUpRequest.getRoles() != null && !signUpRequest.getRoles().isEmpty()) {
+		if (signUpRequest.getRoles() != null && !signUpRequest.getRoles().isEmpty())
+		{
 			roles = rolesService.getRoles(signUpRequest.getRoles());
-		} else {
+		}
+		else
+		{
 			Set<String> stringRoles = new HashSet<>();
 			stringRoles.add("member");
 			roles = rolesService.getRoles(stringRoles);
 		}
 		Users savedUser = usersService.signUpUser(signUpRequest, roles);
 
-		return ResponseEntity
-			.ok(MessageBox.builder()
-				.message("User with id" + savedUser.getId() + " successfully created and signed up")
-				.build());
+		return ResponseEntity.ok(MessageBox.builder()
+			.message("User with id" + savedUser.getId() + " successfully created and signed up")
+			.build());
 	}
 
 }
