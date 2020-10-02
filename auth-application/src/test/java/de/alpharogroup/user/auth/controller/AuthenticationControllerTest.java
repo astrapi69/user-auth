@@ -103,7 +103,7 @@ public class AuthenticationControllerTest
 		headers.setAccept(acceptableMediaTypes);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Signup signup = Signup.builder().username("xy").email("xy@z.org").password("z").roles(SetFactory.newHashSet(
-			UserRole.member.name())).build();
+			UserRole.testmember.name())).build();
 		String json = RuntimeExceptionDecorator.decorate(() -> ObjectToJsonExtensions.toJson(signup));
 		requestEntity = new HttpEntity<>(json, headers);
 		ResponseEntity<String> entity = this.restTemplate.postForEntity(restUrl,
