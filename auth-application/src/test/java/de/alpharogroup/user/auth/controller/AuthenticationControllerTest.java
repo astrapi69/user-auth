@@ -22,8 +22,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -72,7 +70,7 @@ public class AuthenticationControllerTest
 		String restUrl;
 		HttpHeaders headers;
 		HttpEntity<String> requestEntity;
-		restUrl = UrlExtensions.generateUrl(getBaseUrl(randomServerPort), AuthenticationController.SIGNIN);
+		restUrl = UrlExtensions.generateUrl(getBaseUrl(randomServerPort), AuthenticationController.SIGN_IN);
 		List<MediaType> acceptableMediaTypes = ListFactory.newArrayList();
 		acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
 		headers = new HttpHeaders();
@@ -81,8 +79,8 @@ public class AuthenticationControllerTest
 		String json = "{\n" + "  \"username\": \"foo\",\n" + "  \"password\": \"bar\"\n" + "}";
 		requestEntity = new HttpEntity<>(json, headers);
 		ResponseEntity<JwtResponse> entity = this.restTemplate.postForEntity(restUrl,
-			requestEntity,
-			JwtResponse.class);
+				requestEntity,
+				JwtResponse.class);
 		assertNotNull(entity);
 		assertEquals(entity.getStatusCode(), HttpStatus.OK);
 		JwtResponse body = entity.getBody();
@@ -91,19 +89,19 @@ public class AuthenticationControllerTest
 	}
 
 	@Ignore // TODO remove when implemented properly...
-	@Test public void signup()
-	{
+	@Test
+	public void signup() {
 		String restUrl;
 		HttpHeaders headers;
 		HttpEntity<String> requestEntity;
-		restUrl = UrlExtensions.generateUrl(getBaseUrl(randomServerPort), AuthenticationController.SIGNUP);
+		restUrl = UrlExtensions.generateUrl(getBaseUrl(randomServerPort), AuthenticationController.SIGN_UP);
 		List<MediaType> acceptableMediaTypes = ListFactory.newArrayList();
 		acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
 		headers = new HttpHeaders();
 		headers.setAccept(acceptableMediaTypes);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Signup signup = Signup.builder().username("xy").email("xy@z.org").password("z").roles(SetFactory.newHashSet(
-			UserRole.testmember.name())).build();
+				UserRole.testmember.name())).build();
 		String json = RuntimeExceptionDecorator.decorate(() -> ObjectToJsonExtensions.toJson(signup));
 		requestEntity = new HttpEntity<>(json, headers);
 		ResponseEntity<String> entity = this.restTemplate.postForEntity(restUrl,

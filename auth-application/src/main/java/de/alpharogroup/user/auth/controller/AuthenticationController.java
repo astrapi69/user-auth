@@ -39,10 +39,8 @@ import java.util.stream.Collectors;
 {
 
 	public static final String REST_PATH = "/auth";
-	public static final String AUTHENTICATE = "/authenticate";
-	public static final String LOGIN = "/login";
-	public static final String SIGNIN = "/signin";
-	public static final String SIGNUP = "/signup";
+	public static final String SIGN_IN = "/signin";
+	public static final String SIGN_UP = "/signup";
 
 	ApplicationProperties applicationProperties;
 	AuthenticationsService authenticationsService;
@@ -55,7 +53,7 @@ import java.util.stream.Collectors;
 	/**
 	 * Call this link <a href="https://localhost:8443/v1/auth/signin"> with post http-method </a>
 	 */
-	@CrossOrigin(origins = "*") @RequestMapping(value = SIGNIN, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) @ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password") @ApiImplicitParams({
+	@CrossOrigin(origins = "*") @RequestMapping(value = SIGN_IN, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) @ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password") @ApiImplicitParams({
 		@ApiImplicitParam(name = "jwtRequest", value = "The username", dataType = "JwtRequest", paramType = "body") }) public ResponseEntity<?> signIn(
 		@Valid @RequestBody JwtRequest jwtRequest)
 	{
@@ -78,7 +76,7 @@ import java.util.stream.Collectors;
 			.body(unauthorizedRedirectPath);
 	}
 
-	@RequestMapping(value = SIGNUP, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) public ResponseEntity<?> signUp(
+	@RequestMapping(value = SIGN_UP, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) public ResponseEntity<?> signUp(
 		@Valid @RequestBody Signup signUpRequest)
 	{
 		Optional<ValidationErrors> validationErrors = usersService.validate(signUpRequest);
