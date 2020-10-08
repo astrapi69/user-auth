@@ -1,0 +1,11 @@
+app:
+  db-name: authusers
+  db-host: 34.65.30.47
+  db-port: 5432
+  db-username: postgres
+  db-password: ttHhOKpcu1GxlA4y
+
+spring:
+  datasource:
+    username: ${app.db-username}
+    password: ${app.db-password}

@@ -1,7 +1,7 @@
 package de.alpharogroup.user.auth.service;
 
 import java.util.Date;
-import java.util.function.Function;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -28,18 +28,12 @@ public class JwtTokenService
 
 	public String getUsername(String token)
 	{
-		return getClaims(token, Claims::getSubject);
+		return getAllClaims(token).getSubject();
 	}
 
 	public Date getExpirationDate(String token)
 	{
-		return getClaims(token, Claims::getExpiration);
-	}
-
-	public <T> T getClaims(String token, Function<Claims, T> claimsResolver)
-	{
-		final Claims claims = getAllClaims(token);
-		return claimsResolver.apply(claims);
+		return getAllClaims(token).getExpiration();
 	}
 
 	private Claims getAllClaims(String token)
@@ -52,15 +46,15 @@ public class JwtTokenService
 
 	public String newJwtToken(UserDetails userDetails)
 	{
-		var roles = userDetails.getAuthorities()
+		List<String> roles = userDetails.getAuthorities()
 			.stream()
 			.map(GrantedAuthority::getAuthority)
 			.collect(Collectors.toList());
 
 		String jwtSecret = applicationProperties.getJwtSecret();
-		var signingKey = jwtSecret.getBytes();
+		byte[] signingKey = jwtSecret.getBytes();
 
-		var token = Jwts.builder()
+		String token = Jwts.builder()
 			.signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
 			.setHeaderParam(HeaderKeyNames.TOKEN_TYPE_KEY, HeaderKeyNames.DEFAULT_TOKEN_TYPE)
 			.setIssuer(ApplicationHeaderKeyNames.DEFAULT_TOKEN_ISSUER)

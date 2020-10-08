@@ -9,11 +9,19 @@ import de.alpharogroup.file.search.PathFinder;
 import de.alpharogroup.spring.boot.application.ApplicationHooks;
 import de.alpharogroup.user.auth.configuration.ApplicationProperties;
 
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
 @EnableTransactionManagement
 @EnableConfigurationProperties({ ApplicationProperties.class })
 @SpringBootApplication
-public class UserAuthApplication
+public class UserAuthApplication extends SpringBootServletInitializer
 {
+	@Override
+	protected SpringApplicationBuilder configure(
+		SpringApplicationBuilder builder) {
+		return builder.sources(UserAuthApplication.class);
+	}
 
 	public static void main(String[] args)
 	{
