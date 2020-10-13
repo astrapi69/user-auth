@@ -55,6 +55,14 @@ public class UsersServiceImpl implements UsersService
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override public Optional<Users> findByEmail(@NonNull String email)
+	{
+		return usersRepository.findByEmail(email);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isInRole(final @NonNull Users user, final @NonNull Roles role)
 	{

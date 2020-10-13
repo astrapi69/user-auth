@@ -44,6 +44,15 @@ public interface UsersService
 	Optional<Users> findByUsername(final @NonNull String username);
 
 	/**
+	 * Find {@link Users} object from the given users email
+	 *
+	 * @param email
+	 *            the users email
+	 * @return the found {@link Users} object
+	 */
+	Optional<Users> findByEmail(final @NonNull String email);
+
+	/**
 	 * Checks if the given {@link Users} object is in the given {@link Roles} object.
 	 *
 	 * @param user

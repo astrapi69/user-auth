@@ -39,4 +39,13 @@ public interface UsersRepository extends JpaRepository<Users, UUID>
 	 */
 	Optional<Users> findByUsername(final String username);
 
+	/**
+	 * Find {@link Users} object from the given users email
+	 *
+	 * @param email
+	 *            the users email
+	 * @return the found {@link Users} object
+	 */
+	Optional<Users> findByEmail(final String email);
+
 }
