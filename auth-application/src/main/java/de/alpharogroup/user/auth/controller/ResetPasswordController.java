@@ -9,6 +9,7 @@ import de.alpharogroup.user.auth.dto.JwtRequest;
 import de.alpharogroup.user.auth.dto.JwtResponse;
 import de.alpharogroup.user.auth.dto.MessageBox;
 import de.alpharogroup.user.auth.dto.Signup;
+import de.alpharogroup.user.auth.jpa.entities.ResetPasswords;
 import de.alpharogroup.user.auth.jpa.entities.Roles;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 import de.alpharogroup.user.auth.service.JwtTokenService;
@@ -36,11 +37,23 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@RestController @RequestMapping(ApplicationConfiguration.REST_VERSION + ResetPasswordController.REST_PATH) @AllArgsConstructor @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true) public class ResetPasswordController
+@RestController @RequestMapping(ApplicationConfiguration.REST_VERSION + ResetPasswordController.REST_PATH) @AllArgsConstructor @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true) 
+public class ResetPasswordController
 {
 
 	public static final String REST_PATH = "/resetpassword";
+	public static final String EMAIL_PATH = "/email";
 
 	ResetPasswordsService resetPasswordsService;
+
+	@RequestMapping(value = EMAIL_PATH, method = RequestMethod.GET)
+	public ResponseEntity<?> resetPasswordMessageForMail(String email) {
+		Optional<ResetPasswords> resetPasswords = resetPasswordsService
+			.generateResetPasswordMessageForMail(email);
+		if(resetPasswords.isPresent()){
+			ResetPasswords resetPassword = resetPasswords.get();
+		}
+		return null;
+	}
 
 }
