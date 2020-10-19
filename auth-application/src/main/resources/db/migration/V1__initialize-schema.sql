@@ -1,5 +1,18 @@
 create sequence hibernate_sequence;
 
+create table applications
+(
+    id          uuid not null
+        constraint applications_pkey
+            primary key,
+    name        varchar(255)
+        constraint idx_applications_name
+            unique,
+    version     integer,
+    domain_name varchar(1024),
+    email       varchar(1024)
+);
+
 create table contactmethods
 (
     id            uuid not null,
@@ -55,12 +68,15 @@ create table users
     username varchar(256),
     email varchar(512),
     password       varchar(1024),
+    application uuid,
     constraint users_pkey
         primary key (id),
     constraint uk_users_username
         unique (username),
     constraint uk_users_email
-        unique (email)
+        unique (email),
+    constraint fk_users_application_id
+        foreign key (application) references applications
 );
 
 create table relation_permissions
@@ -128,7 +144,7 @@ create table user_infos
     owner       uuid,
     constraint user_infos_pkey
         primary key (id),
-    constraint fk_user_infos_users_id
+    constraint fk_user_infos_user_id
         foreign key (owner) references users
 );
 
