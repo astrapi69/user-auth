@@ -9,6 +9,7 @@ import de.alpharogroup.user.auth.dto.JwtRequest;
 import de.alpharogroup.user.auth.dto.JwtResponse;
 import de.alpharogroup.user.auth.dto.MessageBox;
 import de.alpharogroup.user.auth.dto.Signup;
+import de.alpharogroup.user.auth.jpa.entities.Applications;
 import de.alpharogroup.user.auth.jpa.entities.ResetPasswords;
 import de.alpharogroup.user.auth.jpa.entities.Roles;
 import de.alpharogroup.user.auth.jpa.entities.Users;
@@ -52,6 +53,11 @@ public class ResetPasswordController
 			.generateResetPasswordMessageForMail(email);
 		if(resetPasswords.isPresent()){
 			ResetPasswords resetPassword = resetPasswords.get();
+			Applications applications = resetPassword.getUser().getApplications();
+			String applicationDomainName = applications.getDomainName();
+			String applicationSenderAddress = applications.getEmail();
+			String recipientEmailContact = resetPassword.getUser().getEmail();
+
 		}
 		return null;
 	}
