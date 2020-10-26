@@ -44,3 +44,17 @@ INSERT INTO user_roles (user_id, role_id) VALUES ('020ad06c-7e35-4ae4-92a0-535b9
 INSERT INTO user_roles (user_id, role_id) VALUES ('ae2aac3f-72de-4eb7-a4b3-4f09fd4eecfb', '02da1ace-f7d2-4d42-a505-52cc07cd38ee');
 INSERT INTO user_roles (user_id, role_id) VALUES ('c4fb6dd8-6bd8-4d45-afae-1eeafe66f13b', '06a1dd25-6979-4108-be2e-3f872eb56c21');
 INSERT INTO user_roles (user_id, role_id) VALUES ('b916a8ab-428f-46c8-95a3-1e09b6152a26', '06bc1bb3-8b4e-4b15-a325-8234b2a8e12c');
+
+INSERT INTO application_roles (application_id, role_id) VALUES ('0084d910-d153-4bd4-86bf-f5e5a8492c7e', '020ad06c-7e35-4ae4-92a0-535b9773a7f3');
+INSERT INTO application_roles (application_id, role_id) VALUES ('0084d910-d153-4bd4-86bf-f5e5a8492c7e', '02da1ace-f7d2-4d42-a505-52cc07cd38ee');
+INSERT INTO application_roles (application_id, role_id) VALUES ('0084d910-d153-4bd4-86bf-f5e5a8492c7e', '06a1dd25-6979-4108-be2e-3f872eb56c21');
+INSERT INTO application_roles (application_id, role_id) VALUES ('0084d910-d153-4bd4-86bf-f5e5a8492c7e', '06bc1bb3-8b4e-4b15-a325-8234b2a8e12c');
+
+INSERT INTO application_permissions (application_id, permission_id) VALUES ('0084d910-d153-4bd4-86bf-f5e5a8492c7e', '020ad06c-7e35-4ae4-92a0-535b9773a7f3');
+INSERT INTO application_permissions (application_id, permission_id) VALUES ('0084d910-d153-4bd4-86bf-f5e5a8492c7e', '02da1ace-f7d2-4d42-a505-52cc07cd38ee');
+INSERT INTO application_permissions (application_id, permission_id) VALUES ('0084d910-d153-4bd4-86bf-f5e5a8492c7e', '06a1dd25-6979-4108-be2e-3f872eb56c21');
+INSERT INTO application_permissions (application_id, permission_id) VALUES ('0084d910-d153-4bd4-86bf-f5e5a8492c7e', '06bc1bb3-8b4e-4b15-a325-8234b2a8e12c');
+INSERT INTO application_permissions (application_id, permission_id) VALUES ('0084d910-d153-4bd4-86bf-f5e5a8492c7e', '08a33502-8dab-4ea8-83a5-913c0e362302');
+INSERT INTO application_permissions (application_id, permission_id) VALUES ('0084d910-d153-4bd4-86bf-f5e5a8492c7e', '08c0dd1a-e62a-4688-bf3e-5dcd15a12080');
+INSERT INTO application_permissions (application_id, permission_id) VALUES ('0084d910-d153-4bd4-86bf-f5e5a8492c7e', '0923793d-a5e7-4e50-9a22-ade4fe4169a9');
+INSERT INTO application_permissions (application_id, permission_id) VALUES ('0084d910-d153-4bd4-86bf-f5e5a8492c7e', '0f178aab-52f9-4459-83a9-c3078ca9d4d9');
