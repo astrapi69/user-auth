@@ -42,13 +42,21 @@ import java.util.Set;
 @Entity
 @Table(name = Users.TABLE_NAME, indexes = { @Index(name = DatabasePrefix.INDEX_PREFIX + Users.TABLE_NAME
 	+ DatabasePrefix.UNDERSCORE
-	+ Users.COLUMN_NAME_USERNAME, columnList = Users.COLUMN_NAME_USERNAME, unique = true) }, uniqueConstraints = {
+	+ Users.JOIN_COLUMN_NAME_APPLICATION
+	+ DatabasePrefix.UNDERSCORE
+	+ Users.JOIN_COLUMN_NAME_APPLICATION ,
+	columnList = Users.JOIN_COLUMN_NAME_APPLICATION +","+Users.COLUMN_NAME_USERNAME, unique = true) },
+	uniqueConstraints = {
 			@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
 				+ DatabasePrefix.UNDERSCORE
-				+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.COLUMN_NAME_USERNAME }),
+				+ Users.JOIN_COLUMN_NAME_APPLICATION
+				+ DatabasePrefix.UNDERSCORE
+				+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.JOIN_COLUMN_NAME_APPLICATION, Users.COLUMN_NAME_USERNAME }),
 			@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
 				+ DatabasePrefix.UNDERSCORE
-				+ Users.COLUMN_NAME_EMAIL, columnNames = { Users.COLUMN_NAME_EMAIL })})
+				+ Users.JOIN_COLUMN_NAME_APPLICATION
+				+ DatabasePrefix.UNDERSCORE
+				+ Users.COLUMN_NAME_EMAIL, columnNames = { Users.JOIN_COLUMN_NAME_APPLICATION, Users.COLUMN_NAME_EMAIL })})
 @Getter
 @Setter
 @ToString(callSuper = true)

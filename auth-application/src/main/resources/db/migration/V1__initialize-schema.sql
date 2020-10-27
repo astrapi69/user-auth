@@ -9,6 +9,12 @@ create table applications
     email varchar(1024),
     constraint applications_pkey
         primary key (id),
+    constraint uk_applications_name
+        unique (name),
+    constraint uk_applications_domain_name
+        unique (domain_name),
+    constraint uk_applications_email
+        unique (email),
     constraint idx_applications_name
         unique (name)
 );
@@ -97,12 +103,12 @@ create table users
     application uuid,
     constraint users_pkey
         primary key (id),
-    constraint uk_users_username
-        unique (username),
-    constraint uk_users_email
-        unique (email),
-    constraint idx_users_username
-        unique (username),
+    constraint uk_users_application_username
+        unique (application, username),
+    constraint uk_users_application_email
+        unique (application, email),
+    constraint idx_users_application_username
+        unique (application, username),
     constraint fk_users_application_id
         foreign key (application) references applications
 );

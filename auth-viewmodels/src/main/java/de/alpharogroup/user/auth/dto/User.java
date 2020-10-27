@@ -26,7 +26,8 @@ public class User
 	String salt;
 	/** The user name. */
 	String username;
-
 	/** The email */
 	String email;
+	/** The application this user is registered */
+	Application application;
 }
