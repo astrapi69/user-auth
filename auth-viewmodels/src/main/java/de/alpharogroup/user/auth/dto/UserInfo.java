@@ -1,13 +1,22 @@
 package de.alpharogroup.user.auth.dto;
 
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserInfo
 {
 	User owner;
 	String birthname;
+	@Builder.Default
 	Set<Contactmethod> contactmethods = new HashSet<>();
 	Date dateofbirth;
 	String firstname;
