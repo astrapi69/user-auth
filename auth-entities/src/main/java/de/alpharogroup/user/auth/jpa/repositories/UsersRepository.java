@@ -3,7 +3,10 @@ package de.alpharogroup.user.auth.jpa.repositories;
 import java.util.Optional;
 import java.util.UUID;
 
+import de.alpharogroup.user.auth.jpa.entities.Applications;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import de.alpharogroup.user.auth.jpa.entities.Users;
@@ -30,6 +33,8 @@ public interface UsersRepository extends JpaRepository<Users, UUID>
 	 */
 	boolean existsByEmail(final String email);
 
+	boolean existsByEmailAndApplications(final String email, Applications applications);
+
 	/**
 	 * Find {@link Users} object from the given user name.
 	 *
@@ -48,4 +53,29 @@ public interface UsersRepository extends JpaRepository<Users, UUID>
 	 */
 	Optional<Users> findByEmail(final String email);
 
+	/**
+	 * Find {@link Users} object from the given users email
+	 *
+	 * @param email
+	 *            the users email
+	 * @param domainName
+	 *            the domain name of the application
+	 * @return the found {@link Users} object
+	 */
+	@Query("select u from Users u " +
+		"where u.email=:email " +
+		"and u.applications.domainName=:domainName")
+	Optional<Users> findByEmailAndApplications(@Param("email") final String email, @Param("domainName") final String domainName);
+
+	/**
+	 * Find {@link Users} object from the given user name.
+	 *
+	 * @param username
+	 *            the user name
+	 * @return the found {@link Users} object
+	 */
+	@Query("select u from Users u " +
+		"where u.username=:username " +
+		"and u.applications.domainName=:domainName")
+	Optional<Users> findByUsernameAndApplications(@Param("username") final String username, @Param("domainName") final String domainName);
 }

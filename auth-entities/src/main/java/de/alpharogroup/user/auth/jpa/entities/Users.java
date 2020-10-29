@@ -80,7 +80,7 @@ public class Users extends UUIDEntity
 		+ TABLE_NAME + DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_APPLICATION + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
 	/** The {@link Applications} that owns this {@link Users} object. */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
-	@JoinColumn(name = JOIN_COLUMN_NAME_APPLICATION,
+	@JoinColumn(name = JOIN_COLUMN_NAME_APPLICATION, nullable = false,
 		referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
 		foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_USERS_APPLICATION_ID))
 	Applications applications;
