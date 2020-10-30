@@ -48,7 +48,7 @@ public class ResetPasswordController
 	ResetPasswordsService resetPasswordsService;
 
 	@RequestMapping(value = EMAIL_PATH, method = RequestMethod.GET)
-	public ResponseEntity<?> resetPasswordMessageForMail(String email, String domainName) {
+	public ResponseEntity<?> resetPasswordMessageForMail(String email) {
 		Optional<ResetPasswords> resetPasswords = resetPasswordsService
 			.generateResetPasswordMessageForMail(email);
 		if(resetPasswords.isPresent()){

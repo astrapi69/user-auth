@@ -47,11 +47,17 @@ import java.util.Set;
 	+ Users.JOIN_COLUMN_NAME_APPLICATION ,
 	columnList = Users.JOIN_COLUMN_NAME_APPLICATION +","+Users.COLUMN_NAME_USERNAME, unique = true) },
 	uniqueConstraints = {
-			@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
-				+ DatabasePrefix.UNDERSCORE
-				+ Users.JOIN_COLUMN_NAME_APPLICATION
-				+ DatabasePrefix.UNDERSCORE
-				+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.JOIN_COLUMN_NAME_APPLICATION, Users.COLUMN_NAME_USERNAME }),
+		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
+			+ DatabasePrefix.UNDERSCORE
+			+ Users.JOIN_COLUMN_NAME_APPLICATION
+			+ DatabasePrefix.UNDERSCORE
+			+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.JOIN_COLUMN_NAME_APPLICATION, Users.COLUMN_NAME_USERNAME }),
+		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
+			+ DatabasePrefix.UNDERSCORE
+			+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.COLUMN_NAME_USERNAME }),
+		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
+			+ DatabasePrefix.UNDERSCORE
+			+ Users.COLUMN_NAME_EMAIL, columnNames = { Users.COLUMN_NAME_EMAIL }),
 			@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
 				+ DatabasePrefix.UNDERSCORE
 				+ Users.JOIN_COLUMN_NAME_APPLICATION

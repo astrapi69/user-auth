@@ -107,8 +107,10 @@ create table users
         unique (application, username),
     constraint uk_users_application_email
         unique (application, email),
-    constraint idx_users_application_username
-        unique (application, username),
+    constraint idx_users_username
+        unique (username),
+    constraint idx_users_email
+        unique (email),
     constraint fk_users_application_id
         foreign key (application) references applications
 );
