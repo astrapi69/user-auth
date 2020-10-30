@@ -10,7 +10,11 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 import de.alpharogroup.crypto.pw.PasswordEncryptor;
+import de.alpharogroup.user.auth.dto.ResetPassword;
+import de.alpharogroup.user.auth.dto.ResetPasswordMessage;
+import de.alpharogroup.user.auth.mapper.ResetPasswordMapper;
 import de.alpharogroup.user.auth.service.api.UsersService;
+import io.github.astrapi69.throwable.RuntimeExceptionDecorator;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +39,7 @@ public class ResetPasswordsServiceImpl implements ResetPasswordsService
 
 	UsersService usersService;
 	ResetPasswordsRepository resetPasswordsRepository;
+	ResetPasswordMapper resetPasswordMapper;
 
 	@Override
 	public Optional<ResetPasswords> findByUser(Users user)
@@ -49,53 +54,51 @@ public class ResetPasswordsServiceImpl implements ResetPasswordsService
 		return resetPasswordsRepository.findByUserAndGeneratedPassword(user, generatedPassword);
 	}
 
-	public Optional<ResetPasswords> generateResetPasswordMessageForMail(String email) {
+	public ResetPasswordMessage generateResetPasswordMessageForMail(String email) {
+		ResetPasswordMessage resetPasswordMessage = ResetPasswordMessage.builder().build();
+		// 1. Check if email exists.
 		Optional<Users> optionalUser = usersService.findByEmail(email);
+		// 2. if email exists...
 		if(optionalUser.isPresent()) {
 			Users user = optionalUser.get();
+
 			Optional<ResetPasswords> optionalResetPasswords = findByUser(user);
-			Optional<String> hashedPassword = generateNewPassword(user.getSalt());
-			String password = "";
-			if(hashedPassword.isPresent()) {
-				password = hashedPassword.get();
+			ResetPasswords resetPassword;
+			if(!optionalResetPasswords.isPresent()) {
+				String hashedPassword = generateNewPassword(user.getSalt());
+				resetPassword = ResetPasswords.builder().build();
+				resetPassword.setGeneratedPassword(hashedPassword);
 			} else {
-				log.log(Level.SEVERE, "!!!=======================================!!!");
-				log.log(Level.SEVERE, "!!!===[PASSWORD COULD NOT BE GENERATED]" +
-					" for email:" + email +
-					"===!!!");
-				log.log(Level.SEVERE, "!!!=======================================!!!");
-				return Optional.empty();
+				resetPassword = optionalResetPasswords.get();
 			}
 			LocalDateTime now = LocalDateTime.now();
 			LocalDateTime expiryDate = now.plusDays(1);
-			ResetPasswords resetPassword;
-			if(optionalResetPasswords.isPresent()) {
-				resetPassword = optionalResetPasswords.get();
-			} else {
-				resetPassword = ResetPasswords.builder().build();
-			}
 			resetPassword.setExpiryDate(expiryDate);
 			resetPassword.setStarttime(now);
-			resetPassword.setGeneratedPassword(password);
+
 			ResetPasswords saved = resetPasswordsRepository.save(resetPassword);
-			return Optional.of(saved);
+			ResetPassword dto = resetPasswordMapper.toDto(saved);
+			resetPasswordMessage.setResetPassword(dto);
+
+
+			String applicationDomainName = user.getApplications().getDomainName();
+			String applicationSenderAddress = user.getApplications().getEmail();
+			String usersEmail = user.getEmail();
+			// TODO
+			String urlForForgottenPassword = null;
+
+		} else {
+
 		}
-		return Optional.empty();
+		return resetPasswordMessage;
 	}
 
-	private Optional<String> generateNewPassword(String salt)
+	private String generateNewPassword(String salt)
 	{
 		PasswordEncryptor passwordService = PasswordEncryptor.getInstance();
 		String newPassword = passwordService.getRandomPassword(8);
-		try {
-			return Optional.of(passwordService.hashAndHexPassword(
-				newPassword, salt));
-		} catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException
-			| InvalidKeyException | InvalidKeySpecException | UnsupportedEncodingException
-			| NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e)
-		{
-			return Optional.empty();
-		}
+		return RuntimeExceptionDecorator.decorate(()-> passwordService.hashAndHexPassword(
+			newPassword, salt));
 	}
 
 }

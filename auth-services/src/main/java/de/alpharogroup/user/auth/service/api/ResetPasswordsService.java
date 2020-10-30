@@ -2,6 +2,8 @@ package de.alpharogroup.user.auth.service.api;
 
 import java.util.Optional;
 
+import de.alpharogroup.user.auth.dto.ResetPassword;
+import de.alpharogroup.user.auth.dto.ResetPasswordMessage;
 import de.alpharogroup.user.auth.jpa.entities.ResetPasswords;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 import lombok.NonNull;
@@ -41,6 +43,6 @@ public interface ResetPasswordsService
 	 *            the user email
 	 * @return an optional with the entry if generated otherwise empty
 	 */
-	Optional<ResetPasswords> generateResetPasswordMessageForMail(String email);
+	ResetPasswordMessage generateResetPasswordMessageForMail(String email);
 
 }
