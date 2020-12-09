@@ -8,6 +8,7 @@ import de.alpharogroup.user.auth.configuration.ApplicationProperties;
 import de.alpharogroup.user.auth.dto.JwtRequest;
 import de.alpharogroup.user.auth.dto.JwtResponse;
 import de.alpharogroup.user.auth.dto.MessageBox;
+import de.alpharogroup.user.auth.dto.ResetPasswordMessage;
 import de.alpharogroup.user.auth.dto.Signup;
 import de.alpharogroup.user.auth.jpa.entities.Applications;
 import de.alpharogroup.user.auth.jpa.entities.ResetPasswords;
@@ -49,17 +50,9 @@ public class ResetPasswordController
 
 	@RequestMapping(value = EMAIL_PATH, method = RequestMethod.GET)
 	public ResponseEntity<?> resetPasswordMessageForMail(String email) {
-		Optional<ResetPasswords> resetPasswords = resetPasswordsService
+		ResetPasswordMessage resetPasswords = resetPasswordsService
 			.generateResetPasswordMessageForMail(email);
-		if(resetPasswords.isPresent()){
-			ResetPasswords resetPassword = resetPasswords.get();
-			Applications applications = resetPassword.getUser().getApplications();
-			String applicationDomainName = applications.getDomainName();
-			String applicationSenderAddress = applications.getEmail();
-			String recipientEmailContact = resetPassword.getUser().getEmail();
-
-		}
-		return null;
+		return ResponseEntity.ok(resetPasswords);
 	}
 
 }
