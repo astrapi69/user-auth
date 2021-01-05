@@ -6,6 +6,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -13,6 +15,7 @@ import de.alpharogroup.crypto.pw.PasswordEncryptor;
 import de.alpharogroup.user.auth.dto.ResetPassword;
 import de.alpharogroup.user.auth.dto.ResetPasswordMessage;
 import de.alpharogroup.user.auth.mapper.ResetPasswordMapper;
+import de.alpharogroup.user.auth.service.api.UserInfosService;
 import de.alpharogroup.user.auth.service.api.UsersService;
 import io.github.astrapi69.throwable.RuntimeExceptionDecorator;
 import lombok.extern.java.Log;
@@ -38,6 +41,7 @@ public class ResetPasswordsServiceImpl implements ResetPasswordsService
 {
 
 	UsersService usersService;
+	UserInfosService userInfosService;
 	ResetPasswordsRepository resetPasswordsRepository;
 	ResetPasswordMapper resetPasswordMapper;
 
@@ -80,17 +84,31 @@ public class ResetPasswordsServiceImpl implements ResetPasswordsService
 			ResetPassword dto = resetPasswordMapper.toDto(saved);
 			resetPasswordMessage.setResetPassword(dto);
 
-
 			String applicationDomainName = user.getApplications().getDomainName();
 			String applicationSenderAddress = user.getApplications().getEmail();
 			String usersEmail = user.getEmail();
+			resetPasswordMessage.setApplicationDomainName(applicationDomainName);
+			resetPasswordMessage.setApplicationSenderAddress(applicationSenderAddress);
+			resetPasswordMessage.setUsersEmail(usersEmail);
 			// TODO
-			String urlForForgottenPassword = null;
-
+			String contextPath = null;
+			String urlForForgottenPassword =
+				getUrlForForgottenPassword(contextPath, dto);
+//			InfoMessageModel infoMessageModel = EmailComposer
+//				.createEmailMessageForForgottenPassword(
+//					applicationSenderAddress, applicationDomainName,
+//					user.getUsername(), userInfosService.getFullName(user),
+//					recipientEmailContact, newPassword,
+//					urlForForgottenPassword, getLocale());
 		} else {
 
 		}
 		return resetPasswordMessage;
+	}
+
+	protected String getUrlForForgottenPassword(String contextPath,	ResetPassword dto) {
+		String urlForForgottenPassword = contextPath + "/public/reset/password?token=" + dto.getId();
+		return urlForForgottenPassword;
 	}
 
 	private String generateNewPassword(String salt)

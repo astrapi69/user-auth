@@ -33,7 +33,7 @@ public interface AuthenticationsService extends Serializable
 	 *            the password
 	 * @return the resulted {@link AuthenticationResult} object
 	 */
-	default public AuthenticationResult<Users, AuthenticationErrors> authenticate(
+	default AuthenticationResult<Users, AuthenticationErrors> authenticate(
 		final @NonNull String emailOrUsername, final @NonNull String password)
 	{
 
@@ -58,7 +58,7 @@ public interface AuthenticationsService extends Serializable
 	 *            the password
 	 * @return the authentication result
 	 */
-	default public AuthenticationResult<Users, AuthenticationErrors> authorize(
+	default AuthenticationResult<Users, AuthenticationErrors> authorize(
 		final @NonNull Users user, final @NonNull String password)
 	{
 		final AuthenticationResult<Users, AuthenticationErrors> authenticationResult = AuthenticationResult

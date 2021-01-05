@@ -1,6 +1,7 @@
 package de.alpharogroup.user.auth.dto;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -20,4 +21,5 @@ public class ResetPassword
 	LocalDateTime starttime;
 	/** The user attribute that references to the domain class {@link User}. */
 	User user;
+	UUID id;
 }

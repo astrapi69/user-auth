@@ -13,12 +13,12 @@ public class ContactmethodMapperTest
 	@Test
 	public void testMapper(){
 		ContactmethodMapper mapper = new ContactmethodMapper();
-		Contactmethods contactmethods = Contactmethods.builder()
+		Contactmethods entity = Contactmethods.builder()
 			.contactmethod(ContactmethodType.EMAIL)
 			.contactvalue("foo@bar.org")
 			.build();
-		Contactmethod contactmethod = mapper.toDto(contactmethods);
-		assertEquals(contactmethod.getContactvalue(), contactmethods.getContactvalue());
+		Contactmethod dto = mapper.toDto(entity);
+		assertEquals(dto.getContactvalue(), entity.getContactvalue());
 	}
 
 }
