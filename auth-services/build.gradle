@@ -13,6 +13,7 @@ dependencies {
     implementation("de.alpharogroup:auth:$authVersion")
     implementation("de.alpharogroup:mystic-crypt:$mysticCryptVersion")
     implementation("de.alpharogroup:servlet-kt-extensions:$servletKtExtensionsVersion")
+    implementation("de.alpharogroup:resourcebundle-core:$resourcebundleCoreVersion")
 
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core")

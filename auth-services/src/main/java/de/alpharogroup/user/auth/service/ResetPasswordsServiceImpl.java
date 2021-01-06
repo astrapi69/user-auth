@@ -7,13 +7,16 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
 import de.alpharogroup.crypto.pw.PasswordEncryptor;
+import de.alpharogroup.resourcebundle.locale.LocaleResolver;
 import de.alpharogroup.user.auth.dto.ResetPassword;
 import de.alpharogroup.user.auth.dto.ResetPasswordMessage;
+import de.alpharogroup.user.auth.jpa.entities.UserInfos;
 import de.alpharogroup.user.auth.mapper.ResetPasswordMapper;
 import de.alpharogroup.user.auth.service.api.UserInfosService;
 import de.alpharogroup.user.auth.service.api.UsersService;
@@ -68,8 +71,13 @@ public class ResetPasswordsServiceImpl implements ResetPasswordsService
 
 			Optional<ResetPasswords> optionalResetPasswords = findByUser(user);
 			ResetPasswords resetPassword;
+			String newPassword = null;
 			if(!optionalResetPasswords.isPresent()) {
-				String hashedPassword = generateNewPassword(user.getSalt());
+				PasswordEncryptor passwordService = PasswordEncryptor.getInstance();
+				newPassword = passwordService.getRandomPassword(8);
+				final String tmpNewPw = newPassword;
+				String hashedPassword = RuntimeExceptionDecorator.decorate(()-> passwordService.hashAndHexPassword(
+					tmpNewPw, user.getSalt()));
 				resetPassword = ResetPasswords.builder().build();
 				resetPassword.setGeneratedPassword(hashedPassword);
 			} else {
@@ -86,12 +94,16 @@ public class ResetPasswordsServiceImpl implements ResetPasswordsService
 
 			String applicationDomainName = user.getApplications().getDomainName();
 			String applicationSenderAddress = user.getApplications().getEmail();
-			String usersEmail = user.getEmail();
+			String recipientEmailContact = user.getApplications().getEmail();
+				String usersEmail = user.getEmail();
 			resetPasswordMessage.setApplicationDomainName(applicationDomainName);
 			resetPasswordMessage.setApplicationSenderAddress(applicationSenderAddress);
 			resetPasswordMessage.setUsersEmail(usersEmail);
 			// TODO
-			String contextPath = null;
+			String contextPath = null; // TODO
+			UserInfos userInfos = userInfosService.findByOwner(user);
+			String locale = userInfos.getLocale();
+			Locale usersLocale = LocaleResolver.resolveLocaleCode(locale);
 			String urlForForgottenPassword =
 				getUrlForForgottenPassword(contextPath, dto);
 //			InfoMessageModel infoMessageModel = EmailComposer
@@ -99,7 +111,7 @@ public class ResetPasswordsServiceImpl implements ResetPasswordsService
 //					applicationSenderAddress, applicationDomainName,
 //					user.getUsername(), userInfosService.getFullName(user),
 //					recipientEmailContact, newPassword,
-//					urlForForgottenPassword, getLocale());
+//					urlForForgottenPassword, usersLocale);
 		} else {
 
 		}

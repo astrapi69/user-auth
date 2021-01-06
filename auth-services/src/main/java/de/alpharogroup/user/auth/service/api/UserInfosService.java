@@ -8,10 +8,39 @@ import de.alpharogroup.user.auth.jpa.entities.Users;
  */
 public interface UserInfosService
 {
-	default String getFullName(UserInfos userData)
+
+	/**
+	 * Find the {@link UserInfos} object by the given {@link Users} object.
+	 *
+	 * @param user
+	 *            the {@link Users} object
+	 * @return the found {@link UserInfos} object or null if does not exist.
+	 */
+	UserInfos findByOwner(Users user);
+
+	/**
+	 * Gets the full name from the given {@link Users} object.
+	 *
+	 * @param user
+	 *            the user
+	 * @return the full name
+	 */
+	default String getFullName(Users user) {
+		String fullName = getFullName(findByOwner(user));
+		return fullName.isEmpty() ? user.getUsername() : fullName;
+	}
+
+	/**
+	 * Gets the full name from the given {@link UserInfos} object.
+	 *
+	 * @param userInfos
+	 *            the user info
+	 * @return the full name
+	 */
+	default String getFullName(UserInfos userInfos)
 	{
-		String firstname = userData.getFirstname();
-		String lastname = userData.getLastname();
+		String firstname = userInfos.getFirstname();
+		String lastname = userInfos.getLastname();
 		StringBuilder sb = new StringBuilder();
 		if (firstname != null && !firstname.isEmpty())
 		{
