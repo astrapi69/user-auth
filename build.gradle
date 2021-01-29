@@ -40,6 +40,7 @@ subprojects {
     apply plugin: "net.ltgt.apt"
     apply plugin: "net.ltgt.apt-idea"
     apply plugin: "com.github.ben-manes.versions"
+    apply plugin: "com.github.hierynomus.license"
 
     bootJar {
         enabled = false
