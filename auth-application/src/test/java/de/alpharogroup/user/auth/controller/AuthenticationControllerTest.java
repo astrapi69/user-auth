@@ -73,7 +73,7 @@ public class AuthenticationControllerTest
 		HttpHeaders headers;
 		HttpEntity<String> requestEntity;
 		restUrl = UrlExtensions.generateUrl(getBaseUrl(randomServerPort),
-			AuthenticationController.SIGNIN);
+			AuthenticationController.SIGN_IN);
 		List<MediaType> acceptableMediaTypes = ListFactory.newArrayList();
 		acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
 		headers = new HttpHeaders();
@@ -98,7 +98,7 @@ public class AuthenticationControllerTest
 		HttpHeaders headers;
 		HttpEntity<String> requestEntity;
 		restUrl = UrlExtensions.generateUrl(getBaseUrl(randomServerPort),
-			AuthenticationController.SIGNUP);
+			AuthenticationController.SIGN_UP);
 		List<MediaType> acceptableMediaTypes = ListFactory.newArrayList();
 		acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
 		headers = new HttpHeaders();

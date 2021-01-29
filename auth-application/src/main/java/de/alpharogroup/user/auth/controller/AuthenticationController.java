@@ -35,7 +35,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@RestController @RequestMapping(ApplicationConfiguration.REST_VERSION + AuthenticationController.REST_PATH) @AllArgsConstructor @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true) public class AuthenticationController
+@RestController @RequestMapping(ApplicationConfiguration.REST_VERSION + AuthenticationController.REST_PATH) @AllArgsConstructor @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class AuthenticationController
 {
 
 	public static final String REST_PATH = "/auth";
