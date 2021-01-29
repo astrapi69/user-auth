@@ -16,11 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class MessageUtils {
+public class SendEmailProvider
+{
 
 	/** The Constant logger. */
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(MessageUtils.class.getName());
+			.getLogger(SendEmailProvider.class.getName());
 	private static final SendEmail emailSender;
 
 	public static Properties emailProperties;
@@ -57,7 +58,7 @@ public class MessageUtils {
 		throws MessagingException, UnsupportedEncodingException
 	{
 		final EmailMessage emailMessage = new EmailMessage();
-		MessageUtils.setApplicationAsSender(applicationSenderAddress,
+		SendEmailProvider.setApplicationAsSender(applicationSenderAddress,
 				applicationDomainName, emailMessage);
 
 		// Set recipient

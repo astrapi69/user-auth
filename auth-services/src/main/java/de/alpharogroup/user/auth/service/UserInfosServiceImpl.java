@@ -1,5 +1,6 @@
 package de.alpharogroup.user.auth.service;
 
+import de.alpharogroup.spring.service.api.GenericService;
 import de.alpharogroup.user.auth.jpa.entities.UserInfos;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 import de.alpharogroup.user.auth.jpa.repositories.UserInfosRepository;
@@ -10,11 +11,14 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Getter
 @Service
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserInfosServiceImpl implements UserInfosService
+public class UserInfosServiceImpl implements GenericService<UserInfos, UUID, UserInfosRepository>,
+	UserInfosService
 {
 	UserInfosRepository repository;
 

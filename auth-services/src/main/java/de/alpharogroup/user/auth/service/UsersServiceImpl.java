@@ -2,10 +2,13 @@ package de.alpharogroup.user.auth.service;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import de.alpharogroup.auth.enums.ValidationErrors;
 import de.alpharogroup.crypto.pw.PasswordEncryptor;
+import de.alpharogroup.spring.service.api.GenericService;
 import de.alpharogroup.user.auth.dto.Signup;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import de.alpharogroup.user.auth.jpa.entities.Roles;
@@ -18,12 +21,15 @@ import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 
 @Service
+@Getter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UsersServiceImpl implements UsersService
+public class UsersServiceImpl implements
+	GenericService<Users, UUID, UsersRepository>,
+	UsersService
 {
 
-	UsersRepository usersRepository;
+	UsersRepository repository;
 
 	/**
 	 * {@inheritDoc}
@@ -31,7 +37,7 @@ public class UsersServiceImpl implements UsersService
 	@Override
 	public boolean existsByUsername(final @NonNull String username)
 	{
-		return usersRepository.existsByUsername(username);
+		return repository.existsByUsername(username);
 	}
 
 	/**
@@ -40,7 +46,7 @@ public class UsersServiceImpl implements UsersService
 	@Override
 	public boolean existsByEmail(@NonNull String email)
 	{
-		return usersRepository.existsByEmail(email);
+		return repository.existsByEmail(email);
 	}
 
 	/**
@@ -49,7 +55,7 @@ public class UsersServiceImpl implements UsersService
 	@Override
 	public Optional<Users> findByUsername(final @NonNull String username)
 	{
-		return usersRepository.findByUsername(username);
+		return repository.findByUsername(username);
 	}
 
 	/**
@@ -57,7 +63,7 @@ public class UsersServiceImpl implements UsersService
 	 */
 	@Override public Optional<Users> findByEmail(@NonNull String email)
 	{
-		return usersRepository.findByEmail(email);
+		return repository.findByEmail(email);
 	}
 
 	/**
@@ -121,7 +127,7 @@ public class UsersServiceImpl implements UsersService
 			.salt(salt)
 			.password(hashedPassword)
 			.roles(roles).build();
-		Users savedUser = usersRepository.save(newUser);
+		Users savedUser = repository.save(newUser);
 		return savedUser;
 	}
 }

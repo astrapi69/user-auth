@@ -1,6 +1,5 @@
 package de.alpharogroup.user.auth.service.api;
 
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -19,7 +18,7 @@ import de.alpharogroup.crypto.pw.PasswordEncryptor;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 import lombok.NonNull;
 
-public interface AuthenticationsService extends Serializable
+public interface AuthenticationsService
 {
 
 	/**

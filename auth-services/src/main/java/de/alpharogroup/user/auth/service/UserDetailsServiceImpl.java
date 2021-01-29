@@ -21,13 +21,13 @@ import lombok.experimental.FieldDefaults;
 public class UserDetailsServiceImpl implements UserDetailsService
 {
 
-	UsersRepository usersRepository;
+	UsersRepository repository;
 
 	@Override
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username)
 	{
-		Optional<Users> optionalUser = usersRepository.findByUsername(username);
+		Optional<Users> optionalUser = repository.findByUsername(username);
 		if (!optionalUser.isPresent())
 		{
 			throw new UsernameNotFoundException(username);

@@ -24,8 +24,10 @@ import org.springframework.stereotype.Repository;
 	 *            the contact value
 	 * @return the list of the found {@link Contactmethods} objects.
 	 */
-	@Query("select cm from Contactmethods cm where cm.contactmethod=:contactmethod and cm.contactvalue=:contactmethod")
-	List<Contactmethods> find(@Param("contactmethod") ContactmethodType contactmethod, @Param("contactmethod")  String contactvalue);
+	@Query("select distinct cm from Contactmethods cm " +
+		"where cm.contactmethod=:contactmethod " +
+		"and cm.contactvalue=:contactvalue")
+	List<Contactmethods> find(@Param("contactmethod") ContactmethodType contactmethod, @Param("contactvalue")  String contactvalue);
 
 	/**
 	 * Find all the {@link Contactmethods} objects from the given user and the given

@@ -3,10 +3,13 @@ package de.alpharogroup.user.auth.service;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import javax.mail.MessagingException;
 
+import de.alpharogroup.spring.service.api.GenericService;
+import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -31,28 +34,30 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.java.Log;
 
 @Service
+@Getter
 @AllArgsConstructor
 @Log
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ResetPasswordsServiceImpl implements ResetPasswordsService
+public class ResetPasswordsServiceImpl implements GenericService<ResetPasswords, UUID, ResetPasswordsRepository>,
+	ResetPasswordsService
 {
 
 	UsersService usersService;
 	UserInfosService userInfosService;
-	ResetPasswordsRepository resetPasswordsRepository;
+	ResetPasswordsRepository repository;
 	ResetPasswordMapper resetPasswordMapper;
 
 	@Override
 	public Optional<ResetPasswords> findByUser(Users user)
 	{
-		return resetPasswordsRepository.findByUser(user);
+		return repository.findByUser(user);
 	}
 
 	@Override
 	public Optional<ResetPasswords> findByUserAndGeneratedPassword(Users user,
 		String generatedPassword)
 	{
-		return resetPasswordsRepository.findByUserAndGeneratedPassword(user, generatedPassword);
+		return repository.findByUserAndGeneratedPassword(user, generatedPassword);
 	}
 
 	@Override
@@ -93,7 +98,7 @@ public class ResetPasswordsServiceImpl implements ResetPasswordsService
 			resetPassword.setExpiryDate(expiryDate);
 			resetPassword.setStarttime(now);
 
-			ResetPasswords saved = resetPasswordsRepository.save(resetPassword);
+			ResetPasswords saved = repository.save(resetPassword);
 			ResetPassword dto = resetPasswordMapper.toDto(saved);
 			resetPasswordMessage.setResetPassword(dto);
 
@@ -116,7 +121,7 @@ public class ResetPasswordsServiceImpl implements ResetPasswordsService
 
 			try
 			{
-				SendMessageService.sendInfoEmail(MessageUtils.getEmailSender(), infoMessageModel);
+				SendMessageService.sendInfoEmail(SendEmailProvider.getEmailSender(), infoMessageModel);
 			}
 			catch (MessagingException e)
 			{
