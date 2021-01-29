@@ -1,9 +1,6 @@
 
 buildscript {
     repositories {
-        mavenCentral()
-        google()
-        jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
@@ -23,8 +20,9 @@ allprojects {
     version = "$projectVersion"
 
     repositories {
-        jcenter()
+        mavenLocal()
         mavenCentral()
+        jcenter()
     }
 }
 

@@ -42,13 +42,27 @@ import java.util.Set;
 @Entity
 @Table(name = Users.TABLE_NAME, indexes = { @Index(name = DatabasePrefix.INDEX_PREFIX + Users.TABLE_NAME
 	+ DatabasePrefix.UNDERSCORE
-	+ Users.COLUMN_NAME_USERNAME, columnList = Users.COLUMN_NAME_USERNAME, unique = true) }, uniqueConstraints = {
+	+ Users.JOIN_COLUMN_NAME_APPLICATION
+	+ DatabasePrefix.UNDERSCORE
+	+ Users.JOIN_COLUMN_NAME_APPLICATION ,
+	columnList = Users.JOIN_COLUMN_NAME_APPLICATION +","+Users.COLUMN_NAME_USERNAME, unique = true) },
+	uniqueConstraints = {
+		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
+			+ DatabasePrefix.UNDERSCORE
+			+ Users.JOIN_COLUMN_NAME_APPLICATION
+			+ DatabasePrefix.UNDERSCORE
+			+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.JOIN_COLUMN_NAME_APPLICATION, Users.COLUMN_NAME_USERNAME }),
+		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
+			+ DatabasePrefix.UNDERSCORE
+			+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.COLUMN_NAME_USERNAME }),
+		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
+			+ DatabasePrefix.UNDERSCORE
+			+ Users.COLUMN_NAME_EMAIL, columnNames = { Users.COLUMN_NAME_EMAIL }),
 			@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
 				+ DatabasePrefix.UNDERSCORE
-				+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.COLUMN_NAME_USERNAME }),
-			@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
+				+ Users.JOIN_COLUMN_NAME_APPLICATION
 				+ DatabasePrefix.UNDERSCORE
-				+ Users.COLUMN_NAME_EMAIL, columnNames = { Users.COLUMN_NAME_EMAIL })})
+				+ Users.COLUMN_NAME_EMAIL, columnNames = { Users.JOIN_COLUMN_NAME_APPLICATION, Users.COLUMN_NAME_EMAIL })})
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -58,16 +72,24 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Users extends UUIDEntity
 {
-
 	static final String SINGULAR_ENTITY_NAME = "user";
 	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String COLUMN_NAME_USERNAME = "username";
 	static final String COLUMN_NAME_EMAIL = "email";
+	static final String JOIN_COLUMN_NAME_APPLICATION = Applications.SINGULAR_ENTITY_NAME;
 	static final String JOIN_TABLE_NAME_USER_ROLES = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Roles.TABLE_NAME;
 	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
 	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID = Roles.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
 	static final String JOIN_TABLE_FOREIGN_KEY_USER_ROLES_USER_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_USER_ROLES + DatabasePrefix.UNDERSCORE + JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID;
 	static final String JOIN_TABLE_FOREIGN_KEY_USER_ROLES_ROLE_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_USER_ROLES + DatabasePrefix.UNDERSCORE + JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID;
+	static final String JOIN_COLUMN_FOREIGN_KEY_USERS_APPLICATION_ID = DatabasePrefix.FOREIGN_KEY_PREFIX
+		+ TABLE_NAME + DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_APPLICATION + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+	/** The {@link Applications} that owns this {@link Users} object. */
+	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = JOIN_COLUMN_NAME_APPLICATION, nullable = false,
+		referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
+		foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_USERS_APPLICATION_ID))
+	Applications applications;
 
 	/** The attribute active, if true the user account is active. */
 	@Column
@@ -105,7 +127,7 @@ public class Users extends UUIDEntity
 	/** The email of this user. */
 	@Column(name = COLUMN_NAME_EMAIL, length = 512)
 	@Email
-	private String email;
+	String email;
 
 	/**
 	 * Adds the given role to this {@link Users} object

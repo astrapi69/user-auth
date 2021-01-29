@@ -1,6 +1,5 @@
 package de.alpharogroup.user.auth.service.api;
 
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -19,7 +18,7 @@ import de.alpharogroup.crypto.pw.PasswordEncryptor;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 import lombok.NonNull;
 
-public interface AuthenticationsService extends Serializable
+public interface AuthenticationsService
 {
 
 	/**
@@ -33,7 +32,7 @@ public interface AuthenticationsService extends Serializable
 	 *            the password
 	 * @return the resulted {@link AuthenticationResult} object
 	 */
-	default public AuthenticationResult<Users, AuthenticationErrors> authenticate(
+	default AuthenticationResult<Users, AuthenticationErrors> authenticate(
 		final @NonNull String emailOrUsername, final @NonNull String password)
 	{
 
@@ -58,7 +57,7 @@ public interface AuthenticationsService extends Serializable
 	 *            the password
 	 * @return the authentication result
 	 */
-	default public AuthenticationResult<Users, AuthenticationErrors> authorize(
+	default AuthenticationResult<Users, AuthenticationErrors> authorize(
 		final @NonNull Users user, final @NonNull String password)
 	{
 		final AuthenticationResult<Users, AuthenticationErrors> authenticationResult = AuthenticationResult

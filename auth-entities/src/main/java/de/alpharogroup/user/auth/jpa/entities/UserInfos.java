@@ -53,7 +53,7 @@ public class UserInfos extends UUIDEntity
 	static final String JOIN_TABLE_FOREIGN_KEY_USER_INFOS_CONTACTMETHODS_ID = DatabasePrefix.FOREIGN_KEY_PREFIX +
 		TABLE_NAME + DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_CONTACTMETHODS_ID;
 	static final String JOIN_COLUMN_FOREIGN_KEY_USER_INFOS_USER_ID = DatabasePrefix.FOREIGN_KEY_PREFIX +
-		TABLE_NAME + DatabasePrefix.UNDERSCORE + Users.TABLE_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+		TABLE_NAME + DatabasePrefix.UNDERSCORE + Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
 
 	/** The owner of this user data. */
 	@OneToOne(fetch = FetchType.EAGER)

@@ -3,7 +3,10 @@ package de.alpharogroup.user.auth.jpa.repositories;
 import java.util.Optional;
 import java.util.UUID;
 
+import de.alpharogroup.user.auth.jpa.entities.Applications;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import de.alpharogroup.user.auth.jpa.entities.Users;
@@ -38,5 +41,14 @@ public interface UsersRepository extends JpaRepository<Users, UUID>
 	 * @return the found {@link Users} object
 	 */
 	Optional<Users> findByUsername(final String username);
+
+	/**
+	 * Find {@link Users} object from the given users email
+	 *
+	 * @param email
+	 *            the users email
+	 * @return the found {@link Users} object
+	 */
+	Optional<Users> findByEmail(final String email);
 
 }
