@@ -1,12 +1,3 @@
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
 ##################
 # Compiled files #
 ##################
@@ -15,11 +6,12 @@
 ##################
 # intellij files #
 ##################
-*.iml
-.idea
-*/.idea
 *.iws
+*.iml
 *.ipr
+!.idea/runConfigurations
+.idea/**
+.idea/*.*
 
 #################
 # eclipse files #
@@ -29,22 +21,44 @@
 /.settings
 /.tern-project
 
+###########
+### STS ###
+###########
+.apt_generated
+.factorypath
+.springBeans
+.sts4-cache
+
+
+################
+### NetBeans ###
+################
+/nbproject/private/
+/nbbuild/
+/nbdist/
+/.nb-gradle/
+/build/
+
 #########################
 # maven generated files #
 #########################
 /target
+/.mvn/
 *.versionsBackup
 
 #############
 # Zip files #
 #############
 *.tar
+*.tar.gz
 *.zip
 *.7z
 *.dmg
 *.gz
 *.iso
 *.jar
+*.war
+*.ear
 *.rar
 
 ##############
@@ -85,4 +99,3 @@ gradle-app.setting
 ##############################################################
 hs_err_pid*
 /.attach_pid*
-

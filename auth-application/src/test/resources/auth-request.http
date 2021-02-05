@@ -1,0 +1,8 @@
+POST https://localhost:8443/v1/auth/authenticate
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "foo",
+  "password": "bar"
+}
