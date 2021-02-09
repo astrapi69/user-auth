@@ -30,6 +30,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.subethamail:subethasmtp:$subethasmtpVersion")
 }
 
 license {
@@ -40,6 +41,7 @@ license {
               "**/README.md",
               "**/LICENSE",
               "**/NOTICE",
+              "**/*.yml",
               "**/*.xml",
               "**/*.xsl",
               "**/*.xsd",

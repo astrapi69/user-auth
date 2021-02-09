@@ -21,8 +21,15 @@
 package de.alpharogroup.user.auth.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
+import de.alpharogroup.user.auth.dto.NewPasswortRequest;
+import de.alpharogroup.user.auth.dto.ResetPasswortRequest;
+import de.alpharogroup.user.auth.dto.VerifyTokenRequest;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,11 +50,15 @@ public class ResetPasswordController
 
 	public static final String REST_PATH = "/resetpassword";
 	public static final String EMAIL_PATH = "/email";
+	public static final String NEW_PASSWORD_PATH = "/newpassword";
+	public static final String VERIFY_TOKEN_PATH = "/token";
 
 	ResetPasswordsService resetPasswordsService;
 
-	@RequestMapping(value = EMAIL_PATH, method = RequestMethod.GET)
-	public ResponseEntity<?> resetPasswordMessageForMail(String email, HttpServletRequest request)
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = EMAIL_PATH, method = RequestMethod.POST,
+		consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> resetPasswordMessageForMail(@Valid @RequestBody ResetPasswortRequest email, HttpServletRequest request)
 	{
 		String scheme = request.getScheme();
 		String host = request.getHeader("Host");
@@ -56,8 +67,26 @@ public class ResetPasswordController
 		String resultPath = scheme + "://" + host + contextPath;
 
 		ResetPasswordMessage resetPasswords = resetPasswordsService
-			.generateResetPasswordMessageForMail(email, resultPath);
+			.generateResetPasswordMessageForMail(email.getEmail(), resultPath);
 		return ResponseEntity.ok(resetPasswords);
+	}
+
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = NEW_PASSWORD_PATH, method = RequestMethod.POST,
+		consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> setNewPassword(NewPasswortRequest newPassword, HttpServletRequest request)
+	{
+		// TODO implement set new pw
+		return ResponseEntity.ok(newPassword);
+	}
+
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = VERIFY_TOKEN_PATH, method = RequestMethod.POST,
+		consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> verifyToken(VerifyTokenRequest token, HttpServletRequest request)
+	{
+		// TODO implement verify token
+		return ResponseEntity.ok(token);
 	}
 
 }

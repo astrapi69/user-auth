@@ -20,6 +20,24 @@
  */
 package de.alpharogroup.user.auth.controller;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
 import de.alpharogroup.auth.beans.AuthenticationResult;
 import de.alpharogroup.auth.enums.AuthenticationErrors;
 import de.alpharogroup.auth.enums.ValidationErrors;
@@ -42,20 +60,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-@RestController @RequestMapping(ApplicationConfiguration.REST_VERSION + AuthenticationController.REST_PATH) @AllArgsConstructor @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RestController
+@RequestMapping(ApplicationConfiguration.REST_VERSION + AuthenticationController.REST_PATH)
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationController
 {
 
@@ -74,9 +83,12 @@ public class AuthenticationController
 	/**
 	 * Call this link <a href="https://localhost:8443/v1/auth/signin"> with post http-method </a>
 	 */
-	@CrossOrigin(origins = "*") @RequestMapping(value = SIGN_IN, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) @ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password") @ApiImplicitParams({
-		@ApiImplicitParam(name = "jwtRequest", value = "The username", dataType = "JwtRequest", paramType = "body") }) public ResponseEntity<?> signIn(
-		@Valid @RequestBody JwtRequest jwtRequest)
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = SIGN_IN, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "jwtRequest", value = "The username", dataType = "JwtRequest", paramType = "body") })
+	public ResponseEntity<?> signIn(@Valid @RequestBody JwtRequest jwtRequest)
 	{
 		AuthenticationResult<Users, AuthenticationErrors> authenticate = authenticationsService
 			.authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
@@ -91,14 +103,15 @@ public class AuthenticationController
 				.username(jwtRequest.getUsername()).roles(roles).build();
 			return ResponseEntity.status(HttpStatus.OK.value()).body(jwtResponse);
 		}
-		String unauthorizedRedirectPath = "redirect:" + applicationProperties
-			.getContextPath() + ApplicationConfiguration.REST_VERSION + MessageController.REST_PATH + MessageController.UNAUTHORIZED_PATH;
+		String unauthorizedRedirectPath = "redirect:" + applicationProperties.getContextPath()
+			+ ApplicationConfiguration.REST_VERSION + MessageController.REST_PATH
+			+ MessageController.UNAUTHORIZED_PATH;
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value())
 			.body(unauthorizedRedirectPath);
 	}
 
-	@RequestMapping(value = SIGN_UP, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) public ResponseEntity<?> signUp(
-		@Valid @RequestBody Signup signUpRequest)
+	@RequestMapping(value = SIGN_UP, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> signUp(@Valid @RequestBody Signup signUpRequest)
 	{
 		Optional<ValidationErrors> validationErrors = usersService.validate(signUpRequest);
 		if (validationErrors.isPresent())

@@ -61,6 +61,10 @@ subprojects {
         annotationProcessor("org.projectlombok:lombok:$lombokVersion")
     }
 
+    // workhack for license issue #76
+    gradle.startParameter.excludedTaskNames += "licenseMain"
+    gradle.startParameter.excludedTaskNames += "licenseTest"
+
     compileJava {
         sourceCompatibility = "$projectSourceCompatibility"
         targetCompatibility = "$projectTargetCompatibility"

@@ -88,7 +88,7 @@ public class ResetPasswordsServiceImpl implements GenericService<ResetPasswords,
 		// 1. Check if email exists.
 		Optional<Users> optionalUser = usersService.findByEmail(email);
 		// 2. if email exists...
-		if (!optionalUser.isPresent())
+		if (!optionalUser.isEmpty())
 		{
 			throw new RuntimeException("No user exists with the given email");
 		}
@@ -99,7 +99,7 @@ public class ResetPasswordsServiceImpl implements GenericService<ResetPasswords,
 			Optional<ResetPasswords> optionalResetPasswords = findByUser(user);
 			ResetPasswords resetPassword;
 			String newPassword = null;
-			if (!optionalResetPasswords.isPresent())
+			if (!optionalResetPasswords.isEmpty())
 			{
 				PasswordEncryptor passwordService = PasswordEncryptor.getInstance();
 				newPassword = passwordService.getRandomPassword(8);
@@ -141,6 +141,8 @@ public class ResetPasswordsServiceImpl implements GenericService<ResetPasswords,
 
 			try
 			{
+				// TODO refactor with commons-email
+				// For now no email is send!!!
 				SendMessageService.sendInfoEmail(SendEmailProvider.getEmailSender(), infoMessageModel);
 			}
 			catch (MessagingException e)

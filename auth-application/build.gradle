@@ -47,6 +47,7 @@ license {
               "**/README.md",
               "**/LICENSE",
               "**/NOTICE",
+              "**/*.yml",
               "**/*.xml",
               "**/*.xsl",
               "**/*.xsd",
