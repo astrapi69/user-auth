@@ -26,6 +26,8 @@ import javax.validation.Valid;
 import de.alpharogroup.user.auth.dto.NewPasswortRequest;
 import de.alpharogroup.user.auth.dto.ResetPasswortRequest;
 import de.alpharogroup.user.auth.dto.VerifyTokenRequest;
+import de.alpharogroup.user.auth.enums.ResetPasswordRest;
+import de.alpharogroup.user.auth.enums.Rest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
 import de.alpharogroup.user.auth.dto.ResetPasswordMessage;
 import de.alpharogroup.user.auth.service.api.ResetPasswordsService;
 import lombok.AccessLevel;
@@ -42,21 +43,15 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @RestController
-@RequestMapping(ApplicationConfiguration.REST_VERSION + ResetPasswordController.REST_PATH)
+@RequestMapping(Rest.VERSION_1 + ResetPasswordRest.MAIN_PATH)
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ResetPasswordController
 {
-
-	public static final String REST_PATH = "/resetpassword";
-	public static final String EMAIL_PATH = "/email";
-	public static final String NEW_PASSWORD_PATH = "/newpassword";
-	public static final String VERIFY_TOKEN_PATH = "/token";
-
 	ResetPasswordsService resetPasswordsService;
 
 	@CrossOrigin(origins = "*")
-	@RequestMapping(value = EMAIL_PATH, method = RequestMethod.POST,
+	@RequestMapping(value = ResetPasswordRest.EMAIL_PATH, method = RequestMethod.POST,
 		consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> resetPasswordMessageForMail(@Valid @RequestBody ResetPasswortRequest email, HttpServletRequest request)
 	{
@@ -72,7 +67,7 @@ public class ResetPasswordController
 	}
 
 	@CrossOrigin(origins = "*")
-	@RequestMapping(value = NEW_PASSWORD_PATH, method = RequestMethod.POST,
+	@RequestMapping(value = ResetPasswordRest.NEW_PASSWORD_PATH, method = RequestMethod.POST,
 		consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> setNewPassword(NewPasswortRequest newPassword, HttpServletRequest request)
 	{
@@ -81,7 +76,7 @@ public class ResetPasswordController
 	}
 
 	@CrossOrigin(origins = "*")
-	@RequestMapping(value = VERIFY_TOKEN_PATH, method = RequestMethod.POST,
+	@RequestMapping(value = ResetPasswordRest.VERIFY_TOKEN_PATH, method = RequestMethod.POST,
 		consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> verifyToken(VerifyTokenRequest token, HttpServletRequest request)
 	{

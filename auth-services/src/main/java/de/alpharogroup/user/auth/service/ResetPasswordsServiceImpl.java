@@ -29,6 +29,8 @@ import java.util.logging.Level;
 import javax.mail.MessagingException;
 
 import de.alpharogroup.spring.service.api.GenericService;
+import de.alpharogroup.user.auth.enums.ResetPasswordRest;
+import de.alpharogroup.user.auth.enums.Rest;
 import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
@@ -161,8 +163,11 @@ public class ResetPasswordsServiceImpl implements GenericService<ResetPasswords,
 
 	protected String getUrlForForgottenPassword(String contextPath, ResetPassword dto)
 	{
-		String urlForForgottenPassword = contextPath + "/public/reset/password?token="
-			+ dto.getId();
+		String urlForForgottenPassword = contextPath +
+			Rest.VERSION_1 +
+			ResetPasswordRest.MAIN_PATH +
+			ResetPasswordRest.VERIFY_TOKEN_PATH +
+			"/?token=" + dto.getId();
 		return urlForForgottenPassword;
 	}
 
