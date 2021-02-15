@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.alpharogroup.user.auth.dto.ResetPasswordMessage;
@@ -76,9 +77,9 @@ public class ResetPasswordController
 	}
 
 	@CrossOrigin(origins = "*")
-	@RequestMapping(value = ResetPasswordRest.VERIFY_TOKEN_PATH, method = RequestMethod.POST,
-		consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> verifyToken(VerifyTokenRequest token, HttpServletRequest request)
+	@RequestMapping(value = ResetPasswordRest.VERIFY_TOKEN_PATH, method = RequestMethod.GET,
+		produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> verifyToken(@RequestParam("token") String token, HttpServletRequest request)
 	{
 		// TODO implement verify token
 		return ResponseEntity.ok(token);
