@@ -22,7 +22,6 @@ package de.alpharogroup.user.auth.controller;
 
 import de.alpharogroup.user.auth.dto.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;

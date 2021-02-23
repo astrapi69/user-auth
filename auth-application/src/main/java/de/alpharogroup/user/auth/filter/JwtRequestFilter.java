@@ -66,7 +66,9 @@ import lombok.NonNull;
 	@Override protected void doFilterInternal(HttpServletRequest request,
 		HttpServletResponse response, FilterChain chain) throws ServletException, IOException
 	{
-		if(!request.isSecure() || isPublicRequest(request) ){
+		if( isPublicRequest(request)
+			|| !request.isSecure()
+		){
 			chain.doFilter(request, response);
 			return;
 		}
@@ -165,7 +167,8 @@ import lombok.NonNull;
 	{
 		boolean isSigninRequest = false;
 		// check the request url path, if it is a sign in request
-		if(isSigninPath(getPath(request))){
+		String path = getPath(request);
+		if(isSigninPath(path)){
 			isSigninRequest = true;
 		}
 		return isSigninRequest;
