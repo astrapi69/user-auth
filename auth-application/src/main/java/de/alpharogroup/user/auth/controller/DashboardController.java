@@ -39,6 +39,7 @@ public class DashboardController
 	public static final String REST_PATH = "/dashboard";
 	public static final String MEMBER_PATH = "/member";
 
+	@CrossOrigin(origins = "*")
 	@RequestMapping(value = MEMBER_PATH, method = RequestMethod.GET)
 	public ResponseEntity<?> member(@AuthenticationPrincipal User user) {
 		return ResponseEntity.ok("Member area");

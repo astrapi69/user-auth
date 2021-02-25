@@ -106,4 +106,13 @@ public class JwtTokenService
 			&& !getExpirationDate(token).before(new Date()));
 	}
 
+	public boolean validateToken(String authToken) {
+		try{
+			getAllClaims(authToken);
+			return true;
+		} catch (Exception e){
+			return false;
+		}
+	}
+
 }

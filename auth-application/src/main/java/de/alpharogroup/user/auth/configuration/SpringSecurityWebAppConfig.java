@@ -20,12 +20,16 @@
  */
 package de.alpharogroup.user.auth.configuration;
 
+import java.util.Arrays;
 import java.util.List;
 
+import de.alpharogroup.user.auth.filter.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -35,15 +39,20 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import de.alpharogroup.collections.list.ListExtensions;
 import de.alpharogroup.user.auth.entrypoint.RestAuthenticationEntryPoint;
 import de.alpharogroup.user.auth.filter.JwtRequestFilter;
 import de.alpharogroup.user.auth.service.UserDetailsServiceImpl;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@Order(SecurityProperties.IGNORED_ORDER)
 public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 {
 
@@ -93,6 +102,7 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 		String[] allPublicPaths = ListExtensions.toArray(signinPaths);
 		// @formatter:off
 		http
+			.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class)
 			.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
 			.csrf().disable()
 			.authorizeRequests()

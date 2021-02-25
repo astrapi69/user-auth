@@ -39,6 +39,10 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -46,6 +50,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -85,8 +90,10 @@ public class ApplicationConfiguration implements WebMvcConfigurer
 	@Override
 	public void addCorsMappings(CorsRegistry registry)
 	{
-		registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-			.allowedOrigins("*");
+		registry.addMapping("/**")
+			.allowedOrigins(CrossOrigin.DEFAULT_ORIGINS)
+			.allowedHeaders(CrossOrigin.DEFAULT_ALLOWED_HEADERS)
+			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
 	}
 
 	@Override
