@@ -31,6 +31,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.alpharogroup.user.auth.principal.UsersPrincipal;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -104,7 +105,7 @@ public class JwtRequestFilter extends OncePerRequestFilter
 			jwtToken = optionalToken.get();
 			validateToken(request, response, jwtToken);
 		}
-		else if (isSigninRequest(request))
+		else
 		{
 			String payloadRequest = HttpServletRequestExtensions.getBody(request);
 			if (payloadRequest.isEmpty())
@@ -138,7 +139,7 @@ public class JwtRequestFilter extends OncePerRequestFilter
 		String username = jwtTokenService.getUsername(jwtToken);
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null)
 		{
-			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
+			UsersPrincipal userDetails = (UsersPrincipal)this.jwtUserDetailsService.loadUserByUsername(username);
 			if (jwtTokenService.validate(jwtToken, userDetails))
 			{
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
