@@ -20,10 +20,10 @@
  */
 package de.alpharogroup.user.auth.configuration;
 
-import java.util.Arrays;
 import java.util.List;
 
 import de.alpharogroup.user.auth.filter.CorsFilter;
+import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -45,10 +45,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import de.alpharogroup.collections.list.ListExtensions;
 import de.alpharogroup.user.auth.entrypoint.RestAuthenticationEntryPoint;
 import de.alpharogroup.user.auth.filter.JwtRequestFilter;
-import de.alpharogroup.user.auth.service.UserDetailsServiceImpl;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -66,8 +62,7 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Autowired
 	RestAuthenticationEntryPoint authenticationEntryPoint;
 
-	@Autowired
-	UserDetailsServiceImpl userDetailsService;
+	@Autowired JwtUserDetailsService userDetailsService;
 
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;

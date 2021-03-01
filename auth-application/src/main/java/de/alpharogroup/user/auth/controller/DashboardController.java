@@ -20,8 +20,8 @@
  */
 package de.alpharogroup.user.auth.controller;
 
-import de.alpharogroup.user.auth.jpa.entities.Users;
-import de.alpharogroup.user.auth.utils.AuthenticationUsersResolver;
+import java.util.Optional;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,8 +30,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
-
-import java.util.Optional;
+import de.alpharogroup.user.auth.jpa.entities.Users;
+import de.alpharogroup.user.auth.utils.CurrentUserResolver;
 
 @RestController
 @RequestMapping(ApplicationConfiguration.REST_VERSION + DashboardController.REST_PATH)
@@ -46,9 +46,11 @@ public class DashboardController
 	@RequestMapping(value = MEMBER_PATH, method = RequestMethod.GET)
 	public ResponseEntity<?> member(@AuthenticationPrincipal Users user) {
 		if(user == null) {
-			Optional<Users> authentication = AuthenticationUsersResolver.getAuthentication();
-			if(authentication.isPresent()) {
-				return ResponseEntity.ok(authentication.get());
+			Optional<Users> optionalUsers = CurrentUserResolver.getCurrentUser();
+			if (optionalUsers.isPresent())
+			{
+				Users currentUser = optionalUsers.get();
+				return ResponseEntity.ok(currentUser);
 			}
 		}
 		return ResponseEntity.ok("Member area");
