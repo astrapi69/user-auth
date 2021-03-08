@@ -24,9 +24,9 @@ package de.alpharogroup.user.auth.mapper;
 import de.alpharogroup.user.auth.dto.Contactmethod;
 import de.alpharogroup.user.auth.enums.ContactmethodType;
 import de.alpharogroup.user.auth.jpa.entities.Contactmethods;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ContactmethodMapperTest
 {

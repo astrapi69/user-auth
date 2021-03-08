@@ -22,9 +22,8 @@ package de.alpharogroup.user.auth.jpa.entities;
 
 import de.alpharogroup.db.entity.enums.DatabasePrefix;
 import de.alpharogroup.db.entity.identifiable.Identifiable;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UsersTest
 {

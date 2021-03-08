@@ -20,9 +20,9 @@
  */
 package de.alpharogroup.user.auth.mapper;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import de.alpharogroup.user.auth.dto.ResetPassword;
 import de.alpharogroup.user.auth.jpa.entities.ResetPasswords;

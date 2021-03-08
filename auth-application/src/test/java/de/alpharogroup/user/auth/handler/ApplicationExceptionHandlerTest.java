@@ -20,8 +20,8 @@
  */
 package de.alpharogroup.user.auth.handler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
@@ -30,14 +30,15 @@ import java.util.NoSuchElementException;
 import javax.servlet.http.HttpServletRequest;
 
 import de.alpharogroup.spring.exceptionhandling.ExceptionViewModel;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -47,7 +48,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { ApplicationExceptionHandler.class })
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApplicationExceptionHandlerTest
@@ -73,7 +74,7 @@ public class ApplicationExceptionHandlerTest
 
 	UnsupportedOperationException unsupportedOperationException;
 
-	@Before
+	@BeforeEach
 	public void prepare()
 	{
 		bindException = new BindException(bindingResult);
