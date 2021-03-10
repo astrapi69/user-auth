@@ -44,7 +44,7 @@ import de.alpharogroup.collections.list.ListFactory;
 import de.alpharogroup.collections.set.SetFactory;
 import de.alpharogroup.json.ObjectToJsonExtensions;
 import de.alpharogroup.spring.web.util.UrlExtensions;
-import de.alpharogroup.throwable.RuntimeExceptionDecorator;
+import io.github.astrapi69.throwable.RuntimeExceptionDecorator;
 import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
 import de.alpharogroup.user.auth.dto.JwtResponse;
 import de.alpharogroup.user.auth.dto.Signup;

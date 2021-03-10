@@ -71,19 +71,7 @@ public class JwtRequestFilter extends OncePerRequestFilter
 	private AuthenticationsService authenticationsService;
 	@Autowired
 	ApplicationProperties applicationProperties;
-	private Map<String, String> getHeadersInfo(HttpServletRequest request) {
 
-		Map<String, String> map = new HashMap<String, String>();
-
-		Enumeration headerNames = request.getHeaderNames();
-		while (headerNames.hasMoreElements()) {
-			String key = (String) headerNames.nextElement();
-			String value = request.getHeader(key);
-			map.put(key, value);
-		}
-
-		return map;
-	}
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain chain) throws ServletException, IOException
@@ -98,7 +86,6 @@ public class JwtRequestFilter extends OncePerRequestFilter
 		String username;
 		String password;
 		String jwtToken;
-		Map<String, String> map = getHeadersInfo(request);
 		Optional<String> optionalToken = getJwtToken(request);
 		if (optionalToken.isPresent())
 		{
