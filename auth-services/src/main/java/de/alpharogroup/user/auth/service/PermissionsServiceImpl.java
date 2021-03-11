@@ -23,26 +23,25 @@ package de.alpharogroup.user.auth.service;
 import java.util.Optional;
 import java.util.UUID;
 
-import de.alpharogroup.spring.service.api.GenericService;
-import de.alpharogroup.user.auth.jpa.entities.Contactmethods;
-import de.alpharogroup.user.auth.jpa.repositories.ContactmethodsRepository;
-import lombok.Getter;
 import org.springframework.stereotype.Service;
 
+import de.alpharogroup.spring.service.api.GenericService;
 import de.alpharogroup.user.auth.jpa.entities.Permissions;
 import de.alpharogroup.user.auth.jpa.repositories.PermissionsRepository;
 import de.alpharogroup.user.auth.service.api.PermissionsService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 @Service
 @Getter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class PermissionsServiceImpl implements
-	GenericService<Permissions, UUID, PermissionsRepository>,
-	PermissionsService
+public class PermissionsServiceImpl
+	implements
+		GenericService<Permissions, UUID, PermissionsRepository>,
+		PermissionsService
 {
 
 	PermissionsRepository repository;
@@ -67,8 +66,7 @@ public class PermissionsServiceImpl implements
 		{
 			return optional.get();
 		}
-		return repository
-			.save(Permissions.builder().name(name).description(description).build());
+		return repository.save(Permissions.builder().name(name).description(description).build());
 	}
 
 	@Override

@@ -27,6 +27,6 @@ import de.alpharogroup.user.auth.dto.Role;
 import de.alpharogroup.user.auth.jpa.entities.Roles;
 
 @Component
-public class RoleMapper extends AbstractGenericMapper<Roles,Role>
+public class RoleMapper extends AbstractGenericMapper<Roles, Role>
 {
 }

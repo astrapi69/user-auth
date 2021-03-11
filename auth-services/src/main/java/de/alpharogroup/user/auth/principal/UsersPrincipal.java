@@ -26,30 +26,23 @@ import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import de.alpharogroup.user.auth.jpa.entities.Users;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.experimental.FieldDefaults;
 
-@Getter
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UsersPrincipal implements UserDetails
+public class UsersPrincipal extends GenericPrincipal<Users>
 {
-
 	private static final long serialVersionUID = 1L;
-	@NonNull
-	Users user;
+
+	public UsersPrincipal(Users users)
+	{
+		super(users);
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities()
 	{
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-		user.getRoles().stream().forEach(role -> {
+		getUser().getRoles().stream().forEach(role -> {
 			grantedAuthorities.add(new SimpleGrantedAuthority("role:" + role.getName()));
 			role.getPermissions().stream().forEach(permission -> grantedAuthorities
 				.add(new SimpleGrantedAuthority("permission:" + permission.getName())));
@@ -60,25 +53,25 @@ public class UsersPrincipal implements UserDetails
 	@Override
 	public String getPassword()
 	{
-		return user.getPassword();
+		return getUser().getPassword();
 	}
 
 	@Override
 	public String getUsername()
 	{
-		return user.getUsername();
+		return getUser().getUsername();
 	}
 
 	@Override
 	public boolean isAccountNonExpired()
 	{
-		return user.isActive();
+		return getUser().isActive();
 	}
 
 	@Override
 	public boolean isAccountNonLocked()
 	{
-		return !user.isLocked();
+		return !getUser().isLocked();
 	}
 
 	@Override

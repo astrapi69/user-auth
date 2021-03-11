@@ -80,6 +80,7 @@ public interface RolesService
 
 	/**
 	 * Resolves the {@link Roles} objects from the given set of string role names
+	 * 
 	 * @param stringRoles
 	 *            the role names as string objects
 	 * @return the found {@link Roles} objects

@@ -27,6 +27,8 @@ import de.alpharogroup.user.auth.dto.RelationPermission;
 import de.alpharogroup.user.auth.jpa.entities.RelationPermissions;
 
 @Component
-public class RelationPermissionMapper extends AbstractGenericMapper<RelationPermissions, RelationPermission>
+public class RelationPermissionMapper
+	extends
+		AbstractGenericMapper<RelationPermissions, RelationPermission>
 {
 }

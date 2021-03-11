@@ -20,6 +20,9 @@
 #
 
 # default properties
+
+security:
+  require-ssl: true
 server:
   port: 10443
   ssl:

@@ -1,17 +1,17 @@
-
 dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
     implementation("org.springframework.boot:spring-boot-starter-web")
 }
 
 license {
-    ext.year="$projectInceptionYear"
-    ext.owner="$projectLeaderName"
+    ext.year = "$projectInceptionYear"
+    ext.owner = "$projectLeaderName"
     header rootProject.file('src/main/resources/LICENSE.txt')
     excludes(["**/README",
               "**/README.md",
               "**/LICENSE",
               "**/NOTICE",
+              "**/*.yml",
               "**/*.xml",
               "**/*.xsl",
               "**/*.xsd",
@@ -62,14 +62,14 @@ publishing {
             pom {
                 name = "$project.name"
                 description = "$projectViewmodelsDescription"
-                url = "$projectScmProviderUrl"+"$projectHolderUsername"+"$slash"+"$rootProject.name"
+                url = "$projectScmProviderUrl" + "$projectHolderUsername" + "$slash" + "$rootProject.name"
                 organization {
                     name = "$projectOrganizationName"
                     url = "$projectOrganizationUrl"
                 }
                 issueManagement {
                     system = "$projectIssueManagementSystem"
-                    url = "$projectScmProviderUrl"+"$projectHolderUsername"+"$slash"+"$rootProject.name"+"$issuesPath"
+                    url = "$projectScmProviderUrl" + "$projectHolderUsername" + "$slash" + "$rootProject.name" + "$issuesPath"
                 }
                 licenses {
                     license {

@@ -21,33 +21,39 @@
 package de.alpharogroup.user.auth.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
+import de.alpharogroup.user.auth.dto.NewPasswortRequest;
 import de.alpharogroup.user.auth.dto.ResetPasswordMessage;
+import de.alpharogroup.user.auth.dto.ResetPasswortRequest;
+import de.alpharogroup.user.auth.enums.ResetPasswordRest;
+import de.alpharogroup.user.auth.enums.Rest;
 import de.alpharogroup.user.auth.service.api.ResetPasswordsService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @RestController
-@RequestMapping(ApplicationConfiguration.REST_VERSION + ResetPasswordController.REST_PATH)
+@RequestMapping(Rest.VERSION_1 + ResetPasswordRest.MAIN_PATH)
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ResetPasswordController
 {
-
-	public static final String REST_PATH = "/resetpassword";
-	public static final String EMAIL_PATH = "/email";
-
 	ResetPasswordsService resetPasswordsService;
 
-	@RequestMapping(value = EMAIL_PATH, method = RequestMethod.GET)
-	public ResponseEntity<?> resetPasswordMessageForMail(String email, HttpServletRequest request)
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = ResetPasswordRest.EMAIL_PATH, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> resetPasswordMessageForMail(
+		@Valid @RequestBody ResetPasswortRequest email, HttpServletRequest request)
 	{
 		String scheme = request.getScheme();
 		String host = request.getHeader("Host");
@@ -56,8 +62,26 @@ public class ResetPasswordController
 		String resultPath = scheme + "://" + host + contextPath;
 
 		ResetPasswordMessage resetPasswords = resetPasswordsService
-			.generateResetPasswordMessageForMail(email, resultPath);
+			.generateResetPasswordMessageForMail(email.getEmail(), resultPath);
 		return ResponseEntity.ok(resetPasswords);
+	}
+
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = ResetPasswordRest.NEW_PASSWORD_PATH, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> setNewPassword(NewPasswortRequest newPassword,
+		HttpServletRequest request)
+	{
+		// TODO implement set new pw
+		return ResponseEntity.ok(newPassword);
+	}
+
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = ResetPasswordRest.VERIFY_TOKEN_PATH, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> verifyToken(@RequestParam("token") String token,
+		HttpServletRequest request)
+	{
+		// TODO implement verify token
+		return ResponseEntity.ok(token);
 	}
 
 }

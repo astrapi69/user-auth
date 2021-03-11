@@ -20,6 +20,10 @@
  */
 package de.alpharogroup.user.auth.service;
 
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
 import de.alpharogroup.spring.service.api.GenericService;
 import de.alpharogroup.user.auth.jpa.entities.UserInfos;
 import de.alpharogroup.user.auth.jpa.entities.Users;
@@ -29,25 +33,26 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Getter
 @Service
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserInfosServiceImpl implements GenericService<UserInfos, UUID, UserInfosRepository>,
-	UserInfosService
+public class UserInfosServiceImpl
+	implements
+		GenericService<UserInfos, UUID, UserInfosRepository>,
+		UserInfosService
 {
 	UserInfosRepository repository;
 
-	@Override public UserInfos findByOwner(Users user)
+	@Override
+	public UserInfos findByOwner(Users user)
 	{
 		return repository.findByOwner(user);
 	}
 
-	public String getFullName(Users user) {
+	public String getFullName(Users user)
+	{
 		String fullName = getFullName(findByOwner(user));
 		return fullName.isEmpty() ? user.getUsername() : fullName;
 	}

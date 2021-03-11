@@ -23,15 +23,17 @@ package de.alpharogroup.user.auth.jpa.repositories;
 import java.util.List;
 import java.util.UUID;
 
-import de.alpharogroup.user.auth.enums.ContactmethodType;
-import de.alpharogroup.user.auth.jpa.entities.Contactmethods;
-import de.alpharogroup.user.auth.jpa.entities.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository public interface ContactmethodsRepository extends JpaRepository<Contactmethods, UUID>
+import de.alpharogroup.user.auth.enums.ContactmethodType;
+import de.alpharogroup.user.auth.jpa.entities.Contactmethods;
+import de.alpharogroup.user.auth.jpa.entities.Users;
+
+@Repository
+public interface ContactmethodsRepository extends JpaRepository<Contactmethods, UUID>
 {
 
 	/**
@@ -44,10 +46,10 @@ import org.springframework.stereotype.Repository;
 	 *            the contact value
 	 * @return the list of the found {@link Contactmethods} objects.
 	 */
-	@Query("select distinct cm from Contactmethods cm " +
-		"where cm.contactmethod=:contactmethod " +
-		"and cm.contactvalue=:contactvalue")
-	List<Contactmethods> find(@Param("contactmethod") ContactmethodType contactmethod, @Param("contactvalue")  String contactvalue);
+	@Query("select distinct cm from Contactmethods cm " + "where cm.contactmethod=:contactmethod "
+		+ "and cm.contactvalue=:contactvalue")
+	List<Contactmethods> find(@Param("contactmethod") ContactmethodType contactmethod,
+		@Param("contactvalue") String contactvalue);
 
 	/**
 	 * Find all the {@link Contactmethods} objects from the given user and the given
@@ -60,8 +62,8 @@ import org.springframework.stereotype.Repository;
 	 * @return the list of the found {@link Contactmethods} objects.
 	 */
 	@Query("select distinct cm from UserInfos u inner join u.contactmethods cm "
-		+ "where u.owner=:user "
-		+ "and cm.contactmethod=:contactmethod")
-	List<Contactmethods> findContactmethods(@Param("contactmethod") ContactmethodType contactmethod, @Param("user") Users user);
+		+ "where u.owner=:user " + "and cm.contactmethod=:contactmethod")
+	List<Contactmethods> findContactmethods(@Param("contactmethod") ContactmethodType contactmethod,
+		@Param("user") Users user);
 
 }

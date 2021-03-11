@@ -28,8 +28,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.alpharogroup.json.JsonStringToObjectExtensions;
-import de.alpharogroup.json.factory.ObjectMapperFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,27 +44,39 @@ import de.alpharogroup.auth.beans.AuthenticationResult;
 import de.alpharogroup.auth.enums.AuthenticationErrors;
 import de.alpharogroup.collections.map.MapFactory;
 import de.alpharogroup.collections.pairs.KeyValuePair;
+import de.alpharogroup.json.JsonStringToObjectExtensions;
+import de.alpharogroup.json.factory.ObjectMapperFactory;
 import de.alpharogroup.servlet.extensions.HttpServletRequestExtensions;
 import de.alpharogroup.servlet.extensions.enums.HeaderKeyNames;
 import de.alpharogroup.user.auth.configuration.ApplicationProperties;
 import de.alpharogroup.user.auth.dto.JwtRequest;
 import de.alpharogroup.user.auth.jpa.entities.Users;
+import de.alpharogroup.user.auth.principal.UsersPrincipal;
 import de.alpharogroup.user.auth.service.JwtTokenService;
 import de.alpharogroup.user.auth.service.api.AuthenticationsService;
 import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
 import lombok.NonNull;
 
-@Component public class JwtRequestFilter extends OncePerRequestFilter
+@Component
+public class JwtRequestFilter extends OncePerRequestFilter
 {
-	@Autowired private JwtUserDetailsService jwtUserDetailsService;
-	@Autowired private JwtTokenService jwtTokenService;
-	@Autowired private AuthenticationsService authenticationsService;
-	@Autowired ApplicationProperties applicationProperties;
+	@Autowired
+	ApplicationProperties applicationProperties;
+	@Autowired
+	private JwtUserDetailsService jwtUserDetailsService;
+	@Autowired
+	private JwtTokenService jwtTokenService;
+	@Autowired
+	private AuthenticationsService authenticationsService;
 
-	@Override protected void doFilterInternal(HttpServletRequest request,
-		HttpServletResponse response, FilterChain chain) throws ServletException, IOException
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+		FilterChain chain) throws ServletException, IOException
 	{
-		if(!request.isSecure() || isPublicRequest(request) ){
+		if (isPublicRequest(request)
+		// || !request.isSecure()
+		)
+		{
 			chain.doFilter(request, response);
 			return;
 		}
@@ -74,25 +84,31 @@ import lombok.NonNull;
 		String password;
 		String jwtToken;
 		Optional<String> optionalToken = getJwtToken(request);
-		if(optionalToken.isPresent()){
+		if (optionalToken.isPresent())
+		{
 			jwtToken = optionalToken.get();
 			validateToken(request, response, jwtToken);
-		} else if (isSigninRequest(request))
+		}
+		else
 		{
 			String payloadRequest = HttpServletRequestExtensions.getBody(request);
-			if(payloadRequest.isEmpty()){
+			if (payloadRequest.isEmpty())
+			{
 				username = request.getParameter("username");
 				password = request.getParameter("password");
-				if(StringUtils.isEmpty(username) || StringUtils.isEmpty(password)){
+				if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password))
+				{
 					chain.doFilter(request, response);
 					return;
 				}
-			}else{
-				ObjectMapper mapper = ObjectMapperFactory.newObjectMapper(MapFactory.newHashMap(
-					KeyValuePair.<JsonParser.Feature, Boolean>builder()
+			}
+			else
+			{
+				ObjectMapper mapper = ObjectMapperFactory.newObjectMapper(
+					MapFactory.newHashMap(KeyValuePair.<JsonParser.Feature, Boolean> builder()
 						.key(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES).value(true).build()));
-				JwtRequest jwtRequest = JsonStringToObjectExtensions
-					.toObject(payloadRequest, JwtRequest.class, mapper);
+				JwtRequest jwtRequest = JsonStringToObjectExtensions.toObject(payloadRequest,
+					JwtRequest.class, mapper);
 				username = jwtRequest.getUsername();
 				password = jwtRequest.getPassword();
 			}
@@ -105,29 +121,33 @@ import lombok.NonNull;
 		String jwtToken)
 	{
 		String username = jwtTokenService.getUsername(jwtToken);
-		if (username != null
-			&& SecurityContextHolder.getContext().getAuthentication() == null
-		) {
-			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
-			if (jwtTokenService.validate(jwtToken, userDetails)) {
+		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null)
+		{
+			UsersPrincipal userDetails = (UsersPrincipal)this.jwtUserDetailsService
+				.loadUserByUsername(username);
+			if (jwtTokenService.validate(jwtToken, userDetails))
+			{
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 					userDetails, null, userDetails.getAuthorities());
 				usernamePasswordAuthenticationToken
 					.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-				response.addHeader(HeaderKeyNames.AUTHORIZATION, HeaderKeyNames.BEARER_PREFIX + jwtToken);
+				SecurityContextHolder.getContext()
+					.setAuthentication(usernamePasswordAuthenticationToken);
+				response.addHeader(HeaderKeyNames.AUTHORIZATION,
+					HeaderKeyNames.BEARER_PREFIX + jwtToken);
 			}
 		}
 	}
 
-	private void setNewToken(HttpServletRequest request, HttpServletResponse response, String username,
-		String password)
+	private void setNewToken(HttpServletRequest request, HttpServletResponse response,
+		String username, String password)
 	{
 		String jwtToken;
 		UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 		AuthenticationResult<Users, AuthenticationErrors> authenticationResult = authenticationsService
 			.authenticate(username, password);
-		if(authenticationResult.isValid()){
+		if (authenticationResult.isValid())
+		{
 			jwtToken = jwtTokenService.newJwtToken(userDetails);
 			UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 				userDetails, null, userDetails.getAuthorities());
@@ -135,8 +155,8 @@ import lombok.NonNull;
 				.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 			SecurityContextHolder.getContext()
 				.setAuthentication(usernamePasswordAuthenticationToken);
-			response.addHeader(
-				HeaderKeyNames.AUTHORIZATION, HeaderKeyNames.BEARER_PREFIX + jwtToken);
+			response.addHeader(HeaderKeyNames.AUTHORIZATION,
+				HeaderKeyNames.BEARER_PREFIX + jwtToken);
 		}
 	}
 
@@ -147,9 +167,19 @@ import lombok.NonNull;
 		return authorizationHeader;
 	}
 
-	protected boolean isPublicRequest(@NonNull final HttpServletRequest request){
+	/**
+	 * Checks if the current request is a is a public request
+	 *
+	 * @param request
+	 *            the request
+	 * @return true, if the current request is a is a public request
+	 */
+	protected boolean isPublicRequest(@NonNull final HttpServletRequest request)
+	{
 		boolean isPublicRequest = false;
-		if(isPublicPath(getPath(request))){
+		String path = getPath(request);
+		if (isPublicPath(path) || isSigninPath(path))
+		{
 			isPublicRequest = true;
 		}
 		return isPublicRequest;
@@ -158,14 +188,17 @@ import lombok.NonNull;
 	/**
 	 * Checks if the current request is a is a sign request
 	 *
-	 * @param request the request
+	 * @param request
+	 *            the request
 	 * @return true, if the current request is a is a sign request
 	 */
 	protected boolean isSigninRequest(@NonNull final HttpServletRequest request)
 	{
 		boolean isSigninRequest = false;
 		// check the request url path, if it is a sign in request
-		if(isSigninPath(getPath(request))){
+		String path = getPath(request);
+		if (isSigninPath(path))
+		{
 			isSigninRequest = true;
 		}
 		return isSigninRequest;
@@ -197,7 +230,8 @@ import lombok.NonNull;
 		return applicationProperties.getPublicPathPatterns().contains(path);
 	}
 
-	public String getPath(@NonNull final HttpServletRequest request){
+	public String getPath(@NonNull final HttpServletRequest request)
+	{
 		return HttpServletRequestExtensions.getPath(request);
 	}
 

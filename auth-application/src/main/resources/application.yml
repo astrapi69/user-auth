@@ -46,6 +46,9 @@ app:
     - /v1/auth/signup
     - /v1/jwt/ispublic
     - /v1/jwt/register
+    - /v1/resetpassword/email
+    - /v1/resetpassword/newpassword
+    - /v1/resetpassword/token
     - /v1/public
   ignore-path-patterns:
     - /resources/**

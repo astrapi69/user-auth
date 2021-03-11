@@ -45,7 +45,8 @@ public interface UserInfosService
 	 *            the user
 	 * @return the full name
 	 */
-	default String getFullName(Users user) {
+	default String getFullName(Users user)
+	{
 		String fullName = getFullName(findByOwner(user));
 		return fullName.isEmpty() ? user.getUsername() : fullName;
 	}

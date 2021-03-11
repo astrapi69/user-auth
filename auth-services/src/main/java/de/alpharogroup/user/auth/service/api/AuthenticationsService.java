@@ -44,7 +44,7 @@ public interface AuthenticationsService
 	/**
 	 * Perform the authentication with the given email and password and return the result.
 	 * authentication (who are you?) with username<br>
-	 *     and authorization with password and the roles that the user have
+	 * and authorization with password and the roles that the user have
 	 *
 	 * @param emailOrUsername
 	 *            the email or the user name of the {@link Users} object.
@@ -77,8 +77,8 @@ public interface AuthenticationsService
 	 *            the password
 	 * @return the authentication result
 	 */
-	default AuthenticationResult<Users, AuthenticationErrors> authorize(
-		final @NonNull Users user, final @NonNull String password)
+	default AuthenticationResult<Users, AuthenticationErrors> authorize(final @NonNull Users user,
+		final @NonNull String password)
 	{
 		final AuthenticationResult<Users, AuthenticationErrors> authenticationResult = AuthenticationResult
 			.<Users, AuthenticationErrors> builder().validationErrors(SetFactory.newHashSet())

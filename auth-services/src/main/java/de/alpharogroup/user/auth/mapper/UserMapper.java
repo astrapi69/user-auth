@@ -27,6 +27,6 @@ import de.alpharogroup.user.auth.dto.User;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 
 @Component
-public class UserMapper extends AbstractGenericMapper<Users,User>
+public class UserMapper extends AbstractGenericMapper<Users, User>
 {
 }
