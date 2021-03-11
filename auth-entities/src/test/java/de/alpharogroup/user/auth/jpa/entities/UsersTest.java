@@ -20,16 +20,16 @@
  */
 package de.alpharogroup.user.auth.jpa.entities;
 
-import de.alpharogroup.db.entity.enums.DatabasePrefix;
-import de.alpharogroup.db.entity.identifiable.Identifiable;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 public class UsersTest
 {
 
 	@Test
-	public void testConstants(){
+	public void testConstants()
+	{
 		String actual;
 		String expected;
 		//

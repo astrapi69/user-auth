@@ -1,4 +1,3 @@
-
 dependencies {
     implementation project(":auth-entities")
     implementation project(":auth-services")
@@ -46,8 +45,8 @@ dependencies {
 }
 
 license {
-    ext.year="$projectInceptionYear"
-    ext.owner="$projectLeaderName"
+    ext.year = "$projectInceptionYear"
+    ext.owner = "$projectLeaderName"
     header rootProject.file('src/main/resources/LICENSE.txt')
     excludes(["**/README",
               "**/README.md",
@@ -104,14 +103,14 @@ publishing {
             pom {
                 name = "$project.name"
                 description = "$projectApplicationDescription"
-                url = "$projectScmProviderUrl"+"$projectHolderUsername"+"/"+"$rootProject.name"
+                url = "$projectScmProviderUrl" + "$projectHolderUsername" + "/" + "$rootProject.name"
                 organization {
                     name = "$projectOrganizationName"
                     url = "$projectOrganizationUrl"
                 }
                 issueManagement {
                     system = "$projectIssueManagementSystem"
-                    url = "$projectScmProviderUrl"+"$projectHolderUsername"+"/"+"$rootProject.name"+"/issues"
+                    url = "$projectScmProviderUrl" + "$projectHolderUsername" + "/" + "$rootProject.name" + "/issues"
                 }
                 licenses {
                     license {

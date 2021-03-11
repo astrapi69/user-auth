@@ -1,18 +1,18 @@
 <message>
-<subject>
-Neue Nachricht von ${memberUsername} erhalten
-</subject>
-<content>
-Hallo ${recipientFullName}, 
+    <subject>
+        Neue Nachricht von ${memberUsername} erhalten
+    </subject>
+    <content>
+        Hallo ${recipientFullName},
 
-es befindet sich eine neue Nachricht vom Benutzer ${memberUsername} in deinem Posteingang:
+        es befindet sich eine neue Nachricht vom Benutzer ${memberUsername} in deinem Posteingang:
 
-"${messagePart}"
+        "${messagePart}"
 
-Loggen dich ein um die ganze Nachricht zu lesen.
+        Loggen dich ein um die ganze Nachricht zu lesen.
 
-Freundliche Grüße
+        Freundliche Grüße
 
-Ihr ${applicationDomainName}-Team
-</content>
+        Ihr ${applicationDomainName}-Team
+    </content>
 </message>

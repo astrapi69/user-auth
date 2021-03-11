@@ -26,6 +26,7 @@ import de.alpharogroup.bean.mapper.AbstractGenericMapper;
 import de.alpharogroup.user.auth.dto.Permission;
 import de.alpharogroup.user.auth.jpa.entities.Permissions;
 
-@Component public class PermissionMapper extends AbstractGenericMapper<Permissions, Permission>
+@Component
+public class PermissionMapper extends AbstractGenericMapper<Permissions, Permission>
 {
 }

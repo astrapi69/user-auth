@@ -28,17 +28,15 @@ import java.util.logging.Level;
 
 import javax.mail.MessagingException;
 
-import de.alpharogroup.spring.service.api.GenericService;
-import de.alpharogroup.user.auth.enums.ResetPasswordRest;
-import de.alpharogroup.user.auth.enums.Rest;
-import lombok.Getter;
-import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
 import de.alpharogroup.crypto.pw.PasswordEncryptor;
 import de.alpharogroup.resourcebundle.locale.LocaleResolver;
+import de.alpharogroup.spring.service.api.GenericService;
 import de.alpharogroup.user.auth.dto.ResetPassword;
 import de.alpharogroup.user.auth.dto.ResetPasswordMessage;
+import de.alpharogroup.user.auth.enums.ResetPasswordRest;
+import de.alpharogroup.user.auth.enums.Rest;
 import de.alpharogroup.user.auth.jpa.entities.ResetPasswords;
 import de.alpharogroup.user.auth.jpa.entities.UserInfos;
 import de.alpharogroup.user.auth.jpa.entities.Users;
@@ -52,6 +50,8 @@ import io.github.astrapi69.message.mail.viewmodel.InfoMessage;
 import io.github.astrapi69.throwable.RuntimeExceptionDecorator;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.java.Log;
 
@@ -60,8 +60,10 @@ import lombok.extern.java.Log;
 @AllArgsConstructor
 @Log
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ResetPasswordsServiceImpl implements GenericService<ResetPasswords, UUID, ResetPasswordsRepository>,
-	ResetPasswordsService
+public class ResetPasswordsServiceImpl
+	implements
+		GenericService<ResetPasswords, UUID, ResetPasswordsRepository>,
+		ResetPasswordsService
 {
 
 	UsersService usersService;
@@ -145,7 +147,8 @@ public class ResetPasswordsServiceImpl implements GenericService<ResetPasswords,
 			{
 				// TODO refactor with commons-email
 				// For now no email is send!!!
-				SendMessageService.sendInfoEmail(SendEmailProvider.getEmailSender(), infoMessageModel);
+				SendMessageService.sendInfoEmail(SendEmailProvider.getEmailSender(),
+					infoMessageModel);
 			}
 			catch (MessagingException e)
 			{
@@ -163,11 +166,8 @@ public class ResetPasswordsServiceImpl implements GenericService<ResetPasswords,
 
 	protected String getUrlForForgottenPassword(String contextPath, ResetPassword dto)
 	{
-		String urlForForgottenPassword = contextPath +
-			Rest.VERSION_1 +
-			ResetPasswordRest.MAIN_PATH +
-			ResetPasswordRest.VERIFY_TOKEN_PATH +
-			"/?token=" + dto.getId();
+		String urlForForgottenPassword = contextPath + Rest.VERSION_1 + ResetPasswordRest.MAIN_PATH
+			+ ResetPasswordRest.VERIFY_TOKEN_PATH + "/?token=" + dto.getId();
 		return urlForForgottenPassword;
 	}
 

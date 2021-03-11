@@ -26,13 +26,13 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
-import de.alpharogroup.db.DatabaseDefaults;
-import de.alpharogroup.user.auth.enums.ContactmethodType;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
+import de.alpharogroup.db.DatabaseDefaults;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
+import de.alpharogroup.user.auth.enums.ContactmethodType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

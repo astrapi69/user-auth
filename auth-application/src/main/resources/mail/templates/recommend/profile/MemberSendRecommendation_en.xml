@@ -1,20 +1,21 @@
 <message>
-<subject>Profile recommendation</subject>
-<content>${memberUsername} recommends this profile to you:
- 
-${profileData}
-${profileLink}
+    <subject>Profile recommendation</subject>
+    <content>${memberUsername} recommends this profile to you:
 
-Message from  ${memberUsername} to you:
-${invitationText} 
+        ${profileData}
+        ${profileLink}
 
-Here you can see the profile from the member that recommend this profile:
-${senderProfileLink}
+        Message from ${memberUsername} to you:
+        ${invitationText}
 
-You can sign up for free on this link:
-${signupLink}
+        Here you can see the profile from the member that recommend this profile:
+        ${senderProfileLink}
 
-Cheers,
+        You can sign up for free on this link:
+        ${signupLink}
 
-your ${applicationDomainName}-team</content>
+        Cheers,
+
+        your ${applicationDomainName}-team
+    </content>
 </message>

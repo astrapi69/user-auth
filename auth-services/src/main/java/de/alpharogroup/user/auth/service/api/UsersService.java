@@ -100,7 +100,7 @@ public interface UsersService
 	 * @param model
 	 *            the {@link Signup} object.
 	 * @return If successful an empty optional of {@link ValidationErrors} object will be return
-	 * otherwise the optional with the validation error will be return
+	 *         otherwise the optional with the validation error will be return
 	 */
 	Optional<ValidationErrors> validate(@NonNull Signup model);
 

@@ -25,9 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -44,11 +44,11 @@ import de.alpharogroup.collections.list.ListFactory;
 import de.alpharogroup.collections.set.SetFactory;
 import de.alpharogroup.json.ObjectToJsonExtensions;
 import de.alpharogroup.spring.web.util.UrlExtensions;
-import io.github.astrapi69.throwable.RuntimeExceptionDecorator;
 import de.alpharogroup.user.auth.configuration.ApplicationConfiguration;
 import de.alpharogroup.user.auth.dto.JwtResponse;
 import de.alpharogroup.user.auth.dto.Signup;
 import de.alpharogroup.user.auth.enums.UserRole;
+import io.github.astrapi69.throwable.RuntimeExceptionDecorator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
@@ -56,13 +56,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ActiveProfiles("test")
 @SpringBootTest
-//	(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// (webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthenticationControllerTest
 {
 
 	RestTemplate restTemplate = new RestTemplate();
 
-	int serverPort = 12121;
+	int serverPort = 9090;
 	RestTemplate decoratedRestTemplate;
 
 	public String getBaseUrl(int serverPort)
@@ -83,7 +83,7 @@ public class AuthenticationControllerTest
 	}
 
 	@Test
-	@Disabled  // TODO remove when implemented properly for junit5 ...
+	@Disabled // TODO remove when implemented properly for junit5 ...
 	public void signin()
 	{
 		String restUrl;
@@ -108,7 +108,7 @@ public class AuthenticationControllerTest
 	}
 
 	@Test
-	@Disabled  // TODO remove when implemented properly for junit5 ...
+	@Disabled // TODO remove when implemented properly for junit5 ...
 	public void signup()
 	{
 		String restUrl;

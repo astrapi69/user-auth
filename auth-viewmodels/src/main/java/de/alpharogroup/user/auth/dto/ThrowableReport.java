@@ -22,9 +22,13 @@ package de.alpharogroup.user.auth.dto;
 
 import java.time.LocalDateTime;
 
-import lombok.*;
 import org.springframework.http.HttpStatus;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data

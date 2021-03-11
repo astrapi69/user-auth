@@ -20,15 +20,17 @@
  */
 package de.alpharogroup.user.auth.enums;
 
-import de.alpharogroup.lang.ClassExtensions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import de.alpharogroup.lang.ClassExtensions;
 
 public class GenderTypeTest
 {
 
-	@Test public void testTypeConstant()
+	@Test
+	public void testTypeConstant()
 	{
 		String enumClassNameValue = GenderType.ENUM_CLASS_NAME_VALUE;
 		String classname = ClassExtensions.getClassname(GenderType.class);

@@ -27,6 +27,6 @@ import de.alpharogroup.user.auth.dto.ResetPassword;
 import de.alpharogroup.user.auth.jpa.entities.ResetPasswords;
 
 @Component
-public class ResetPasswordMapper extends AbstractGenericMapper<ResetPasswords,ResetPassword>
+public class ResetPasswordMapper extends AbstractGenericMapper<ResetPasswords, ResetPassword>
 {
 }

@@ -64,6 +64,7 @@ public interface ResetPasswordsService
 	 *            the context path
 	 * @return an optional with the entry if generated otherwise empty
 	 */
-	ResetPasswordMessage generateResetPasswordMessageForMail(final @NonNull String email, final @NonNull String contextPath);
+	ResetPasswordMessage generateResetPasswordMessageForMail(final @NonNull String email,
+		final @NonNull String contextPath);
 
 }

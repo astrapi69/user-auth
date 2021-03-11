@@ -33,7 +33,8 @@ public class UsersPrincipal extends GenericPrincipal<Users>
 {
 	private static final long serialVersionUID = 1L;
 
-	public UsersPrincipal(Users users){
+	public UsersPrincipal(Users users)
+	{
 		super(users);
 	}
 

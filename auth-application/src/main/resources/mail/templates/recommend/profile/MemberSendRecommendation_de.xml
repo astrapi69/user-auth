@@ -1,24 +1,25 @@
 <message>
-<subject>Profil Empfehlung</subject>
-<content>Der Benutzer ${memberUsername} empfiehlt dir das folgende
-${applicationDomainName} Profil:
+    <subject>Profil Empfehlung</subject>
+    <content>Der Benutzer ${memberUsername} empfiehlt dir das folgende
+        ${applicationDomainName} Profil:
 
-${profileData}
+        ${profileData}
 
-${profileLink}
+        ${profileLink}
 
-Nachricht von Benutzer ${memberUsername} an dich:
-${invitationText}
+        Nachricht von Benutzer ${memberUsername} an dich:
+        ${invitationText}
 
-Hier kannst du das Profil des Absenders dieser Empfehlung ansehen:
+        Hier kannst du das Profil des Absenders dieser Empfehlung ansehen:
 
-${senderProfileLink}
+        ${senderProfileLink}
 
-Du kannst dich kostenlos anmelden:
+        Du kannst dich kostenlos anmelden:
 
-${signupLink}
+        ${signupLink}
 
-Freundliche Grüße
+        Freundliche Grüße
 
-von ${applicationDomainName}-Team</content>
+        von ${applicationDomainName}-Team
+    </content>
 </message>

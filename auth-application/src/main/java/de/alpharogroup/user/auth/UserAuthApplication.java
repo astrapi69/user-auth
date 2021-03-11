@@ -20,17 +20,17 @@
  */
 package de.alpharogroup.user.auth;
 
-import de.alpharogroup.user.auth.service.jwt.JwtProperties;
+import java.io.File;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import io.github.astrapi69.search.PathFinder;
 import de.alpharogroup.spring.boot.application.ApplicationHooks;
 import de.alpharogroup.user.auth.configuration.ApplicationProperties;
-
-import java.io.File;
+import de.alpharogroup.user.auth.service.jwt.JwtProperties;
+import io.github.astrapi69.search.PathFinder;
 
 @EnableTransactionManagement
 @EnableConfigurationProperties({ ApplicationProperties.class, JwtProperties.class })
@@ -42,9 +42,8 @@ public class UserAuthApplication
 	{
 		SpringApplication application = new SpringApplication(UserAuthApplication.class);
 		ApplicationHooks instance = ApplicationHooks.INSTANCE;
-		File projectSrcMainResourcesDir = PathFinder
-			.getRelativePath(PathFinder.getProjectDirectory(),
-			"auth-application", "src", "main", "resources");
+		File projectSrcMainResourcesDir = PathFinder.getRelativePath(
+			PathFinder.getProjectDirectory(), "auth-application", "src", "main", "resources");
 		instance.addDatabaseIfNotExists(application, projectSrcMainResourcesDir,
 			"application-dev.yml");
 		application.run(args);

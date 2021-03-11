@@ -24,19 +24,19 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import de.alpharogroup.auth.enums.ValidationErrors;
 import de.alpharogroup.crypto.pw.PasswordEncryptor;
 import de.alpharogroup.spring.service.api.GenericService;
 import de.alpharogroup.user.auth.dto.Signup;
-import lombok.Getter;
-import org.springframework.stereotype.Service;
-
 import de.alpharogroup.user.auth.jpa.entities.Roles;
 import de.alpharogroup.user.auth.jpa.entities.Users;
 import de.alpharogroup.user.auth.jpa.repositories.UsersRepository;
 import de.alpharogroup.user.auth.service.api.UsersService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 
@@ -44,9 +44,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UsersServiceImpl implements
-	GenericService<Users, UUID, UsersRepository>,
-	UsersService
+public class UsersServiceImpl implements GenericService<Users, UUID, UsersRepository>, UsersService
 {
 
 	UsersRepository repository;
@@ -81,7 +79,8 @@ public class UsersServiceImpl implements
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override public Optional<Users> findByEmail(@NonNull String email)
+	@Override
+	public Optional<Users> findByEmail(@NonNull String email)
 	{
 		return repository.findByEmail(email);
 	}
@@ -98,7 +97,8 @@ public class UsersServiceImpl implements
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override public boolean signOut(@NonNull Users user)
+	@Override
+	public boolean signOut(@NonNull Users user)
 	{
 		return true;
 	}
@@ -139,14 +139,8 @@ public class UsersServiceImpl implements
 		{
 			throw new IllegalArgumentException(e);
 		}
-		Users newUser = Users.builder()
-			.active(true)
-			.locked(false)
-			.username(username)
-			.email(email)
-			.salt(salt)
-			.password(hashedPassword)
-			.roles(roles).build();
+		Users newUser = Users.builder().active(true).locked(false).username(username).email(email)
+			.salt(salt).password(hashedPassword).roles(roles).build();
 		Users savedUser = repository.save(newUser);
 		return savedUser;
 	}

@@ -25,26 +25,27 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import de.alpharogroup.spring.service.api.GenericService;
-import lombok.Getter;
 import org.springframework.stereotype.Service;
 
+import de.alpharogroup.spring.service.api.GenericService;
 import de.alpharogroup.user.auth.jpa.entities.Permissions;
 import de.alpharogroup.user.auth.jpa.entities.Roles;
 import de.alpharogroup.user.auth.jpa.repositories.RolesRepository;
 import de.alpharogroup.user.auth.service.api.RolesService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 @Service
 @Getter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RolesServiceImpl implements
+public class RolesServiceImpl
+	implements
 
-	GenericService<Roles, UUID, RolesRepository>,
-	RolesService
+		GenericService<Roles, UUID, RolesRepository>,
+		RolesService
 {
 	RolesRepository repository;
 
@@ -74,9 +75,9 @@ public class RolesServiceImpl implements
 	}
 
 	@Override
-	public Set<Roles> getRoles(Set<String> stringRoles) {
-		return stringRoles.stream()
-			.filter(s -> existsByName(s))
+	public Set<Roles> getRoles(Set<String> stringRoles)
+	{
+		return stringRoles.stream().filter(s -> existsByName(s))
 			.map(strRole -> findByName(strRole).get()).collect(Collectors.toSet());
 	}
 

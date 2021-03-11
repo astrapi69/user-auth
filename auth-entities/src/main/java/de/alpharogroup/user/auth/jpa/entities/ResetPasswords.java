@@ -20,15 +20,27 @@
  */
 package de.alpharogroup.user.auth.jpa.entities;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import de.alpharogroup.db.entity.enums.DatabasePrefix;
 import de.alpharogroup.db.entity.identifiable.Identifiable;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * The entity class {@link ResetPasswords} is keeping the information for reseting the password from
@@ -52,10 +64,10 @@ public class ResetPasswords extends UUIDEntity
 	static final String COLUMN_NAME_GENERATED_PASSWORD = "generated_password";
 	static final String COLUMN_NAME_START_TIME = "starttime";
 
-	static final String JOIN_COLUMN_NAME_USER_ID = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
-	static final String JOIN_COLUMN_FOREIGN_KEY_RESET_PASSWORDS_USER_ID =
-		DatabasePrefix.FOREIGN_KEY_PREFIX + TABLE_NAME +
-			DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_USER_ID;
+	static final String JOIN_COLUMN_NAME_USER_ID = Users.SINGULAR_ENTITY_NAME
+		+ DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+	static final String JOIN_COLUMN_FOREIGN_KEY_RESET_PASSWORDS_USER_ID = DatabasePrefix.FOREIGN_KEY_PREFIX
+		+ TABLE_NAME + DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_USER_ID;
 
 	/** The date which this data expire */
 	@Column(name = COLUMN_NAME_EXPIRY_DATE)
@@ -68,8 +80,6 @@ public class ResetPasswords extends UUIDEntity
 	LocalDateTime starttime;
 	/** The user attribute that references to the Entity class {@link Users} */
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = JOIN_COLUMN_NAME_USER_ID,
-		referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
-		foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_RESET_PASSWORDS_USER_ID))
+	@JoinColumn(name = JOIN_COLUMN_NAME_USER_ID, referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY, foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_RESET_PASSWORDS_USER_ID))
 	Users user;
 }

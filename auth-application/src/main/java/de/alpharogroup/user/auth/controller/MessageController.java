@@ -40,28 +40,33 @@ public class MessageController
 	public static final String MEMBER_PATH = "/member";
 	public static final String ISPUBLIC_PATH = "/ispublic";
 	public static final String UNAUTHORIZED_PATH = "/unauthorized";
+
 	/**
 	 * Call this link <a href="https://localhost:8443/v1/jwt/private"></a>
 	 */
 	@RequestMapping(value = PRIVATE_PATH, method = RequestMethod.GET)
-	public ResponseEntity<?> getPrivateMessage() {
+	public ResponseEntity<?> getPrivateMessage()
+	{
 		return ResponseEntity.ok("This is a private message");
 	}
 
 	@RequestMapping(value = ISPUBLIC_PATH, method = RequestMethod.GET)
-	public ResponseEntity<?> getPublicMessage() {
+	public ResponseEntity<?> getPublicMessage()
+	{
 		return ResponseEntity.ok("This is a public message");
 	}
 
 	@RequestMapping(value = UNAUTHORIZED_PATH, method = RequestMethod.GET)
-	public ResponseEntity<?> getUnauthorized() {
+	public ResponseEntity<?> getUnauthorized()
+	{
 		return ResponseEntity.ok("Sign in failed");
 	}
 
 
 	@RequestMapping(value = MEMBER_PATH, method = RequestMethod.GET)
 	@PreAuthorize("hasRole('MEMBER')")
-	public String member() {
+	public String member()
+	{
 		return "Member area";
 	}
 

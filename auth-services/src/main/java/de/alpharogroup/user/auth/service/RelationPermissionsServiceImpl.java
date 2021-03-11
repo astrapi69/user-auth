@@ -23,10 +23,9 @@ package de.alpharogroup.user.auth.service;
 import java.util.Optional;
 import java.util.UUID;
 
-import de.alpharogroup.spring.service.api.GenericService;
-import lombok.Getter;
 import org.springframework.stereotype.Service;
 
+import de.alpharogroup.spring.service.api.GenericService;
 import de.alpharogroup.user.auth.jpa.entities.Permissions;
 import de.alpharogroup.user.auth.jpa.entities.RelationPermissions;
 import de.alpharogroup.user.auth.jpa.entities.Users;
@@ -34,15 +33,17 @@ import de.alpharogroup.user.auth.jpa.repositories.RelationPermissionsRepository;
 import de.alpharogroup.user.auth.service.api.RelationPermissionsService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 @Service
 @Getter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RelationPermissionsServiceImpl implements
+public class RelationPermissionsServiceImpl
+	implements
 
-	GenericService<RelationPermissions, UUID, RelationPermissionsRepository>,
+		GenericService<RelationPermissions, UUID, RelationPermissionsRepository>,
 		RelationPermissionsService
 {
 
@@ -51,8 +52,8 @@ public class RelationPermissionsServiceImpl implements
 	@Override
 	public void addPermission(Users provider, Users subscriber, Permissions permission)
 	{
-		Optional<RelationPermissions> optional = repository
-			.findByProviderAndSubscriber(provider, subscriber);
+		Optional<RelationPermissions> optional = repository.findByProviderAndSubscriber(provider,
+			subscriber);
 		RelationPermissions relationPermissions;
 		if (!optional.isPresent())
 		{
@@ -77,8 +78,8 @@ public class RelationPermissionsServiceImpl implements
 	@Override
 	public boolean havePermission(Users provider, Users subscriber, Permissions permission)
 	{
-		Optional<RelationPermissions> optional = repository
-			.findByProviderAndSubscriber(provider, subscriber);
+		Optional<RelationPermissions> optional = repository.findByProviderAndSubscriber(provider,
+			subscriber);
 		if (optional.isPresent())
 		{
 			return optional.get().getPermissions().contains(permission);
@@ -89,8 +90,8 @@ public class RelationPermissionsServiceImpl implements
 	@Override
 	public void removeAllPermissions(Users provider, Users subscriber)
 	{
-		Optional<RelationPermissions> optional = repository
-			.findByProviderAndSubscriber(provider, subscriber);
+		Optional<RelationPermissions> optional = repository.findByProviderAndSubscriber(provider,
+			subscriber);
 		RelationPermissions relationPermissions;
 		if (optional.isPresent())
 		{
@@ -102,8 +103,8 @@ public class RelationPermissionsServiceImpl implements
 	@Override
 	public void removePermission(Users provider, Users subscriber, Permissions permission)
 	{
-		Optional<RelationPermissions> optional = repository
-			.findByProviderAndSubscriber(provider, subscriber);
+		Optional<RelationPermissions> optional = repository.findByProviderAndSubscriber(provider,
+			subscriber);
 		RelationPermissions relationPermissions;
 		if (optional.isPresent())
 		{

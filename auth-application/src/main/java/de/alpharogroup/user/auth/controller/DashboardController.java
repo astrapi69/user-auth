@@ -44,8 +44,10 @@ public class DashboardController
 
 	@CrossOrigin(origins = "*")
 	@RequestMapping(value = MEMBER_PATH, method = RequestMethod.GET)
-	public ResponseEntity<?> member(@AuthenticationPrincipal Users user) {
-		if(user == null) {
+	public ResponseEntity<?> member(@AuthenticationPrincipal Users user)
+	{
+		if (user == null)
+		{
 			Optional<Users> optionalUsers = CurrentUserResolver.getCurrentUser();
 			if (optionalUsers.isPresent())
 			{

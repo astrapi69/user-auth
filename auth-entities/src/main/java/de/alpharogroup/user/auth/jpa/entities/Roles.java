@@ -20,16 +20,31 @@
  */
 package de.alpharogroup.user.auth.jpa.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
 import de.alpharogroup.db.entity.enums.DatabasePrefix;
 import de.alpharogroup.db.entity.identifiable.Identifiable;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * The entity class {@link Roles} is keeping the information for the user roles.
@@ -52,11 +67,18 @@ public class Roles extends UUIDEntity
 	static final String TABLE_NAME = SINGULAR_ENTITY_NAME + "s";
 	static final String COLUMN_NAME_NAME = "name";
 	static final String COLUMN_NAME_DESCRIPTION = "description";
-	static final String JOIN_TABLE_NAME_ROLE_PERMISSIONS = Roles.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Permissions.TABLE_NAME;
-	static final String JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_ROLE_ID = Roles.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
-	static final String JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_PERMISSION_ID = Permissions.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
-	static final String JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_ROLE_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_ROLE_PERMISSIONS + DatabasePrefix.UNDERSCORE + JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_ROLE_ID;
-	static final String JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_PERMISSION_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_ROLE_PERMISSIONS + DatabasePrefix.UNDERSCORE + JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_PERMISSION_ID;
+	static final String JOIN_TABLE_NAME_ROLE_PERMISSIONS = Roles.SINGULAR_ENTITY_NAME
+		+ DatabasePrefix.UNDERSCORE + Permissions.TABLE_NAME;
+	static final String JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_ROLE_ID = Roles.SINGULAR_ENTITY_NAME
+		+ DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+	static final String JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_PERMISSION_ID = Permissions.SINGULAR_ENTITY_NAME
+		+ DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+	static final String JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_ROLE_ID = DatabasePrefix.FOREIGN_KEY_PREFIX
+		+ JOIN_TABLE_NAME_ROLE_PERMISSIONS + DatabasePrefix.UNDERSCORE
+		+ JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_ROLE_ID;
+	static final String JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_PERMISSION_ID = DatabasePrefix.FOREIGN_KEY_PREFIX
+		+ JOIN_TABLE_NAME_ROLE_PERMISSIONS + DatabasePrefix.UNDERSCORE
+		+ JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_PERMISSION_ID;
 
 	/** A description of the role. */
 	@Column(name = COLUMN_NAME_DESCRIPTION, length = 64)
@@ -68,12 +90,8 @@ public class Roles extends UUIDEntity
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = JOIN_TABLE_NAME_ROLE_PERMISSIONS, joinColumns = {
-			@JoinColumn(name = JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_ROLE_ID,
-				referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
-				foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_ROLE_ID)) }, inverseJoinColumns = {
-					@JoinColumn(name = JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_PERMISSION_ID,
-						referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
-						foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_PERMISSION_ID)) })
+			@JoinColumn(name = JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_ROLE_ID, referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY, foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_ROLE_ID)) }, inverseJoinColumns = {
+					@JoinColumn(name = JOIN_TABLE_ROLE_PERMISSIONS_COLUMN_NAME_PERMISSION_ID, referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY, foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_ROLE_PERMISSIONS_PERMISSION_ID)) })
 	Set<Permissions> permissions = new HashSet<>();
 
 	/**

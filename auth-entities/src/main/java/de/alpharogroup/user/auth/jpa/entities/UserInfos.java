@@ -20,25 +20,43 @@
  */
 package de.alpharogroup.user.auth.jpa.entities;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+
 import de.alpharogroup.db.DatabaseDefaults;
 import de.alpharogroup.db.entity.enums.DatabasePrefix;
 import de.alpharogroup.db.entity.identifiable.Identifiable;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
 import de.alpharogroup.user.auth.enums.GenderType;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Parameter;
-
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.Table;
-import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * The entity class {@link UserInfos} UserInfos hold user specific information
@@ -46,10 +64,8 @@ import java.util.Set;
 @Entity
 @Table(name = UserInfos.TABLE_NAME)
 @TypeDefs({
-	@TypeDef(name = UserInfos.CONVERTER_NAME_GENDER,
-		typeClass = de.alpharogroup.db.postgres.usertype.PGEnumUserType.class, parameters = {
-		@Parameter(name = DatabaseDefaults.ENUM_CLASS_NAME,
-			value = GenderType.ENUM_CLASS_NAME_VALUE) }) })
+		@TypeDef(name = UserInfos.CONVERTER_NAME_GENDER, typeClass = de.alpharogroup.db.postgres.usertype.PGEnumUserType.class, parameters = {
+				@Parameter(name = DatabaseDefaults.ENUM_CLASS_NAME, value = GenderType.ENUM_CLASS_NAME_VALUE) }) })
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -65,20 +81,23 @@ public class UserInfos extends UUIDEntity
 	static final String COLUMN_NAME_IP_ADDRESS = "ip_address";
 	static final String COLUMN_NAME_STRIPE_CUSTOMER_ID = "stripe_customer_id";
 	static final String CONVERTER_NAME_GENDER = "genderConverter";
-	static final String JOIN_COLUMN_NAME_USER_INFOS_ID = TABLE_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
-	static final String JOIN_COLUMN_NAME_CONTACTMETHODS_ID = Contactmethods.TABLE_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
-	static final String JOIN_TABLE_NAME_USER_CONTACTMETHODS = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Contactmethods.TABLE_NAME;
-	static final String JOIN_TABLE_FOREIGN_KEY_USER_INFOS_USER_INFOS_ID = DatabasePrefix.FOREIGN_KEY_PREFIX +
-		TABLE_NAME + DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_USER_INFOS_ID;
-	static final String JOIN_TABLE_FOREIGN_KEY_USER_INFOS_CONTACTMETHODS_ID = DatabasePrefix.FOREIGN_KEY_PREFIX +
-		TABLE_NAME + DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_CONTACTMETHODS_ID;
-	static final String JOIN_COLUMN_FOREIGN_KEY_USER_INFOS_USER_ID = DatabasePrefix.FOREIGN_KEY_PREFIX +
-		TABLE_NAME + DatabasePrefix.UNDERSCORE + Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+	static final String JOIN_COLUMN_NAME_USER_INFOS_ID = TABLE_NAME + DatabasePrefix.UNDERSCORE
+		+ Identifiable.COLUMN_NAME_ID;
+	static final String JOIN_COLUMN_NAME_CONTACTMETHODS_ID = Contactmethods.TABLE_NAME
+		+ DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+	static final String JOIN_TABLE_NAME_USER_CONTACTMETHODS = Users.SINGULAR_ENTITY_NAME
+		+ DatabasePrefix.UNDERSCORE + Contactmethods.TABLE_NAME;
+	static final String JOIN_TABLE_FOREIGN_KEY_USER_INFOS_USER_INFOS_ID = DatabasePrefix.FOREIGN_KEY_PREFIX
+		+ TABLE_NAME + DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_USER_INFOS_ID;
+	static final String JOIN_TABLE_FOREIGN_KEY_USER_INFOS_CONTACTMETHODS_ID = DatabasePrefix.FOREIGN_KEY_PREFIX
+		+ TABLE_NAME + DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_CONTACTMETHODS_ID;
+	static final String JOIN_COLUMN_FOREIGN_KEY_USER_INFOS_USER_ID = DatabasePrefix.FOREIGN_KEY_PREFIX
+		+ TABLE_NAME + DatabasePrefix.UNDERSCORE + Users.SINGULAR_ENTITY_NAME
+		+ DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
 
 	/** The owner of this user data. */
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = COLUMN_NAME_OWNER,
-		foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_USER_INFOS_USER_ID))
+	@JoinColumn(name = COLUMN_NAME_OWNER, foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_USER_INFOS_USER_ID))
 	Users owner;
 	/** The birth name from the user if he or she had one. */
 	@Column(length = 64)
@@ -88,13 +107,8 @@ public class UserInfos extends UUIDEntity
 	@ManyToMany(fetch = FetchType.EAGER)
 	@Cascade({ CascadeType.SAVE_UPDATE, CascadeType.DELETE })
 	@JoinTable(name = JOIN_TABLE_NAME_USER_CONTACTMETHODS, joinColumns = {
-			@JoinColumn(name = JOIN_COLUMN_NAME_USER_INFOS_ID,
-				referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
-				foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_INFOS_USER_INFOS_ID)) },
-		inverseJoinColumns = {
-					@JoinColumn(name = JOIN_COLUMN_NAME_CONTACTMETHODS_ID,
-						referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
-						foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_INFOS_CONTACTMETHODS_ID)) })
+			@JoinColumn(name = JOIN_COLUMN_NAME_USER_INFOS_ID, referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY, foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_INFOS_USER_INFOS_ID)) }, inverseJoinColumns = {
+					@JoinColumn(name = JOIN_COLUMN_NAME_CONTACTMETHODS_ID, referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY, foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_INFOS_CONTACTMETHODS_ID)) })
 	Set<Contactmethods> contactmethods = new HashSet<>();
 	/** The date of birth from the user. */
 	Date dateofbirth;

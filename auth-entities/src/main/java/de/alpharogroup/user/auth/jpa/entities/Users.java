@@ -20,45 +20,61 @@
  */
 package de.alpharogroup.user.auth.jpa.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
+
 import de.alpharogroup.db.entity.enums.DatabasePrefix;
 import de.alpharogroup.db.entity.identifiable.Identifiable;
 import de.alpharogroup.db.entity.uniqueable.UUIDEntity;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * The entity class {@link Users} is keeping the information for the users from the application.
  */
 @Entity
-@Table(name = Users.TABLE_NAME, indexes = { @Index(name = DatabasePrefix.INDEX_PREFIX + Users.TABLE_NAME
+@Table(name = Users.TABLE_NAME, indexes = { @Index(name = DatabasePrefix.INDEX_PREFIX
+	+ Users.TABLE_NAME + DatabasePrefix.UNDERSCORE + Users.JOIN_COLUMN_NAME_APPLICATION
 	+ DatabasePrefix.UNDERSCORE
-	+ Users.JOIN_COLUMN_NAME_APPLICATION
-	+ DatabasePrefix.UNDERSCORE
-	+ Users.JOIN_COLUMN_NAME_APPLICATION ,
-	columnList = Users.JOIN_COLUMN_NAME_APPLICATION +","+Users.COLUMN_NAME_USERNAME, unique = true) },
-	uniqueConstraints = {
-		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
-			+ DatabasePrefix.UNDERSCORE
-			+ Users.JOIN_COLUMN_NAME_APPLICATION
-			+ DatabasePrefix.UNDERSCORE
-			+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.JOIN_COLUMN_NAME_APPLICATION, Users.COLUMN_NAME_USERNAME }),
-		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
-			+ DatabasePrefix.UNDERSCORE
-			+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.COLUMN_NAME_USERNAME }),
-		@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
-			+ DatabasePrefix.UNDERSCORE
-			+ Users.COLUMN_NAME_EMAIL, columnNames = { Users.COLUMN_NAME_EMAIL }),
-			@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX + Users.TABLE_NAME
-				+ DatabasePrefix.UNDERSCORE
-				+ Users.JOIN_COLUMN_NAME_APPLICATION
-				+ DatabasePrefix.UNDERSCORE
-				+ Users.COLUMN_NAME_EMAIL, columnNames = { Users.JOIN_COLUMN_NAME_APPLICATION, Users.COLUMN_NAME_EMAIL })})
+	+ Users.JOIN_COLUMN_NAME_APPLICATION, columnList = Users.JOIN_COLUMN_NAME_APPLICATION + ","
+		+ Users.COLUMN_NAME_USERNAME, unique = true) }, uniqueConstraints = {
+				@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX
+					+ Users.TABLE_NAME + DatabasePrefix.UNDERSCORE
+					+ Users.JOIN_COLUMN_NAME_APPLICATION + DatabasePrefix.UNDERSCORE
+					+ Users.COLUMN_NAME_USERNAME, columnNames = {
+							Users.JOIN_COLUMN_NAME_APPLICATION, Users.COLUMN_NAME_USERNAME }),
+				@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX
+					+ Users.TABLE_NAME + DatabasePrefix.UNDERSCORE
+					+ Users.COLUMN_NAME_USERNAME, columnNames = { Users.COLUMN_NAME_USERNAME }),
+				@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX
+					+ Users.TABLE_NAME + DatabasePrefix.UNDERSCORE
+					+ Users.COLUMN_NAME_EMAIL, columnNames = { Users.COLUMN_NAME_EMAIL }),
+				@UniqueConstraint(name = DatabasePrefix.UNIQUE_CONSTRAINT_PG_PREFIX
+					+ Users.TABLE_NAME + DatabasePrefix.UNDERSCORE
+					+ Users.JOIN_COLUMN_NAME_APPLICATION + DatabasePrefix.UNDERSCORE
+					+ Users.COLUMN_NAME_EMAIL, columnNames = { Users.JOIN_COLUMN_NAME_APPLICATION,
+							Users.COLUMN_NAME_EMAIL }) })
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -73,18 +89,24 @@ public class Users extends UUIDEntity
 	static final String COLUMN_NAME_USERNAME = "username";
 	static final String COLUMN_NAME_EMAIL = "email";
 	static final String JOIN_COLUMN_NAME_APPLICATION = Applications.SINGULAR_ENTITY_NAME;
-	static final String JOIN_TABLE_NAME_USER_ROLES = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Roles.TABLE_NAME;
-	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID = Users.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
-	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID = Roles.SINGULAR_ENTITY_NAME + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
-	static final String JOIN_TABLE_FOREIGN_KEY_USER_ROLES_USER_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_USER_ROLES + DatabasePrefix.UNDERSCORE + JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID;
-	static final String JOIN_TABLE_FOREIGN_KEY_USER_ROLES_ROLE_ID = DatabasePrefix.FOREIGN_KEY_PREFIX + JOIN_TABLE_NAME_USER_ROLES + DatabasePrefix.UNDERSCORE + JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID;
+	static final String JOIN_TABLE_NAME_USER_ROLES = Users.SINGULAR_ENTITY_NAME
+		+ DatabasePrefix.UNDERSCORE + Roles.TABLE_NAME;
+	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID = Users.SINGULAR_ENTITY_NAME
+		+ DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+	static final String JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID = Roles.SINGULAR_ENTITY_NAME
+		+ DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+	static final String JOIN_TABLE_FOREIGN_KEY_USER_ROLES_USER_ID = DatabasePrefix.FOREIGN_KEY_PREFIX
+		+ JOIN_TABLE_NAME_USER_ROLES + DatabasePrefix.UNDERSCORE
+		+ JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID;
+	static final String JOIN_TABLE_FOREIGN_KEY_USER_ROLES_ROLE_ID = DatabasePrefix.FOREIGN_KEY_PREFIX
+		+ JOIN_TABLE_NAME_USER_ROLES + DatabasePrefix.UNDERSCORE
+		+ JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID;
 	static final String JOIN_COLUMN_FOREIGN_KEY_USERS_APPLICATION_ID = DatabasePrefix.FOREIGN_KEY_PREFIX
-		+ TABLE_NAME + DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_APPLICATION + DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
+		+ TABLE_NAME + DatabasePrefix.UNDERSCORE + JOIN_COLUMN_NAME_APPLICATION
+		+ DatabasePrefix.UNDERSCORE + Identifiable.COLUMN_NAME_ID;
 	/** The {@link Applications} that owns this {@link Users} object. */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
-	@JoinColumn(name = JOIN_COLUMN_NAME_APPLICATION, nullable = false,
-		referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
-		foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_USERS_APPLICATION_ID))
+	@JoinColumn(name = JOIN_COLUMN_NAME_APPLICATION, nullable = false, referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY, foreignKey = @ForeignKey(name = JOIN_COLUMN_FOREIGN_KEY_USERS_APPLICATION_ID))
 	Applications applications;
 
 	/** The attribute active, if true the user account is active. */
@@ -103,13 +125,8 @@ public class Users extends UUIDEntity
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = JOIN_TABLE_NAME_USER_ROLES, joinColumns = {
-			@JoinColumn(name = JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID,
-				referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
-				foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_ROLES_USER_ID)) },
-		inverseJoinColumns = {
-					@JoinColumn(name = JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID,
-						referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY,
-						foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_ROLES_ROLE_ID)) })
+			@JoinColumn(name = JOIN_TABLE_USER_ROLES_COLUMN_NAME_USER_ID, referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY, foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_ROLES_USER_ID)) }, inverseJoinColumns = {
+					@JoinColumn(name = JOIN_TABLE_USER_ROLES_COLUMN_NAME_ROLE_ID, referencedColumnName = DatabasePrefix.DEFAULT_COLUMN_NAME_PRIMARY_KEY, foreignKey = @ForeignKey(name = JOIN_TABLE_FOREIGN_KEY_USER_ROLES_ROLE_ID)) })
 	Set<Roles> roles = new HashSet<>();
 
 	/** The salt that is used to compute the hash. */

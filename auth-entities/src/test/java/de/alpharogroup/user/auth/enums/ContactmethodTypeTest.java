@@ -20,14 +20,16 @@
  */
 package de.alpharogroup.user.auth.enums;
 
-import de.alpharogroup.lang.ClassExtensions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import de.alpharogroup.lang.ClassExtensions;
 
 public class ContactmethodTypeTest
 {
-	@Test public void testTypeConstant()
+	@Test
+	public void testTypeConstant()
 	{
 		String enumClassNameValue = ContactmethodType.ENUM_CLASS_NAME_VALUE;
 		String classname = ClassExtensions.getClassname(ContactmethodType.class);

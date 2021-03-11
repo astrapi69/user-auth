@@ -21,9 +21,6 @@
 package de.alpharogroup.user.auth.filter;
 
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.FilterChain;
@@ -31,7 +28,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.alpharogroup.user.auth.principal.UsersPrincipal;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -55,6 +51,7 @@ import de.alpharogroup.servlet.extensions.enums.HeaderKeyNames;
 import de.alpharogroup.user.auth.configuration.ApplicationProperties;
 import de.alpharogroup.user.auth.dto.JwtRequest;
 import de.alpharogroup.user.auth.jpa.entities.Users;
+import de.alpharogroup.user.auth.principal.UsersPrincipal;
 import de.alpharogroup.user.auth.service.JwtTokenService;
 import de.alpharogroup.user.auth.service.api.AuthenticationsService;
 import de.alpharogroup.user.auth.service.jwt.JwtUserDetailsService;
@@ -64,20 +61,20 @@ import lombok.NonNull;
 public class JwtRequestFilter extends OncePerRequestFilter
 {
 	@Autowired
+	ApplicationProperties applicationProperties;
+	@Autowired
 	private JwtUserDetailsService jwtUserDetailsService;
 	@Autowired
 	private JwtTokenService jwtTokenService;
 	@Autowired
 	private AuthenticationsService authenticationsService;
-	@Autowired
-	ApplicationProperties applicationProperties;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain chain) throws ServletException, IOException
 	{
 		if (isPublicRequest(request)
-//			|| !request.isSecure()
+		// || !request.isSecure()
 		)
 		{
 			chain.doFilter(request, response);
@@ -126,7 +123,8 @@ public class JwtRequestFilter extends OncePerRequestFilter
 		String username = jwtTokenService.getUsername(jwtToken);
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null)
 		{
-			UsersPrincipal userDetails = (UsersPrincipal)this.jwtUserDetailsService.loadUserByUsername(username);
+			UsersPrincipal userDetails = (UsersPrincipal)this.jwtUserDetailsService
+				.loadUserByUsername(username);
 			if (jwtTokenService.validate(jwtToken, userDetails))
 			{
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

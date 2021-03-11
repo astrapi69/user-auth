@@ -25,13 +25,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.alpharogroup.user.auth.enums.ApplicationHeaderKeyNames;
-import de.alpharogroup.user.auth.service.jwt.JwtProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import de.alpharogroup.servlet.extensions.enums.HeaderKeyNames;
+import de.alpharogroup.user.auth.enums.ApplicationHeaderKeyNames;
+import de.alpharogroup.user.auth.service.jwt.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -65,38 +65,29 @@ public class JwtTokenService
 
 	private Claims getAllClaims(String token)
 	{
-		return Jwts.parserBuilder()
-			.setSigningKey(applicationProperties.getSecret().getBytes())
-			.build()
-			.parseClaimsJws(token)
-			.getBody();
+		return Jwts.parserBuilder().setSigningKey(applicationProperties.getSecret().getBytes())
+			.build().parseClaimsJws(token).getBody();
 	}
 
 	public String newJwtToken(UserDetails userDetails)
 	{
 		long expirationDate = System.currentTimeMillis()
 			+ Integer.valueOf(HeaderKeyNames.DEFAULT_DURABILITY); // in 2 hours
-		return buildJwtToken(userDetails,
-			userDetails.getAuthorities()
-				.stream()
-				.map(GrantedAuthority::getAuthority)
+		return buildJwtToken(
+			userDetails, userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toList()),
-			applicationProperties.getSecret().getBytes(),
-			expirationDate);
+			applicationProperties.getSecret().getBytes(), expirationDate);
 	}
 
 	private String buildJwtToken(UserDetails userDetails, List<String> roles, byte[] signingKey,
 		long expirationDate)
 	{
-		return Jwts.builder()
-			.signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
+		return Jwts.builder().signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
 			.setHeaderParam(HeaderKeyNames.TOKEN_TYPE_KEY, HeaderKeyNames.DEFAULT_TOKEN_TYPE)
 			.setIssuer(ApplicationHeaderKeyNames.DEFAULT_TOKEN_ISSUER)
 			.setAudience(ApplicationHeaderKeyNames.DEFAULT_TOKEN_AUDIENCE)
-			.setSubject(userDetails.getUsername())
-			.setExpiration(new Date(expirationDate))
-			.claim(ApplicationHeaderKeyNames.HEADER_KEY_ROLES, roles)
-			.compact();
+			.setSubject(userDetails.getUsername()).setExpiration(new Date(expirationDate))
+			.claim(ApplicationHeaderKeyNames.HEADER_KEY_ROLES, roles).compact();
 	}
 
 	public Boolean validate(String token, UserDetails userDetails)
@@ -106,11 +97,15 @@ public class JwtTokenService
 			&& !getExpirationDate(token).before(new Date()));
 	}
 
-	public boolean validateToken(String authToken) {
-		try{
+	public boolean validateToken(String authToken)
+	{
+		try
+		{
 			getAllClaims(authToken);
 			return true;
-		} catch (Exception e){
+		}
+		catch (Exception e)
+		{
 			return false;
 		}
 	}

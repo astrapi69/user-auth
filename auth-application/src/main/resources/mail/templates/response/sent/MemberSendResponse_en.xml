@@ -1,18 +1,18 @@
 <message>
-<subject>
-Received new message from ${memberUsername}
-</subject>
-<content>
-Hello ${recipientFullName},  
+    <subject>
+        Received new message from ${memberUsername}
+    </subject>
+    <content>
+        Hello ${recipientFullName},
 
-you have a new message from the member ${memberUsername} in your inbox:
+        you have a new message from the member ${memberUsername} in your inbox:
 
-"${messagePart}"
+        "${messagePart}"
 
-Login and read the whole message.
+        Login and read the whole message.
 
-King regards,
+        King regards,
 
-your ${applicationDomainName}-team
-</content>
+        your ${applicationDomainName}-team
+    </content>
 </message>
