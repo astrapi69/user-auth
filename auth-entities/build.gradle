@@ -1,14 +1,14 @@
 dependencies {
-    implementation("de.alpharogroup:ent-api:$entApiVersion")
-    implementation("de.alpharogroup:ent-core:$entCoreVersion")
-    implementation("de.alpharogroup:pg-enum-usertype:$pgEnumUsertypeVersion")
+    implementation("io.github.astrapi69:data-api:$dataApiVersion")
+    implementation("io.github.astrapi69:ent-core:$entCoreVersion")
+    implementation("io.github.astrapi69:pg-enum-usertype:$pgEnumUsertypeVersion")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    testImplementation("de.alpharogroup:jobj-core:$jobjCoreVersion")
+    testImplementation("io.github.astrapi69:jobj-core:$jobjCoreVersion")
 
-    runtime("org.postgresql:postgresql")
+    implementation("org.postgresql:postgresql")
     testImplementation project(':auth-application')
-    testImplementation("de.alpharogroup:silly-collections:$sillyCollectionsVersion")
+    testImplementation("io.github.astrapi69:silly-collections:$sillyCollectionsVersion")
     testImplementation("org.flywaydb:flyway-core")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

@@ -1,3 +1,4 @@
+
 buildscript {
     repositories {
         maven {
@@ -5,29 +6,27 @@ buildscript {
         }
     }
     dependencies {
-        classpath "io.franzbecker:gradle-lombok:$gradlePluginLombokVersion"
+        classpath "io.freefair.gradle:lombok-plugin:$gradlePluginLombokVersion"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootGradlePluginVersion"
         classpath "io.spring.gradle:dependency-management-plugin:$springGradlePluginDependencyManagementVersion"
         classpath "com.github.ben-manes:gradle-versions-plugin:$gradlePluginVersionsVersion"
         classpath "gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:$licenseGradlePluginVersion"
-        classpath "net.ltgt.gradle:gradle-apt-plugin:$gradleAptPluginVersion"
     }
 }
 
 allprojects {
-    group = "$groupPackage"
-    version = "$projectVersion"
+    group = "$groupPackage" as Object
+    version = "$projectVersion" as Object
 
     repositories {
         mavenLocal()
         mavenCentral()
-        jcenter()
     }
 }
 
 subprojects {
 
-    apply plugin: "io.franzbecker.gradle-lombok"
+    apply plugin: "io.freefair.lombok"
     apply plugin: "org.springframework.boot"
     apply plugin: "io.spring.dependency-management"
     apply plugin: "java"
@@ -36,8 +35,6 @@ subprojects {
     apply plugin: "jacoco"
     apply plugin: "eclipse"
     apply plugin: "idea"
-    apply plugin: "net.ltgt.apt"
-    apply plugin: "net.ltgt.apt-idea"
     apply plugin: "com.github.ben-manes.versions"
     apply plugin: "com.github.hierynomus.license"
 
@@ -67,6 +64,14 @@ subprojects {
     compileJava {
         sourceCompatibility = "$projectSourceCompatibility"
         targetCompatibility = "$projectTargetCompatibility"
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        // uncomment the next line for build with compiler argument -Xlint:deprecation
+        // options.compilerArgs << "-Xlint:deprecation"
+        // uncomment the next line for build with compiler argument -Xlint:unchecked
+        // options.compilerArgs << "-Xlint:unchecked"
     }
 
     test {
