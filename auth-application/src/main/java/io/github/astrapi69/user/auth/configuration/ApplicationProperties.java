@@ -35,7 +35,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApplicationProperties
 {
-
 	String uriScheme;
 	String host;
 	String dbHost;
@@ -49,5 +48,18 @@ public class ApplicationProperties
 	List<String> publicPathPatterns;
 	List<String> signinPathPatterns;
 	List<String> ignorePathPatterns;
+	String dbUsername;
+	String dbPassword;
+	String basePackage;
+	String apiInfoTitle;
+	String apiInfoTermsOfServiceUrl;
+	String apiInfoDescription;
+	String apiInfoVersion;
+	String apiInfoLicense;
+	String apiInfoLicenseUrl;
+	String contactName;
+	String contactUrl;
+	String contactEmail;
+	String docketPathsRegex;
 
 }

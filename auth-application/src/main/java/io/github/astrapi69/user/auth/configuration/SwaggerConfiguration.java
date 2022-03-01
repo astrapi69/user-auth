@@ -20,17 +20,22 @@
  */
 package io.github.astrapi69.user.auth.configuration;
 
+import io.github.astrapi69.user.auth.enums.AppRestPath;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import io.github.astrapi69.spring.configuration.AbstractSwaggerConfiguration;
 
 @Configuration
 @EnableSwagger2
 public class SwaggerConfiguration extends AbstractSwaggerConfiguration
 {
+	@Autowired
+	ApplicationProperties applicationProperties;
 
 	@Bean
 	public Docket api()
@@ -44,45 +49,75 @@ public class SwaggerConfiguration extends AbstractSwaggerConfiguration
 	}
 
 	@Override
-	public String getBasePackage()
+	public String newBasePackage()
 	{
-		return "io.github.astrapi69.user.auth";
+		return applicationProperties.getBasePackage() != null
+			? applicationProperties.getBasePackage()
+			: "io.github.astrapi69.user.auth";
 	}
 
 	@Override
-	public String getApiInfoTitle()
+	public String newApiInfoTitle()
 	{
-		return "User Auth REST API";
+		return applicationProperties.getApiInfoTitle() != null
+			? applicationProperties.getApiInfoTitle()
+			: "user authorisation and authentication REST API";
 	}
 
 	@Override
-	public String getApiInfoDescription()
+	public String newApiInfoDescription()
 	{
-		return "REST API for user authorisation and authentication";
+		return applicationProperties.getApiInfoDescription() != null
+			? applicationProperties.getApiInfoDescription()
+			: "REST API for user authorisation and authentication";
 	}
 
 	@Override
-	public String getApiInfoVersion()
+	public String newApiInfoVersion()
 	{
-		return ApplicationConfiguration.VERSION_API_1;
+		return applicationProperties.getApiInfoVersion() != null
+			? applicationProperties.getApiInfoVersion()
+			: AppRestPath.REST_API_VERSION_1;
 	}
 
 	@Override
-	public String getContactName()
+	public String newApiInfoLicense()
 	{
-		return "user-auth org.";
+		return applicationProperties.getApiInfoLicense() != null
+			? applicationProperties.getApiInfoLicense()
+			: "MIT";
 	}
 
 	@Override
-	public String getContactUrl()
+	public String newApiInfoLicenseUrl()
 	{
-		return "www.user-auth.org";
+		return applicationProperties.getApiInfoLicenseUrl() != null
+			? applicationProperties.getApiInfoLicenseUrl()
+			: "https://opensource.org/licenses/MIT";
 	}
 
 	@Override
-	public String getDocketPathsPathRegex()
+	public String newContactName()
 	{
-		return ApplicationConfiguration.REST_VERSION + "/.*|";
+		return applicationProperties.getContactName() != null
+			? applicationProperties.getContactName()
+			: "user authentication inc.";
+	}
+
+	@Override
+	public String newContactUrl()
+	{
+		return applicationProperties.getContactUrl() != null
+			? applicationProperties.getContactUrl()
+			: "www.user-auth.org";
+	}
+
+	@Override
+	public String newDocketPathsRegex()
+	{
+		return applicationProperties.getDocketPathsRegex() != null
+			? applicationProperties.getDocketPathsRegex()
+			: AppRestPath.REST_DOCKET_PATHS_REGEX;
 	}
 
 }
