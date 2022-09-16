@@ -44,7 +44,7 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
 import io.github.astrapi69.db.DatabaseDefaults;
-import io.github.astrapi69.data.enums.DatabasePrefix;
+import io.github.astrapi69.data.enumtype.DatabasePrefix;
 import io.github.astrapi69.data.identifiable.Identifiable;
 import io.github.astrapi69.entity.uniqueable.UUIDEntity;
 import io.github.astrapi69.user.auth.enums.GenderType;

@@ -30,7 +30,7 @@ import javax.mail.MessagingException;
 
 import org.springframework.stereotype.Service;
 
-import io.github.astrapi69.crypto.pw.PasswordEncryptor;
+import io.github.astrapi69.mystic.crypt.pw.PasswordEncryptor;
 import io.github.astrapi69.resourcebundle.locale.LocaleResolver;
 import io.github.astrapi69.spring.service.api.GenericService;
 import io.github.astrapi69.user.auth.dto.ResetPassword;

@@ -40,7 +40,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import io.github.astrapi69.collections.list.ListExtensions;
+import io.github.astrapi69.collection.list.ListExtensions;
 import io.github.astrapi69.user.auth.entrypoint.RestAuthenticationEntryPoint;
 import io.github.astrapi69.user.auth.filter.CorsFilter;
 import io.github.astrapi69.user.auth.filter.JwtRequestFilter;

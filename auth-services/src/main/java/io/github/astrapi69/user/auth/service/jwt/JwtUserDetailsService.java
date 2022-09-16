@@ -49,7 +49,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.astrapi69.auth.exceptions.UserAlreadyExistsException;
-import io.github.astrapi69.crypto.pw.PasswordEncryptor;
+import io.github.astrapi69.mystic.crypt.pw.PasswordEncryptor;
 import io.github.astrapi69.user.auth.dto.User;
 import io.github.astrapi69.user.auth.jpa.entities.Users;
 import io.github.astrapi69.user.auth.jpa.repositories.UsersRepository;

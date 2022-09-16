@@ -33,7 +33,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import io.github.astrapi69.data.enums.DatabasePrefix;
+import io.github.astrapi69.data.enumtype.DatabasePrefix;
 import io.github.astrapi69.data.identifiable.Identifiable;
 import io.github.astrapi69.entity.uniqueable.UUIDEntity;
 import lombok.AccessLevel;

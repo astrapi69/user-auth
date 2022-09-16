@@ -33,8 +33,8 @@ import javax.crypto.NoSuchPaddingException;
 
 import io.github.astrapi69.auth.beans.AuthenticationResult;
 import io.github.astrapi69.auth.enumtype.AuthenticationErrors;
-import io.github.astrapi69.collections.set.SetFactory;
-import io.github.astrapi69.crypto.pw.PasswordEncryptor;
+import io.github.astrapi69.collection.set.SetFactory;
+import io.github.astrapi69.mystic.crypt.pw.PasswordEncryptor;
 import io.github.astrapi69.user.auth.jpa.entities.Users;
 import lombok.NonNull;
 
