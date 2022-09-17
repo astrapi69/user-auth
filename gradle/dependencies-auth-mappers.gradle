@@ -1,0 +1,15 @@
+dependencies {
+    implementation project(":auth-entities")
+    implementation project(":auth-viewmodels")
+    implementation("com.google.code.findbugs:jsr305:$findbugsJsr305Version")
+    implementation("com.google.code.findbugs:annotations:$findbugsAnnotationsVersion")
+    implementation("io.github.astrapi69:bean-mapper-api:$beanMapperApiVersion")
+    implementation("io.github.astrapi69:generic-mapper:$genericMapperVersion")
+    implementation("io.github.astrapi69:data-api:$dataApiVersion")
+    implementation("io.github.astrapi69:ent-core:$entCoreVersion")
+    implementation("org.springframework.boot:spring-boot-starter")
+    testImplementation project(":auth-application")
+    testImplementation("io.github.astrapi69:silly-collection:$sillyCollectionVersion")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa")
+}

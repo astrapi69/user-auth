@@ -1,0 +1,3 @@
+apply from: "../gradle/dependencies-auth-mappers.gradle"
+apply from: "../gradle/licensing.gradle"
+apply from: "../gradle/publishing-auth-mappers.gradle"
