@@ -43,7 +43,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.astrapi69.auth.beans.AuthenticationResult;
 import io.github.astrapi69.auth.enumtype.AuthenticationErrors;
 import io.github.astrapi69.collection.map.MapFactory;
-import io.github.astrapi69.collections.pairs.KeyValuePair;
+import io.github.astrapi69.collection.pair.KeyValuePair;
 import io.github.astrapi69.json.JsonStringToObjectExtensions;
 import io.github.astrapi69.json.factory.ObjectMapperFactory;
 import io.github.astrapi69.servlet.extensions.HttpServletRequestExtensions;
