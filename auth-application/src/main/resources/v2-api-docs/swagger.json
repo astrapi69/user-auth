@@ -1,0 +1,546 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "REST API for user authorisation and authentication",
+    "version" : "v1",
+    "title" : "user authorisation and authentication REST API",
+    "contact" : {
+      "name" : "user authentication inc.",
+      "url" : "www.user-auth.org"
+    },
+    "license" : {
+      "name" : "MIT",
+      "url" : "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host" : "localhost:9090",
+  "basePath" : "/",
+  "tags" : [ {
+    "name" : "authentication-controller",
+    "description" : "Authentication Controller"
+  }, {
+    "name" : "dashboard-controller",
+    "description" : "Dashboard Controller"
+  }, {
+    "name" : "message-controller",
+    "description" : "Message Controller"
+  }, {
+    "name" : "reset-password-controller",
+    "description" : "Reset Password Controller"
+  } ],
+  "paths" : {
+    "/v1/auth/signin" : {
+      "post" : {
+        "tags" : [ "authentication-controller" ],
+        "summary" : "authenticate with the given JwtRequest that contains the username and password",
+        "operationId" : "signInUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "jwtRequest",
+          "description" : "The username",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/JwtRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/v1/auth/signup" : {
+      "post" : {
+        "tags" : [ "authentication-controller" ],
+        "summary" : "signUp",
+        "operationId" : "signUpUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "signUpRequest",
+          "description" : "signUpRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Signup"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/v1/dashboard/member" : {
+      "get" : {
+        "tags" : [ "dashboard-controller" ],
+        "summary" : "member",
+        "operationId" : "memberUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "active",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "applications.domainName",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "applications.email",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "applications.name",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "applications.permissions[0].description",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "applications.permissions[0].id",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "applications.permissions[0].name",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "applications.permissions[0].shortcut",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "applications.roles[0].description",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "applications.roles[0].id",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "applications.roles[0].name",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "applications.roles[0].permissions[0].description",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "applications.roles[0].permissions[0].id",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "applications.roles[0].permissions[0].name",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "applications.roles[0].permissions[0].shortcut",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "applications.version",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "email",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "locked",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "password",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "roles[0].description",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "roles[0].id",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "roles[0].name",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "roles[0].permissions[0].description",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "roles[0].permissions[0].id",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "roles[0].permissions[0].name",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "roles[0].permissions[0].shortcut",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "salt",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "username",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/v1/jwt/ispublic" : {
+      "get" : {
+        "tags" : [ "message-controller" ],
+        "summary" : "getPublicMessage",
+        "operationId" : "getPublicMessageUsingGET",
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/v1/jwt/member" : {
+      "get" : {
+        "tags" : [ "message-controller" ],
+        "summary" : "member",
+        "operationId" : "memberUsingGET_1",
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/v1/jwt/private" : {
+      "get" : {
+        "tags" : [ "message-controller" ],
+        "summary" : "getPrivateMessage",
+        "operationId" : "getPrivateMessageUsingGET",
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/v1/jwt/unauthorized" : {
+      "get" : {
+        "tags" : [ "message-controller" ],
+        "summary" : "getUnauthorized",
+        "operationId" : "getUnauthorizedUsingGET",
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/v1/resetpassword/email" : {
+      "post" : {
+        "tags" : [ "reset-password-controller" ],
+        "summary" : "resetPasswordMessageForMail",
+        "operationId" : "resetPasswordMessageForMailUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "email",
+          "description" : "email",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ResetPasswortRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/v1/resetpassword/newpassword" : {
+      "post" : {
+        "tags" : [ "reset-password-controller" ],
+        "summary" : "setNewPassword",
+        "operationId" : "setNewPasswordUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "newPassword",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/v1/resetpassword/token" : {
+      "get" : {
+        "tags" : [ "reset-password-controller" ],
+        "summary" : "verifyToken",
+        "operationId" : "verifyTokenUsingGET",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "token",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "definitions" : {
+    "JwtRequest" : {
+      "type" : "object",
+      "properties" : {
+        "password" : {
+          "type" : "string"
+        },
+        "username" : {
+          "type" : "string"
+        }
+      },
+      "title" : "JwtRequest"
+    },
+    "ResetPasswortRequest" : {
+      "type" : "object",
+      "properties" : {
+        "email" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ResetPasswortRequest"
+    },
+    "Signup" : {
+      "type" : "object",
+      "properties" : {
+        "email" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string"
+        },
+        "roles" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "username" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Signup"
+    }
+  }
+}
