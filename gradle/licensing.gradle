@@ -9,6 +9,7 @@ license {
               "**/NOTICE",
               "**/package-info.java",
               "**/*.xml",
+              "**/*.yml",
               "**/*.pfx",
               "**/*.xsl",
               "**/*.xsd",

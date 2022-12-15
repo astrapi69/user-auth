@@ -22,7 +22,7 @@ package io.github.astrapi69.user.auth.mapper;
 
 import org.springframework.stereotype.Component;
 
-import io.github.astrapi69.bean.mapper.AbstractGenericMapper;
+import io.github.astrapi69.model.mapper.AbstractGenericMapper;
 import io.github.astrapi69.user.auth.dto.Contactmethod;
 import io.github.astrapi69.user.auth.jpa.entities.Contactmethods;
 
