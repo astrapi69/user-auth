@@ -21,6 +21,7 @@
 package io.github.astrapi69.user.auth.jpa.entities;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -50,6 +51,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = Contactmethods.TABLE_NAME)
 @TypeDef(name = Contactmethods.CONVERTER_NAME_CONTACTMETHOD, typeClass = io.github.astrapi69.db.postgres.usertype.PGEnumUserType.class, parameters = {
 		@Parameter(name = DatabaseDefaults.ENUM_CLASS_NAME, value = ContactmethodType.ENUM_CLASS_NAME_VALUE) })
+@Convert(attributeName = "", converter = io.github.astrapi69.db.postgres.usertype.PGEnumUserType.class)
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -68,7 +70,8 @@ public class Contactmethods extends UUIDEntity
 	/** The contact method like email, telefon etc. */
 	@Enumerated(EnumType.STRING)
 	@Column(name = COLUMN_NAME_CONTACTMETHOD)
-	@Type(type = Contactmethods.CONVERTER_NAME_CONTACTMETHOD)
+	@Type( value = io.github.astrapi69.db.postgres.usertype.PGEnumUserType.class,  parameters = {}
+			type = Contactmethods.CONVERTER_NAME_CONTACTMETHOD)
 	ContactmethodType contactmethod;
 
 	/**
