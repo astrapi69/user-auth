@@ -24,27 +24,21 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-
-import io.github.astrapi69.db.DatabaseDefaults;
-import io.github.astrapi69.data.enumtype.DatabasePrefix;
+import io.github.astrapi69.data.enumeration.DatabasePrefix;
 import io.github.astrapi69.data.identifiable.Identifiable;
 import io.github.astrapi69.entity.uniqueable.UUIDEntity;
 import io.github.astrapi69.user.auth.enums.GenderType;
@@ -63,9 +57,6 @@ import lombok.experimental.SuperBuilder;
  */
 @Entity
 @Table(name = UserInfos.TABLE_NAME)
-@TypeDefs({
-		@TypeDef(name = UserInfos.CONVERTER_NAME_GENDER, typeClass = io.github.astrapi69.db.postgres.usertype.PGEnumUserType.class, parameters = {
-				@Parameter(name = DatabaseDefaults.ENUM_CLASS_NAME, value = GenderType.ENUM_CLASS_NAME_VALUE) }) })
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -118,7 +109,6 @@ public class UserInfos extends UUIDEntity
 	/** The enum for the gender of the user. */
 	@Enumerated(EnumType.STRING)
 	@Column
-	@Type(type = CONVERTER_NAME_GENDER)
 	GenderType gender;
 	/** The ip address from where the user has register his self. */
 	@Column(name = COLUMN_NAME_IP_ADDRESS, length = 16)

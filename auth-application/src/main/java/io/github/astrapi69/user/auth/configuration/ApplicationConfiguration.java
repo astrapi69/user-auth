@@ -87,8 +87,11 @@ public class ApplicationConfiguration implements WebMvcConfigurer
 	@Override
 	public void addCorsMappings(CorsRegistry registry)
 	{
-		registry.addMapping("/**").allowedOrigins(CrossOrigin.DEFAULT_ORIGINS)
-			.allowedHeaders(CrossOrigin.DEFAULT_ALLOWED_HEADERS)
+		String[] allowedOrigins = {"*"};
+		String[] allowedHeaders = {"all"};
+		// TODO check
+		registry.addMapping("/**").allowedOrigins(allowedOrigins)
+			.allowedHeaders(allowedHeaders)
 			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
 	}
 

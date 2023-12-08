@@ -29,14 +29,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -49,11 +51,11 @@ import io.github.astrapi69.user.auth.service.jwt.JwtUserDetailsService;
 @Configuration
 @EnableWebSecurity
 @Order(SecurityProperties.IGNORED_ORDER)
-public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
+public class SpringSecurityWebAppConfig
 {
 
 	@Autowired
-	@Qualifier("authenticationManagerBean")
+	@Qualifier("authenticationManager")
 	AuthenticationManager authenticationManager;
 
 	@Autowired
@@ -68,15 +70,15 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
 
-	@Override
 	@Bean
-	public AuthenticationManager authenticationManagerBean() throws Exception
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+		throws Exception
 	{
-		return super.authenticationManagerBean();
+		return config.getAuthenticationManager();
 	}
 
 	@Bean
-	public DaoAuthenticationProvider authenticationProvider()
+	public AuthenticationProvider authenticationProvider()
 	{
 		final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(userDetailsService);
@@ -84,14 +86,13 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 		return authProvider;
 	}
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception
+	protected void configure(AuthenticationManagerBuilder auth, AuthenticationConfiguration config)
+		throws Exception
 	{
-		auth.parentAuthenticationManager(authenticationManagerBean())
+		auth.parentAuthenticationManager(authenticationManager(config))
 			.userDetailsService(userDetailsService);
 	}
 
-	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
 		List<String> signinPaths = applicationProperties.getSigninPathPatterns();
@@ -102,22 +103,32 @@ public class SpringSecurityWebAppConfig extends WebSecurityConfigurerAdapter
 		http
 			.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class)
 			.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-			.csrf().disable()
+
 			.authorizeRequests()
-				.antMatchers(allPublicPaths).permitAll()
+				.requestMatchers(allPublicPaths).permitAll()
 				.anyRequest().authenticated()
-	            .and().csrf().disable()
-	            .exceptionHandling()
+	            .and()
 			.authenticationEntryPoint(authenticationEntryPoint);
         // @formatter:on
 	}
 
-	@Override
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
+	{
+		http.csrf(AbstractHttpConfigurer::disable)
+			.authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**").permitAll()
+				.anyRequest().authenticated())
+			.sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
+			.authenticationProvider(authenticationProvider())
+			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+		return http.build();
+	}
+
 	public void configure(WebSecurity web)
 	{
 		List<String> publicPaths = applicationProperties.getPublicPathPatterns();
 		String[] allIgnorePatterns = ListExtensions.toArray(publicPaths);
-		web.ignoring().antMatchers(allIgnorePatterns);
+		web.ignoring().requestMatchers(allIgnorePatterns);
 	}
 
 	@Bean

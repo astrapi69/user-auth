@@ -20,7 +20,7 @@
  */
 package io.github.astrapi69.user.auth.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.MediaType;

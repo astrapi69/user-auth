@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.NoSuchElementException;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import io.github.astrapi69.user.auth.handler.ApplicationExceptionHandler;
 import org.junit.jupiter.api.BeforeEach;

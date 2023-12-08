@@ -30,7 +30,7 @@ import io.github.astrapi69.user.auth.principal.UsersPrincipal;
 
 public class CurrentUserResolver
 {
-
+	@SuppressWarnings("unchecked")
 	public static <T> Optional<T> getAuthenticationPrincipal()
 	{
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

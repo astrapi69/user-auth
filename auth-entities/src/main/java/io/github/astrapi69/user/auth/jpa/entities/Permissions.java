@@ -20,13 +20,13 @@
  */
 package io.github.astrapi69.user.auth.jpa.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
-import io.github.astrapi69.data.enumtype.DatabasePrefix;
+import io.github.astrapi69.data.enumeration.DatabasePrefix;
 import io.github.astrapi69.entity.uniqueable.UUIDEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
