@@ -1,23 +1,3 @@
-/**
- * The MIT License
- *
- * Copyright (C) 2015 Asterios Raptis
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
 package io.github.astrapi69.user.auth.controller;
 
 import java.util.HashSet;
@@ -25,7 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,9 +34,12 @@ import io.github.astrapi69.user.auth.service.api.AuthenticationsService;
 import io.github.astrapi69.user.auth.service.api.RolesService;
 import io.github.astrapi69.user.auth.service.api.UsersService;
 import io.github.astrapi69.user.auth.service.jwt.JwtUserDetailsService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -81,13 +64,17 @@ public class AuthenticationController
 	PasswordEncoder encoder;
 
 	/**
-	 * Call this link <a href="https://localhost:8443/v1/auth/signin"> with post http-method </a>
+	 * Endpoint for user sign-in.
+	 *
+	 * @param jwtRequest
+	 *            Contains the username and password for authentication
+	 * @return Response entity with the JWT token or an error message
 	 */
 	@CrossOrigin(origins = "*")
 	@RequestMapping(value = SIGN_IN, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(value = "authenticate with the given JwtRequest that contains the username and password")
-	@ApiImplicitParams({
-			@ApiImplicitParam(name = "jwtRequest", value = "The username", dataType = "JwtRequest", paramType = "body") })
+	@Operation(summary = "Authenticate with the given JwtRequest that contains the username and password", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(schema = @Schema(implementation = JwtRequest.class))), responses = {
+			@ApiResponse(responseCode = "200", description = "Successful authentication", content = @Content(schema = @Schema(implementation = JwtResponse.class))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content) })
 	public ResponseEntity<?> signIn(@Valid @RequestBody JwtRequest jwtRequest)
 	{
 		AuthenticationResult<Users, AuthenticationErrors> authenticate = authenticationsService
@@ -97,20 +84,29 @@ public class AuthenticationController
 			final UserDetails userDetails = userDetailsService
 				.loadUserByUsername(jwtRequest.getUsername());
 			final String token = jwtTokenService.newJwtToken(userDetails);
-			Set<String> roles = authenticate.getUser().getRoles().stream()
-				.map(roles1 -> roles1.getName()).collect(Collectors.toSet());
+			Set<String> roles = authenticate.getUser().getRoles().stream().map(Roles::getName)
+				.collect(Collectors.toSet());
 			JwtResponse jwtResponse = JwtResponse.builder().token(token).type("Bearer")
 				.username(jwtRequest.getUsername()).roles(roles).build();
-			return ResponseEntity.status(HttpStatus.OK.value()).body(jwtResponse);
+			return ResponseEntity.status(HttpStatus.OK).body(jwtResponse);
 		}
 		String unauthorizedRedirectPath = "redirect:" + applicationProperties.getContextPath()
 			+ ApplicationConfiguration.REST_VERSION + MessageController.REST_PATH
 			+ MessageController.UNAUTHORIZED_PATH;
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value())
-			.body(unauthorizedRedirectPath);
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(unauthorizedRedirectPath);
 	}
 
+	/**
+	 * Endpoint for user sign-up.
+	 *
+	 * @param signUpRequest
+	 *            Contains user registration data
+	 * @return Response entity with success message or error message
+	 */
 	@RequestMapping(value = SIGN_UP, method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Operation(summary = "Sign up a new user", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(schema = @Schema(implementation = Signup.class))), responses = {
+			@ApiResponse(responseCode = "200", description = "User created", content = @Content(schema = @Schema(implementation = MessageBox.class))),
+			@ApiResponse(responseCode = "400", description = "Validation error", content = @Content) })
 	public ResponseEntity<?> signUp(@Valid @RequestBody Signup signUpRequest)
 	{
 		Optional<ValidationErrors> validationErrors = usersService.validate(signUpRequest);
@@ -119,17 +115,15 @@ public class AuthenticationController
 			ValidationErrors error = validationErrors.get();
 			if (ValidationErrors.EMAIL_EXISTS_ERROR.equals(error))
 			{
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
-					.body("Email already exists");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already exists");
 			}
 			if (ValidationErrors.USERNAME_EXISTS_ERROR.equals(error))
 			{
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body("Username already exists");
 			}
 		}
 		Set<Roles> roles;
-
 		if (signUpRequest.getRoles() != null && !signUpRequest.getRoles().isEmpty())
 		{
 			roles = rolesService.getRoles(signUpRequest.getRoles());
@@ -143,8 +137,7 @@ public class AuthenticationController
 		Users savedUser = usersService.signUpUser(signUpRequest, roles);
 
 		return ResponseEntity.ok(MessageBox.builder()
-			.message("User with id" + savedUser.getId() + " successfully created and signed up")
+			.message("User with id " + savedUser.getId() + " successfully created and signed up")
 			.build());
 	}
-
 }

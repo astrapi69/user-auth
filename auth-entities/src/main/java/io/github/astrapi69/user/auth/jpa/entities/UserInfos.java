@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -36,15 +37,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import io.github.astrapi69.user.auth.converter.GenderTypeConverter;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
 
 import io.github.astrapi69.db.DatabaseDefaults;
-import io.github.astrapi69.data.enumtype.DatabasePrefix;
+import io.github.astrapi69.data.enumeration.DatabasePrefix;
 import io.github.astrapi69.data.identifiable.Identifiable;
 import io.github.astrapi69.entity.uniqueable.UUIDEntity;
 import io.github.astrapi69.user.auth.enums.GenderType;
@@ -63,9 +61,6 @@ import lombok.experimental.SuperBuilder;
  */
 @Entity
 @Table(name = UserInfos.TABLE_NAME)
-@TypeDefs({
-		@TypeDef(name = UserInfos.CONVERTER_NAME_GENDER, typeClass = io.github.astrapi69.db.postgres.usertype.PGEnumUserType.class, parameters = {
-				@Parameter(name = DatabaseDefaults.ENUM_CLASS_NAME, value = GenderType.ENUM_CLASS_NAME_VALUE) }) })
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -116,9 +111,8 @@ public class UserInfos extends UUIDEntity
 	@Column(length = 64)
 	String firstname;
 	/** The enum for the gender of the user. */
-	@Enumerated(EnumType.STRING)
+	@Convert(converter = GenderTypeConverter.class) // Use the converter for the enum
 	@Column
-	@Type(type = CONVERTER_NAME_GENDER)
 	GenderType gender;
 	/** The ip address from where the user has register his self. */
 	@Column(name = COLUMN_NAME_IP_ADDRESS, length = 16)

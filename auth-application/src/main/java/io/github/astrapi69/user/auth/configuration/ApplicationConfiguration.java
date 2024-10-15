@@ -52,7 +52,8 @@ import lombok.experimental.FieldDefaults;
 
 @Configuration
 @ComponentScan(basePackages = "io.github.astrapi69.user.auth")
-@EntityScan(basePackages = "io.github.astrapi69.user.auth.jpa.entities")
+@EntityScan(basePackages = { "io.github.astrapi69.user.auth.jpa.entities",
+		"io.github.astrapi69.entity.uniqueable", "io.github.astrapi69.entity.identifiable" })
 @EnableJpaRepositories(basePackages = { "io.github.astrapi69.user.auth.jpa.repositories" })
 @EnableTransactionManagement
 @AllArgsConstructor
@@ -87,9 +88,11 @@ public class ApplicationConfiguration implements WebMvcConfigurer
 	@Override
 	public void addCorsMappings(CorsRegistry registry)
 	{
-		registry.addMapping("/**").allowedOrigins(CrossOrigin.DEFAULT_ORIGINS)
-			.allowedHeaders(CrossOrigin.DEFAULT_ALLOWED_HEADERS)
-			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+		registry.addMapping("/**").allowedOrigins("*") // Allow all origins, or specify allowed
+														// origins
+			.allowedHeaders("Authorization", "Content-Type", "Accept") // Specify allowed headers
+			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow specific methods
+			.maxAge(3600); // Set max age for pre-flight requests
 	}
 
 	@Override

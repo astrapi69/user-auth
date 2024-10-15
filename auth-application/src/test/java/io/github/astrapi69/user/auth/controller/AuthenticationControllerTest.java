@@ -40,7 +40,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -55,6 +54,8 @@ import io.github.astrapi69.spring.web.util.UrlExtensions;
 import io.github.astrapi69.user.auth.configuration.ApplicationConfiguration;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.springframework.boot.test.web.server.LocalServerPort;
+
 
 @ExtendWith(SpringExtension.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)

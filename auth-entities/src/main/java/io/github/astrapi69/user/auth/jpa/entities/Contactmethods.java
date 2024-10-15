@@ -27,12 +27,10 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 import io.github.astrapi69.db.DatabaseDefaults;
 import io.github.astrapi69.entity.uniqueable.UUIDEntity;
+import io.github.astrapi69.user.auth.converter.ContactmethodTypeConverter;
 import io.github.astrapi69.user.auth.enums.ContactmethodType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -49,9 +47,6 @@ import lombok.experimental.SuperBuilder;
  */
 @Entity
 @Table(name = Contactmethods.TABLE_NAME)
-@TypeDef(name = Contactmethods.CONVERTER_NAME_CONTACTMETHOD, typeClass = io.github.astrapi69.db.postgres.usertype.PGEnumUserType.class, parameters = {
-		@Parameter(name = DatabaseDefaults.ENUM_CLASS_NAME, value = ContactmethodType.ENUM_CLASS_NAME_VALUE) })
-@Convert(attributeName = "", converter = io.github.astrapi69.db.postgres.usertype.PGEnumUserType.class)
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -68,10 +63,8 @@ public class Contactmethods extends UUIDEntity
 	static final String CONVERTER_NAME_CONTACTMETHOD = "contactmethodConverter";
 
 	/** The contact method like email, telefon etc. */
-	@Enumerated(EnumType.STRING)
 	@Column(name = COLUMN_NAME_CONTACTMETHOD)
-	@Type( value = io.github.astrapi69.db.postgres.usertype.PGEnumUserType.class,  parameters = {}
-			type = Contactmethods.CONVERTER_NAME_CONTACTMETHOD)
+	@Convert(converter = ContactmethodTypeConverter.class)
 	ContactmethodType contactmethod;
 
 	/**

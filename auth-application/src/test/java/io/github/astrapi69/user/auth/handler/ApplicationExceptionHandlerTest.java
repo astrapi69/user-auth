@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.NoSuchElementException;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import io.github.astrapi69.user.auth.handler.ApplicationExceptionHandler;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +36,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -97,8 +98,8 @@ public class ApplicationExceptionHandlerTest
 		when(fieldError.getDefaultMessage()).thenReturn("An error");
 		ResponseEntity<Object> responseEntity = applicationExceptionHandler
 			.handleException(exception, httpServletRequest);
-		HttpStatus statusCode = responseEntity.getStatusCode();
-		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, statusCode);
+		HttpStatusCode statusCode = responseEntity.getStatusCode();
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), statusCode.value());
 		Object body = responseEntity.getBody();
 		assertTrue(body instanceof ExceptionViewModel);
 		ExceptionViewModel exceptionViewModel = (ExceptionViewModel)body;
@@ -115,8 +116,8 @@ public class ApplicationExceptionHandlerTest
 		when(fieldError.getDefaultMessage()).thenReturn("An error");
 		ResponseEntity<Object> responseEntity = applicationExceptionHandler
 			.handleIllegalArgumentException(illegalArgumentException, httpServletRequest);
-		HttpStatus statusCode = responseEntity.getStatusCode();
-		assertEquals(HttpStatus.BAD_REQUEST, statusCode);
+		HttpStatusCode statusCode = responseEntity.getStatusCode();
+		assertEquals(HttpStatus.BAD_REQUEST.value(), statusCode.value());
 		Object body = responseEntity.getBody();
 		assertTrue(body instanceof ExceptionViewModel);
 		ExceptionViewModel exceptionViewModel = (ExceptionViewModel)body;
@@ -133,8 +134,8 @@ public class ApplicationExceptionHandlerTest
 		when(fieldError.getDefaultMessage()).thenReturn("An error");
 		ResponseEntity<Object> responseEntity = applicationExceptionHandler
 			.handleNoSuchElementException(noSuchElementException, httpServletRequest);
-		HttpStatus statusCode = responseEntity.getStatusCode();
-		assertEquals(HttpStatus.NOT_FOUND, statusCode);
+		HttpStatusCode statusCode = responseEntity.getStatusCode();
+		assertEquals(HttpStatus.NOT_FOUND.value(), statusCode.value());
 		Object body = responseEntity.getBody();
 		assertTrue(body instanceof ExceptionViewModel);
 		ExceptionViewModel exceptionViewModel = (ExceptionViewModel)body;
@@ -151,8 +152,8 @@ public class ApplicationExceptionHandlerTest
 		when(fieldError.getDefaultMessage()).thenReturn("An error");
 		ResponseEntity<Object> responseEntity = applicationExceptionHandler
 			.handleUnsupportedOperationException(unsupportedOperationException, httpServletRequest);
-		HttpStatus statusCode = responseEntity.getStatusCode();
-		assertEquals(HttpStatus.METHOD_NOT_ALLOWED, statusCode);
+		HttpStatusCode statusCode = responseEntity.getStatusCode();
+		assertEquals(HttpStatus.METHOD_NOT_ALLOWED.value(), statusCode.value());
 		Object body = responseEntity.getBody();
 		assertTrue(body instanceof ExceptionViewModel);
 		ExceptionViewModel exceptionViewModel = (ExceptionViewModel)body;

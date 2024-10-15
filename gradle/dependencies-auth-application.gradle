@@ -22,8 +22,6 @@ dependencies {
     implementation("io.github.astrapi69:silly-collection:$sillyCollectionVersion")
     implementation("io.github.astrapi69:silly-bean:$sillyBeanVersion")
     implementation("io.github.astrapi69:pg-enum-usertype:$pgEnumUsertypeVersion")
-    implementation("io.springfox:springfox-swagger2:$springfoxSwaggerVersion")
-    implementation("io.springfox:springfox-swagger-ui:$springfoxSwaggerVersion")
     implementation("com.thoughtworks.xstream:xstream:$xstreamVersion")
     implementation("javax.validation:validation-api:$javaxValidationApiVersion")
     implementation("org.apache.commons:commons-lang3:$commonsLang3Version")
@@ -39,6 +37,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+//    implementation("io.springfox:springfox-swagger2:$springfoxSwaggerVersion")
+//    implementation("io.springfox:springfox-swagger-ui:$springfoxSwaggerVersion")
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.0'
+    testImplementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 //    testImplementation("com.h2database:h2")
