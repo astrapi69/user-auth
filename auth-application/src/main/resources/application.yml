@@ -68,7 +68,6 @@ spring:
     driver-class-name: org.postgresql.Driver
     type: com.zaxxer.hikari.HikariDataSource
     url: ${app.db-url-prefix}${app.db-host}:${app.db-port}/${app.db-name}
-    initialization-mode: never
 
   jpa:
     properties:
@@ -85,3 +84,6 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+  sql:
+    init:
+      mode: always
