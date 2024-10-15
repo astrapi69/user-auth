@@ -1,4 +1,9 @@
 dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
     implementation("org.springframework.boot:spring-boot-starter-web")
+            {
+                exclude module: "spring-boot-starter-logging"
+                exclude module: "logback-classic"
+                exclude module: "slf4j-simple"
+            }
 }

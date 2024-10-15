@@ -9,6 +9,11 @@ dependencies {
     implementation("io.github.astrapi69:data-api:$dataApiVersion")
     implementation("io.github.astrapi69:ent-core:$entCoreVersion")
     implementation("org.springframework.boot:spring-boot-starter")
+    {
+        exclude module: "spring-boot-starter-logging"
+        exclude module: "logback-classic"
+        exclude module: "slf4j-simple"
+    }
     testImplementation project(":auth-application")
     testImplementation("io.github.astrapi69:silly-collection:$sillyCollectionVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
