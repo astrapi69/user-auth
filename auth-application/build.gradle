@@ -22,10 +22,12 @@ dependencies {
     implementation("io.github.astrapi69:silly-collection:$sillyCollectionVersion")
     implementation("io.github.astrapi69:silly-bean:$sillyBeanVersion")
     implementation("io.github.astrapi69:pg-enum-usertype:$pgEnumUsertypeVersion")
-    implementation("io.springfox:springfox-swagger2:$springfoxSwaggerVersion")
-    implementation("io.springfox:springfox-swagger-ui:$springfoxSwaggerVersion")
+    implementation 'io.swagger.core.v3:swagger-models:2.2.10'
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.10'
+
     implementation("com.thoughtworks.xstream:xstream:$xstreamVersion")
-    implementation("javax.validation:validation-api:$javaxValidationApiVersion")
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+
     implementation("org.apache.commons:commons-lang3:$commonsLang3Version")
     implementation("io.github.astrapi69:file-worker:$fileWorkerVersion")
     implementation("org.postgresql:postgresql")
