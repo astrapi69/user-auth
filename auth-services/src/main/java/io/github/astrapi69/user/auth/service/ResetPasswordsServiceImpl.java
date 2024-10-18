@@ -30,9 +30,12 @@ import javax.mail.MessagingException;
 
 import org.springframework.stereotype.Service;
 
+import io.github.astrapi69.message.mail.utils.EmailComposer;
+import io.github.astrapi69.message.mail.viewmodel.InfoMessage;
 import io.github.astrapi69.mystic.crypt.pw.PasswordEncryptor;
 import io.github.astrapi69.resourcebundle.locale.LocaleResolver;
 import io.github.astrapi69.spring.service.api.GenericService;
+import io.github.astrapi69.throwable.RuntimeExceptionDecorator;
 import io.github.astrapi69.user.auth.dto.ResetPassword;
 import io.github.astrapi69.user.auth.dto.ResetPasswordMessage;
 import io.github.astrapi69.user.auth.enums.ResetPasswordRest;
@@ -45,9 +48,6 @@ import io.github.astrapi69.user.auth.mapper.ResetPasswordMapper;
 import io.github.astrapi69.user.auth.service.api.ResetPasswordsService;
 import io.github.astrapi69.user.auth.service.api.UserInfosService;
 import io.github.astrapi69.user.auth.service.api.UsersService;
-import io.github.astrapi69.message.mail.utils.EmailComposer;
-import io.github.astrapi69.message.mail.viewmodel.InfoMessage;
-import io.github.astrapi69.throwable.RuntimeExceptionDecorator;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

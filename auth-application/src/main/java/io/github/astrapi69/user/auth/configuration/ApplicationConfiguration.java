@@ -35,7 +35,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -54,7 +53,8 @@ import lombok.experimental.FieldDefaults;
 @ComponentScan(basePackages = "io.github.astrapi69.user.auth")
 @EntityScan(basePackages = { "io.github.astrapi69.user.auth.jpa.entities",
 		"io.github.astrapi69.entity.uniqueable", "io.github.astrapi69.entity.identifiable" })
-@EnableJpaRepositories(basePackages = { "io.github.astrapi69.user.auth.jpa.repositories" })
+@EnableJpaRepositories(basePackages = { "io.github.astrapi69.user.auth.jpa.entities",
+		"io.github.astrapi69.entity.uniqueable", "io.github.astrapi69.entity.identifiable", "io.github.astrapi69.user.auth.jpa.repositories" })
 @EnableTransactionManagement
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

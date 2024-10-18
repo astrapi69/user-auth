@@ -20,31 +20,15 @@
  */
 package io.github.astrapi69.user.auth.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
-import io.github.astrapi69.collection.list.ListFactory;
-import io.github.astrapi69.collection.set.SetFactory;
-import io.github.astrapi69.json.ObjectToJsonExtensions;
-import io.github.astrapi69.throwable.RuntimeExceptionDecorator;
-import io.github.astrapi69.user.auth.controller.AuthenticationController;
-import io.github.astrapi69.user.auth.dto.JwtResponse;
-import io.github.astrapi69.user.auth.dto.Signup;
-import io.github.astrapi69.user.auth.enums.UserRole;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -54,7 +38,6 @@ import io.github.astrapi69.spring.web.util.UrlExtensions;
 import io.github.astrapi69.user.auth.configuration.ApplicationConfiguration;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.boot.test.web.server.LocalServerPort;
 
 
 @ExtendWith(SpringExtension.class)

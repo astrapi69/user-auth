@@ -23,11 +23,6 @@ package io.github.astrapi69.user.auth.filter;
 import java.io.IOException;
 import java.util.Optional;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -55,6 +50,10 @@ import io.github.astrapi69.user.auth.principal.UsersPrincipal;
 import io.github.astrapi69.user.auth.service.JwtTokenService;
 import io.github.astrapi69.user.auth.service.api.AuthenticationsService;
 import io.github.astrapi69.user.auth.service.jwt.JwtUserDetailsService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 
 @Component

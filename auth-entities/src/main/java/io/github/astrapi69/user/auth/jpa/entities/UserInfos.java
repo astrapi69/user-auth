@@ -27,8 +27,6 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
@@ -37,14 +35,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import io.github.astrapi69.user.auth.converter.GenderTypeConverter;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-import io.github.astrapi69.db.DatabaseDefaults;
 import io.github.astrapi69.data.enumeration.DatabasePrefix;
 import io.github.astrapi69.data.identifiable.Identifiable;
 import io.github.astrapi69.entity.uniqueable.UUIDEntity;
+import io.github.astrapi69.user.auth.converter.GenderTypeConverter;
 import io.github.astrapi69.user.auth.enums.GenderType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

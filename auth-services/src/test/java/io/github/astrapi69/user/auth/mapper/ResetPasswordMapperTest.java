@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.UUID;
 
-import io.github.astrapi69.user.auth.mapper.ResetPasswordMapper;
 import org.junit.jupiter.api.Test;
 
 import io.github.astrapi69.user.auth.dto.ResetPassword;

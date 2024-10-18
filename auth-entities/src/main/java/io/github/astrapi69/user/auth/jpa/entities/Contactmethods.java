@@ -23,12 +23,8 @@ package io.github.astrapi69.user.auth.jpa.entities;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
-
-import io.github.astrapi69.db.DatabaseDefaults;
 import io.github.astrapi69.entity.uniqueable.UUIDEntity;
 import io.github.astrapi69.user.auth.converter.ContactmethodTypeConverter;
 import io.github.astrapi69.user.auth.enums.ContactmethodType;

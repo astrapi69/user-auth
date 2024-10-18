@@ -27,10 +27,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import io.github.astrapi69.file.search.PathFinder;
 import io.github.astrapi69.spring.boot.application.ApplicationHooks;
 import io.github.astrapi69.user.auth.configuration.ApplicationProperties;
 import io.github.astrapi69.user.auth.service.jwt.JwtProperties;
-import io.github.astrapi69.file.search.PathFinder;
 
 @EnableTransactionManagement
 @EnableConfigurationProperties({ ApplicationProperties.class, JwtProperties.class })

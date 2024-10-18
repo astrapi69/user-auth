@@ -23,7 +23,6 @@ package io.github.astrapi69.user.auth.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import io.github.astrapi69.user.auth.mapper.ContactmethodMapper;
 import org.junit.jupiter.api.Test;
 
 import io.github.astrapi69.user.auth.dto.Contactmethod;

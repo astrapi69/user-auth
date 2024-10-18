@@ -2,9 +2,10 @@ package io.github.astrapi69.user.auth.converter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import io.github.astrapi69.user.auth.enums.ContactmethodType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import io.github.astrapi69.user.auth.enums.ContactmethodType;
 
 class ContactmethodTypeConverterTest
 {

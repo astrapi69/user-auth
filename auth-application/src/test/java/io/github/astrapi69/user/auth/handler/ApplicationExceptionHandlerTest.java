@@ -27,9 +27,6 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.NoSuchElementException;
 
-import jakarta.servlet.http.HttpServletRequest;
-
-import io.github.astrapi69.user.auth.handler.ApplicationExceptionHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,6 +43,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import io.github.astrapi69.spring.exceptionhandling.ExceptionViewModel;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 

@@ -30,8 +30,8 @@ import io.github.astrapi69.email.messages.EmailConstants;
 import io.github.astrapi69.email.messages.EmailMessage;
 import io.github.astrapi69.email.send.SendEmail;
 import io.github.astrapi69.email.utils.EmailExtensions;
-import io.github.astrapi69.string.StringExtensions;
 import io.github.astrapi69.message.mail.viewmodel.InfoMessage;
+import io.github.astrapi69.string.StringExtensions;
 
 /**
  * The Class {@link SendMessageService} provides methods for send emails

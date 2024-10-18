@@ -20,9 +20,6 @@
  */
 package io.github.astrapi69.user.auth.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -38,6 +35,8 @@ import io.github.astrapi69.user.auth.dto.ResetPasswortRequest;
 import io.github.astrapi69.user.auth.enums.ResetPasswordRest;
 import io.github.astrapi69.user.auth.enums.Rest;
 import io.github.astrapi69.user.auth.service.api.ResetPasswordsService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;

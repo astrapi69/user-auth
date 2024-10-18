@@ -22,34 +22,19 @@ package io.github.astrapi69.user.auth.utils;
 
 import java.util.Optional;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
+import io.github.astrapi69.spring.security.AuthenticationPrincipalResolver;
 import io.github.astrapi69.user.auth.jpa.entities.Users;
-import io.github.astrapi69.user.auth.principal.UsersPrincipal;
 
 public class CurrentUserResolver
 {
 
 	public static <T> Optional<T> getAuthenticationPrincipal()
 	{
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null)
-		{
-			return Optional.empty();
-		}
-		T principal = (T)authentication.getPrincipal();
-		return Optional.of(principal);
+		return AuthenticationPrincipalResolver.getAuthenticationPrincipal();
 	}
 
 	public static Optional<Users> getCurrentUser()
 	{
-		Optional<UsersPrincipal> authenticationPrincipal = getAuthenticationPrincipal();
-		if (!authenticationPrincipal.isPresent())
-		{
-			return Optional.empty();
-		}
-		UsersPrincipal usersPrincipal = authenticationPrincipal.get();
-		return Optional.of(usersPrincipal.getUser());
+		return AuthenticationPrincipalResolver.getCurrentUser();
 	}
 }

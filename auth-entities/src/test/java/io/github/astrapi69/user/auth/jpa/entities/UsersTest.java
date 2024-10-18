@@ -22,8 +22,8 @@ package io.github.astrapi69.user.auth.jpa.entities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import io.github.astrapi69.user.auth.jpa.entities.Users;
 import org.junit.jupiter.api.Test;
+
 
 public class UsersTest
 {

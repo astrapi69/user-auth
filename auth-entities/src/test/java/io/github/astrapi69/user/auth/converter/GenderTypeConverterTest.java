@@ -1,10 +1,10 @@
 package io.github.astrapi69.user.auth.converter;
 
-import io.github.astrapi69.user.auth.converter.GenderTypeConverter;
-import io.github.astrapi69.user.auth.enums.GenderType;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import io.github.astrapi69.user.auth.enums.GenderType;
 
 class GenderTypeConverterTest
 {

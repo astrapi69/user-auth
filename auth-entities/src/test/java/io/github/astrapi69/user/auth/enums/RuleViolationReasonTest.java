@@ -22,7 +22,6 @@ package io.github.astrapi69.user.auth.enums;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import io.github.astrapi69.user.auth.enums.RuleViolationReason;
 import org.junit.jupiter.api.Test;
 
 import io.github.astrapi69.lang.ClassExtensions;

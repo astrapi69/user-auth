@@ -2,6 +2,7 @@ package io.github.astrapi69.user.auth.converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+
 import io.github.astrapi69.user.auth.enums.GenderType;
 
 @Converter(autoApply = true)
