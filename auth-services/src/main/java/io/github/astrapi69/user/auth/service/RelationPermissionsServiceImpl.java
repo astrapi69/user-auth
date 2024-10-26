@@ -23,6 +23,7 @@ package io.github.astrapi69.user.auth.service;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import io.github.astrapi69.spring.service.api.GenericService;
@@ -46,7 +47,7 @@ public class RelationPermissionsServiceImpl
 		GenericService<RelationPermissions, UUID, RelationPermissionsRepository>,
 		RelationPermissionsService
 {
-
+	@Qualifier("relationPermissionsRepository")
 	RelationPermissionsRepository repository;
 
 	@Override

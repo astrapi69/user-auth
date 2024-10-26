@@ -54,7 +54,8 @@ import lombok.experimental.FieldDefaults;
 @EntityScan(basePackages = { "io.github.astrapi69.user.auth.jpa.entities",
 		"io.github.astrapi69.entity.uniqueable", "io.github.astrapi69.entity.identifiable" })
 @EnableJpaRepositories(basePackages = { "io.github.astrapi69.user.auth.jpa.entities",
-		"io.github.astrapi69.entity.uniqueable", "io.github.astrapi69.entity.identifiable", "io.github.astrapi69.user.auth.jpa.repositories" })
+		"io.github.astrapi69.entity.uniqueable", "io.github.astrapi69.entity.identifiable",
+		"io.github.astrapi69.user.auth.jpa.repositories" })
 @EnableTransactionManagement
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

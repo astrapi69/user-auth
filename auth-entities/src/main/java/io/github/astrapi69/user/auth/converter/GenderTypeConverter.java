@@ -1,9 +1,8 @@
 package io.github.astrapi69.user.auth.converter;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-
 import io.github.astrapi69.user.auth.enums.GenderType;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
 public class GenderTypeConverter implements AttributeConverter<GenderType, String>

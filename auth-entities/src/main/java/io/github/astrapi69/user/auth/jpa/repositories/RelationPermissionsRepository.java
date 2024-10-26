@@ -33,7 +33,7 @@ import io.github.astrapi69.user.auth.jpa.entities.Permissions;
 import io.github.astrapi69.user.auth.jpa.entities.RelationPermissions;
 import io.github.astrapi69.user.auth.jpa.entities.Users;
 
-@Repository
+@Repository("relationPermissionsRepository")
 public interface RelationPermissionsRepository extends JpaRepository<RelationPermissions, UUID>
 {
 
@@ -62,7 +62,7 @@ public interface RelationPermissionsRepository extends JpaRepository<RelationPer
 	 * @return an optional with the entry if found
 	 */
 	@Transactional
-	@Query("select rp from RelationPermissions rp where rp.provider = :provider and rp.subscriber = :subscriber and :permission in (rp.permissions)")
+	@Query("select rp from RelationPermissions rp where rp.provider = :provider and rp.subscriber = :subscriber and :permission in elements(rp.permissions)")
 	Optional<RelationPermissions> findByProviderAndSubscriberAndPermission(
 		@Param("provider") final Users provider, @Param("subscriber") final Users subscriber,
 		@Param("permission") Permissions permission);
