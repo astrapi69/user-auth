@@ -17,10 +17,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import io.github.astrapi69.collection.list.ListExtensions;
 import io.github.astrapi69.user.auth.entrypoint.RestAuthenticationEntryPoint;
-import io.github.astrapi69.user.auth.filter.CorsFilter;
 import io.github.astrapi69.user.auth.filter.JwtRequestFilter;
 import io.github.astrapi69.user.auth.service.jwt.JwtUserDetailsService;
 
@@ -59,25 +61,40 @@ public class SpringSecurityWebAppConfig
 	}
 
 	@Bean
+	public org.springframework.web.filter.CorsFilter applicationCorsFilter()
+	{
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowCredentials(true);
+		config.addAllowedOriginPattern("*");
+		config.addAllowedHeader("*");
+		config.addAllowedMethod("*");
+		source.registerCorsConfiguration("/**", config);
+		return new org.springframework.web.filter.CorsFilter(source);
+	}
+
+
+	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
 	{
 		List<String> signinPaths = applicationProperties.getSigninPathPatterns();
 		List<String> ignorePathPatterns = applicationProperties.getIgnorePathPatterns();
 		signinPaths.addAll(ignorePathPatterns);
 		String[] allPublicPaths = ListExtensions.toArray(signinPaths);
-
+		CorsFilter corsFilter = applicationCorsFilter();
 		// @formatter:off
 		http
-				.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class)
+				.addFilterBefore(corsFilter, ChannelProcessingFilter.class) // Injected bean here
 				.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-				.csrf().disable()
-				.authorizeHttpRequests()
-				.requestMatchers(allPublicPaths).permitAll()  // Changed from antMatchers to requestMatchers
-				.anyRequest().authenticated()
-				.and()
-				.exceptionHandling()
-				.authenticationEntryPoint(authenticationEntryPoint);
+				.csrf(csrf -> csrf.ignoringRequestMatchers(allPublicPaths)) .authorizeHttpRequests(auth -> auth
+						.requestMatchers(allPublicPaths).permitAll()
+						.anyRequest().authenticated()
+				)
+				.exceptionHandling(exception -> exception
+						.authenticationEntryPoint(authenticationEntryPoint)
+				);
 		// @formatter:on
+
 		return http.build();
 	}
 
@@ -86,4 +103,5 @@ public class SpringSecurityWebAppConfig
 	{
 		return new BCryptPasswordEncoder(11);
 	}
+
 }

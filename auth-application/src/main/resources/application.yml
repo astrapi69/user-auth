@@ -60,6 +60,14 @@ app:
     - /configuration/security # swagger ui
     - /swagger-ui.html # swagger ui
     - /webjars/** # swagger ui
+    - /swagger-ui/**
+    - /v3/api-docs/**
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/index.html
+
+
 
 spring:
   datasource:

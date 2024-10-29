@@ -22,8 +22,10 @@ dependencies {
     implementation("io.github.astrapi69:silly-collection:$sillyCollectionVersion")
     implementation("io.github.astrapi69:silly-bean:$sillyBeanVersion")
     implementation("io.github.astrapi69:pg-enum-usertype:$pgEnumUsertypeVersion")
-    implementation 'io.swagger.core.v3:swagger-models:2.2.10'
-    implementation 'io.swagger.core.v3:swagger-annotations:2.2.10'
+
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.14'
+
+
 
     implementation("com.thoughtworks.xstream:xstream:$xstreamVersion")
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
